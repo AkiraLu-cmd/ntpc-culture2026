@@ -40,13 +40,10 @@ section{padding:56px 0}
 @media(max-width:620px){.split.img-right,.split.img-left{grid-template-columns:1fr}.split-img,.split-text{order:0!important}}
 .split-img{border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:var(--navy);display:flex;align-items:center;justify-content:center;position:relative}
 .split-img img{width:100%;height:100%;object-fit:cover}
-.split-img .ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:rgba(255,255,255,.25);font-size:12px;text-align:center;padding:16px;height:100%}
-.ph-icon{font-size:28px;opacity:.4;display:block}
 .img-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(15,35,71,.8));color:rgba(255,255,255,.7);font-size:11px;padding:20px 12px 8px;letter-spacing:.3px}
 
 .photo-strip{border-radius:12px;overflow:hidden;aspect-ratio:21/8;background:var(--navy-dark);position:relative;margin-bottom:48px;display:flex;align-items:center;justify-content:center}
 .photo-strip img{width:100%;height:100%;object-fit:cover}
-.photo-strip .ph{color:rgba(255,255,255,.2);text-align:center;font-size:12px}
 .photo-strip-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(15,35,71,.85));padding:32px 24px 16px}
 .photo-strip-caption h3{color:#fff;font-size:18px;font-weight:700;margin-bottom:2px}
 .photo-strip-caption p{color:var(--gold);font-size:13px}
@@ -54,7 +51,6 @@ section{padding:56px 0}
 .photo-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:48px}
 .photo-row .ph-slot{border-radius:10px;overflow:hidden;aspect-ratio:4/3;background:var(--navy);display:flex;align-items:center;justify-content:center;position:relative}
 .photo-row .ph-slot img{width:100%;height:100%;object-fit:cover}
-.photo-row .ph-slot .ph{color:rgba(255,255,255,.2);font-size:11px;text-align:center;padding:8px}
 @media(max-width:500px){.photo-row{grid-template-columns:1fr 1fr}}
 
 .tasks-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-bottom:32px}
@@ -73,10 +69,6 @@ section{padding:56px 0}
 .tl-table tbody tr:nth-child(even) td{background:#faf8f3}
 .tl-table td{padding:10px 14px;border-bottom:1px solid var(--cream-dark);vertical-align:top}
 .tl-table tr:last-child td{border-bottom:none}
-.tl-cat{font-size:11px;font-weight:700;letter-spacing:.5px;border-radius:4px;padding:2px 7px;white-space:nowrap}
-.tl-must{background:#0f2347;color:var(--gold);border:1px solid var(--gold)}
-.tl-pick{background:#e8f0fb;color:var(--navy)}
-.tl-open{background:#e8f5e9;color:#2e7d32}
 .note-bar{background:#fff9e6;border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:10px 16px;font-size:13px;color:#7a6000;margin-top:16px;line-height:1.6}
 
 .reward-table{width:100%;border-collapse:collapse;background:var(--white);border-radius:12px;overflow:hidden;border:1px solid var(--cream-dark)}
@@ -87,13 +79,11 @@ section{padding:56px 0}
 .badge{display:inline-block;background:#e8f0fb;color:var(--navy);border-radius:5px;padding:2px 8px;font-size:12px;font-weight:600}
 .badge-gold{background:#fff3cd;color:#7a5c00}
 
-/* Calculator */
 .calc-wrap{background:var(--white);border-radius:16px;border:1px solid var(--cream-dark);padding:28px}
 .calc-title{font-size:16px;font-weight:700;color:var(--navy-dark);margin-bottom:4px}
 .calc-sub{font-size:13px;color:var(--muted);margin-bottom:20px;display:flex;flex-wrap:wrap;gap:12px}
 .legend-item{display:inline-flex;align-items:center;gap:6px}
 .calc-section-head{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin:20px 0 6px;padding-left:2px}
-.calc-section-head:first-child{margin-top:0}
 .calc-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;border:1px solid transparent;transition:background .12s}
 .calc-item.clickable{cursor:pointer}
 .calc-item.clickable:hover{background:#f5f0e8}
@@ -135,7 +125,7 @@ section{padding:56px 0}
 .quote-block blockquote em{color:var(--gold);font-style:normal}
 .quote-block cite{font-size:11px;color:rgba(255,255,255,.35);letter-spacing:1px;font-style:normal}
 
-.cta-section{background:var(--navy-dark);color:#fff;border-radius:16px;padding:50px 32px;text-align:center;margin-bottom:56px;position:relative;overflow:hidden}
+.cta-section{background:var(--navy-dark);color:#fff;border-radius:16px;padding:50px 32px;text-align:center;margin-bottom:32px;position:relative;overflow:hidden}
 .cta-section::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 .cta-section::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 .cta-section h2{font-size:clamp(20px,4vw,32px);font-weight:800;margin-bottom:8px}
@@ -184,7 +174,7 @@ section{padding:56px 0}
     <div class="gold-line"></div>
     <div class="split img-left">
       <div class="split-img">
-        <img src="https://raw.githubusercontent.com/Emma-wceo/ntpc-culture2026/main/group-photo.jpg" alt="活動大合照">
+        <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/group-photo.jpg" alt="活動大合照">
         <div class="img-caption">找到對的人，讓文化傳得更遠</div>
       </div>
       <div class="split-text">
@@ -211,16 +201,16 @@ section{padding:56px 0}
       <div class="task-card"><h3>⭐ 年度青年品牌活動</h3><p>共同辦理第三屆「Young Young 都來街頭玩」，結合老中青三代，共創文化世代傳承</p></div>
     </div>
     <div class="photo-row">
-      <div class="ph-slot"><img src="https://raw.githubusercontent.com/Emma-wceo/ntpc-culture2026/main/culture-mystery.jpg" alt="文化解謎照片"></div>
-      <div class="ph-slot"><img src="https://raw.githubusercontent.com/Emma-wceo/ntpc-culture2026/main/culture-booth.jpg" alt="文化攤位推廣照片"></div>
-      <div class="ph-slot"><img src="https://raw.githubusercontent.com/Emma-wceo/ntpc-culture2026/main/culture-trip.jpg" alt="文化小旅行照片"></div>
+      <div class="ph-slot"><img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/culture-mystery.jpg" alt="文化解謎照片"></div>
+      <div class="ph-slot"><img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/culture-booth.jpg" alt="文化攤位推廣照片"></div>
+      <div class="ph-slot"><img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/culture-trip.jpg" alt="文化小旅行照片"></div>
     </div>
   </div>
 </section>
 
 <div class="container" style="padding-top:48px">
   <div class="photo-strip">
-    <img src="https://raw.githubusercontent.com/Emma-wceo/ntpc-culture2026/main/youngyoung.jpg" alt="YoungYoung 都來街頭玩">
+    <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/youngyoung.jpg" alt="YoungYoung 都來街頭玩">
     <div class="photo-strip-caption">
       <h3>YoungYoung 都來街頭玩 — 第三屆即將登場</h3>
       <p>30,000 人次 · 23 個國家 · 10月17日（六）· 地點待定</p>
@@ -256,14 +246,13 @@ section{padding:56px 0}
         <p style="font-size:13px;color:var(--muted);margin-top:14px">💡 大學生可申請實習學分，高中生可計入學習歷程。課程均安排於假日或暑假，不影響平日上課。</p>
       </div>
       <div class="split-img">
-        <img src="https://raw.githubusercontent.com/Emma-wceo/ntpc-culture2026/main/award.jpg" alt="頒獎照片">
+        <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/award.jpg" alt="頒獎照片">
         <div class="img-caption">2025年授證典禮</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Calculator -->
 <section style="background:var(--navy-dark);padding:56px 0">
   <div class="container">
     <div class="section-label" style="color:var(--gold)">互動試算</div>
@@ -275,7 +264,6 @@ section{padding:56px 0}
       <div class="calc-sub">
         <span class="legend-item"><span style="width:8px;height:8px;border-radius:50%;background:#c9a84c;display:inline-block"></span>必要項目（已自動勾選）</span>
         <span class="legend-item"><span style="width:8px;height:8px;border-radius:50%;background:#1a3a6b;display:inline-block"></span>選擇性參與</span>
-
       </div>
       <div id="calc-items"></div>
       <div class="result-bar">
@@ -335,7 +323,7 @@ section{padding:56px 0}
     <div class="gold-line"></div>
     <div class="split img-left">
       <div class="split-img">
-        <img src="https://raw.githubusercontent.com/Emma-wceo/ntpc-culture2026/main/activity-3.jpg" alt="學員活動照片" style="width:100%;height:100%;object-fit:cover">
+        <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/activity-3.jpg" alt="學員活動照片" style="width:100%;height:100%;object-fit:cover">
         <div class="img-caption">文化的聲量，從街頭延伸到螢幕</div>
       </div>
       <div class="split-text">
@@ -400,27 +388,26 @@ section{padding:56px 0}
 </div>
 
 <script>
-// dot colors: gold=必要, navy=選擇性, amber=選擇性建議
 const GOLD = '#c9a84c';
 const NAVY = '#1a3a6b';
 
 const ACTIVITIES = [
-  {id:'a1',  label:'大使宇宙初見面：實體甄選課程（5/17）',       hrs:8,    must:true,  dot:GOLD, section:'團隊建立及團隊凝聚課程'},
-  {id:'a15', label:'大使宇宙再升級：團隊凝聚課程（9/26 下午）',   hrs:3,    must:false, dot:NAVY, section:'團隊建立及團隊凝聚課程'},
-  {id:'a2',  label:'新莊廟街走讀（5/23 上午）',                  hrs:3,    must:false, dot:NAVY, section:'文化推廣課程'},
-  {id:'a3',  label:'新莊微型藝術策展面面談（5/23 下午）',         hrs:2,    must:false, dot:NAVY, section:'文化推廣課程'},
-  {id:'a4',  label:'POV 解鎖新北文化開箱實戰課（6/6 上午）',     hrs:2.5,  must:false, dot:NAVY, section:'文化推廣課程'},
-  {id:'a6',  label:'聽見綠美圖：聲音策展學（英文授課）（6/14）', hrs:2,    must:false, dot:NAVY, section:'文化推廣課程'},
-  {id:'a8',  label:'市集主理人手札（7/18 上午）',                 hrs:3,    must:false, dot:NAVY, section:'文化推廣課程'},
-  {id:'a9',  label:'從腦洞到行動：文化專案架構拆解術（7/18 下午）', hrs:3,  must:false, dot:NAVY, section:'文化推廣課程'},
-  {id:'a13', label:'走讀眷村（9月）',                             hrs:3,    must:false, dot:NAVY, section:'文化推廣課程'},
-  {id:'a14', label:'視覺陳列：五感沉浸市集美學（9/26 上午）',     hrs:3,    must:false, dot:NAVY, section:'文化推廣課程'},
-  {id:'a5',  label:'潮盛新莊（6/6）',                            hrs:10,   must:false, dot:NAVY, section:'文化推廣專案活動（需擇一場參與）'},
-  {id:'a16', label:'眷村文化節（9–10月）',                        hrs:12,   must:false, dot:NAVY, section:'文化推廣專案活動（需擇一場參與）'},
-  {id:'a7',  label:'帶著華裔青年遊新北（6/28）',                  hrs:8,    must:false, dot:NAVY, section:'國際青年交流活動'},
-  {id:'a11', label:'社造蹲點及文化培訓課程（8/14 ＋ 8/21）',      hrs:14,   must:true,  dot:GOLD, section:'文化推廣交流活動'},
-  {id:'a12', label:'社造文化小旅行（8/22）',                      hrs:4,    must:true,  dot:GOLD, section:'文化推廣交流活動'},
-  {id:'a17', label:'YoungYoung 都來街頭玩（10/17）',              hrs:20,   must:true,  dot:GOLD, section:'文化推廣交流活動'},
+  {id:'a1',  label:'大使宇宙初見面：實體甄選課程（5/17）',           hrs:8,   must:true,  dot:GOLD, section:'團隊建立及團隊凝聚課程'},
+  {id:'a15', label:'大使宇宙再升級：團隊凝聚課程（9/26 下午）',       hrs:3,   must:false, dot:NAVY, section:'團隊建立及團隊凝聚課程'},
+  {id:'a2',  label:'新莊廟街走讀（5/23 上午）',                      hrs:3,   must:false, dot:NAVY, section:'文化推廣課程'},
+  {id:'a3',  label:'新莊微型藝術策展面面談（5/23 下午）',             hrs:2,   must:false, dot:NAVY, section:'文化推廣課程'},
+  {id:'a4',  label:'POV 解鎖新北文化開箱實戰課（6/6 上午）',         hrs:2.5, must:false, dot:NAVY, section:'文化推廣課程'},
+  {id:'a6',  label:'聽見綠美圖：聲音策展學（英文授課）（6/14）',     hrs:2,   must:false, dot:NAVY, section:'文化推廣課程'},
+  {id:'a8',  label:'市集主理人手札（7/18 上午）',                     hrs:3,   must:false, dot:NAVY, section:'文化推廣課程'},
+  {id:'a9',  label:'從腦洞到行動：文化專案架構拆解術（7/18 下午）',   hrs:3,   must:false, dot:NAVY, section:'文化推廣課程'},
+  {id:'a13', label:'走讀眷村（9月）',                                 hrs:3,   must:false, dot:NAVY, section:'文化推廣課程'},
+  {id:'a14', label:'視覺陳列：五感沉浸市集美學（9/26 上午）',         hrs:3,   must:false, dot:NAVY, section:'文化推廣課程'},
+  {id:'a5',  label:'潮盛新莊（6/6）',                                hrs:10,  must:false, dot:NAVY, section:'文化推廣專案活動（需擇一場參與）'},
+  {id:'a16', label:'眷村文化節（9–10月）',                            hrs:12,  must:false, dot:NAVY, section:'文化推廣專案活動（需擇一場參與）'},
+  {id:'a7',  label:'帶著華裔青年遊新北（6/28）',                      hrs:8,   must:false, dot:NAVY, section:'國際青年交流活動'},
+  {id:'a11', label:'社造蹲點及文化培訓課程（8/14 ＋ 8/21）',          hrs:14,  must:true,  dot:GOLD, section:'文化推廣交流活動'},
+  {id:'a12', label:'社造文化小旅行（8/22）',                          hrs:4,   must:true,  dot:GOLD, section:'文化推廣交流活動'},
+  {id:'a17', label:'YoungYoung 都來街頭玩（10/17）',                  hrs:20,  must:true,  dot:GOLD, section:'文化推廣交流活動'},
 ];
 
 const state = {};
@@ -429,21 +416,17 @@ function buildCalc() {
   const container = document.getElementById('calc-items');
   let currentSection = '';
   let html = '';
-
   ACTIVITIES.forEach(a => {
     if (a.must) state[a.id] = true;
     else state[a.id] = false;
-
     if (a.section !== currentSection) {
       currentSection = a.section;
       html += `<div class="calc-section-head">${currentSection}</div>`;
     }
-
     const dot = `<span style="width:7px;height:7px;border-radius:50%;background:${a.dot};flex-shrink:0;display:inline-block"></span>`;
     const mustLabel = a.must ? ' <span style="font-size:11px;color:#c9a84c;font-weight:700">（必要）</span>' : '';
     const itemClass = a.must ? 'calc-item must-item' : 'calc-item clickable';
     const clickAttr = a.must ? '' : `onclick="toggle('${a.id}')"`;
-
     html += `
       <div class="${itemClass}" id="wrap-${a.id}" ${clickAttr}>
         <input type="checkbox" id="${a.id}" ${a.must ? 'checked disabled' : ''} style="${a.must ? 'pointer-events:none' : ''}">
@@ -452,7 +435,6 @@ function buildCalc() {
         <span class="hrs">${a.hrs}hr</span>
       </div>`;
   });
-
   container.innerHTML = html;
   update();
 }
@@ -471,7 +453,6 @@ function update() {
   const disp = total % 1 === 0 ? total : total.toFixed(1);
   document.getElementById('total-hrs').textContent = disp;
   document.getElementById('prog-fill').style.width = Math.min(total / 100 * 100, 100) + '%';
-
   const awards = [
     {label:'🎁 活動獎品 + 時數章', met: total >= 2},
     {label:'🏅 正式證書 + 勳章',   met: total >= 80},
@@ -480,7 +461,6 @@ function update() {
   document.getElementById('award-chips').innerHTML = awards.map(aw =>
     `<span class="award-chip ${aw.met ? 'lit' : 'dim'}">${aw.met ? '✓ ' : ''}${aw.label}</span>`
   ).join('');
-
   let hint = '';
   if (total === 0) hint = '勾選活動後即時顯示可獲得的獎勵';
   else if (total < 80) hint = `還需 ${(80 - total).toFixed(1).replace(/\.0$/, '')} 小時可獲得正式證書`;
