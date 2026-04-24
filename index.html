@@ -5,291 +5,361 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>新北文化大使 115年報名</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Noto Sans TC',sans-serif;background:#f5f0e8;color:#1a1a1a;line-height:1.7}
-:root{--navy:#1a3a6b;--navy-dark:#0f2347;--gold:#c9a84c;--gold-light:#e8c96a;--cream:#f5f0e8;--cream-dark:#ede7d8;--white:#fff;--muted:#666}
+body{font-family:'Noto Sans TC',sans-serif;background:#f5f0e8;color:#0f1f3d;line-height:1.7;overflow-x:hidden}
+:root{
+  --g1:#0f2347;--g2:#1a3a6b;--g3:#2d5a9e;--g4:#b8cce8;--g5:#e8f0fb;
+  --y1:#c9a84c;--y2:#e8c96a;--y3:#fff9e6;
+  --r1:#e85d3a;--b1:#3a7bd5;
+  --cream:#f5f0e8;--white:#fff;--text:#0f1f3d;--muted:#4a5a7a
+}
 
-.hero{background:var(--navy-dark);color:#fff;padding:80px 24px 88px;text-align:center;position:relative;overflow:hidden}
-.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.hero-badge{display:inline-block;border:1px solid var(--gold);color:var(--gold);border-radius:20px;padding:5px 18px;font-size:12px;margin-bottom:20px;letter-spacing:1.5px;font-weight:500}
-.hero h1{font-size:clamp(32px,7vw,58px);font-weight:800;margin-bottom:6px;letter-spacing:2px}
-.hero h1 span{color:var(--gold)}
-.hero-tagline{font-size:13px;letter-spacing:3px;opacity:.5;margin-bottom:26px}
-.hero p{font-size:clamp(14px,2.5vw,17px);opacity:.8;max-width:500px;margin:0 auto 34px;line-height:1.8}
-.hero-deadline{display:inline-flex;gap:32px;flex-wrap:wrap;justify-content:center}
-.deadline-box{background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.5);border-radius:10px;padding:12px 24px;text-align:center}
-.deadline-box span{font-size:12px;color:var(--gold);display:block;margin-bottom:2px}
-.deadline-box strong{font-size:16px;color:#fff}
+/* ── HERO ── */
+.hero{background:var(--g1);min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;padding:80px 0 60px}
+/* big bg text */
+.hero-bg-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:clamp(120px,18vw,220px);font-weight:900;color:rgba(255,255,255,.03);white-space:nowrap;pointer-events:none;letter-spacing:-4px;user-select:none}
+/* floating deco circles */
+.deco{position:absolute;border-radius:50%;pointer-events:none}
+.deco-1{width:320px;height:320px;background:radial-gradient(circle,rgba(76,175,125,.25),transparent 70%);top:-80px;right:-80px}
+.deco-2{width:200px;height:200px;background:radial-gradient(circle,rgba(245,200,66,.15),transparent 70%);bottom:60px;left:-40px}
+.deco-3{width:100px;height:100px;background:rgba(76,175,125,.1);top:30%;right:10%}
 
-.stats-bar{background:var(--navy);color:#fff;padding:32px 24px}
-.stats-inner{max-width:920px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:20px;text-align:center}
-.stat-num{font-size:clamp(26px,4vw,38px);font-weight:800;color:var(--gold);line-height:1}
-.stat-label{font-size:12px;opacity:.6;margin-top:4px}
+.hero-inner{max-width:1000px;margin:0 auto;padding:0 28px;position:relative;z-index:2}
+.hero-logos{display:flex;align-items:center;justify-content:space-between;margin-bottom:52px;flex-wrap:wrap;gap:12px}
+.hero-logos img{height:36px;filter:brightness(0) invert(1);opacity:.8}
 
-.container{max-width:920px;margin:0 auto;padding:0 22px}
-section{padding:56px 0}
-.section-label{font-size:11px;font-weight:700;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
-.section-title{font-size:clamp(20px,3vw,27px);font-weight:700;margin-bottom:10px;color:var(--navy-dark)}
-.gold-line{width:36px;height:3px;background:var(--gold);margin-bottom:24px}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(245,200,66,.15);border:1px solid rgba(245,200,66,.4);border-radius:50px;padding:6px 16px;font-size:12px;color:var(--y1);font-weight:700;letter-spacing:1px;margin-bottom:20px}
+.hero-tag::before{content:'★';font-size:10px}
 
-.split{display:grid;gap:32px;align-items:center;margin-bottom:48px}
-.split.img-right{grid-template-columns:1fr 1fr}
-.split.img-left{grid-template-columns:1fr 1fr}
-.split.img-right .split-img{order:2}.split.img-right .split-text{order:1}
-.split.img-left .split-img{order:1}.split.img-left .split-text{order:2}
-@media(max-width:620px){.split.img-right,.split.img-left{grid-template-columns:1fr}.split-img,.split-text{order:0!important}}
-.split-img{border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:var(--navy);display:flex;align-items:center;justify-content:center;position:relative}
-.split-img img{width:100%;height:100%;object-fit:cover}
-.img-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(15,35,71,.8));color:rgba(255,255,255,.7);font-size:11px;padding:20px 12px 8px;letter-spacing:.3px}
+.hero h1{font-size:clamp(52px,10vw,100px);font-weight:900;line-height:.95;letter-spacing:-2px;margin-bottom:8px}
+.hero h1 .line1{display:block;color:var(--y1)}
+.hero h1 .line2{display:block;color:#fff;-webkit-text-stroke:1px rgba(255,255,255,.3)}
 
-.photo-strip{border-radius:12px;overflow:hidden;aspect-ratio:21/8;background:var(--navy-dark);position:relative;margin-bottom:48px;display:flex;align-items:center;justify-content:center}
-.photo-strip img{width:100%;height:100%;object-fit:cover}
-.photo-strip-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(15,35,71,.85));padding:32px 24px 16px}
-.photo-strip-caption h3{color:#fff;font-size:18px;font-weight:700;margin-bottom:2px}
-.photo-strip-caption p{color:var(--gold);font-size:13px}
+.hero-slash{display:inline-block;color:var(--g3);margin:12px 0 20px;font-size:clamp(14px,2vw,18px);font-weight:500;opacity:.9;letter-spacing:.5px}
 
-.photo-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:48px}
-.photo-row .ph-slot{border-radius:10px;overflow:hidden;aspect-ratio:4/3;background:var(--navy);display:flex;align-items:center;justify-content:center;position:relative}
-.photo-row .ph-slot img{width:100%;height:100%;object-fit:cover}
-@media(max-width:500px){.photo-row{grid-template-columns:1fr 1fr}}
+.hero-desc{font-size:clamp(14px,1.8vw,17px);color:rgba(255,255,255,.65);max-width:440px;margin-bottom:40px;line-height:1.8}
 
-.tasks-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-bottom:32px}
-.task-card{background:var(--white);border-radius:10px;padding:16px 18px;border-left:3px solid var(--navy)}
-.task-card h3{font-size:14px;font-weight:700;margin-bottom:4px;color:var(--navy)}
-.task-card p{font-size:13px;color:var(--muted);line-height:1.5}
+.hero-pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:48px}
+.hero-pill{background:rgba(255,255,255,.08);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:10px 18px;text-align:center}
+.hero-pill small{display:block;font-size:11px;color:rgba(255,255,255,.5);margin-bottom:3px}
+.hero-pill strong{display:block;font-size:14px;color:#fff;font-weight:700}
 
-.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
-.why-card{background:var(--white);border-radius:12px;padding:24px;border-top:3px solid var(--gold)}
-.why-icon{font-size:24px;margin-bottom:12px}
-.why-card h3{font-size:14px;font-weight:700;margin-bottom:6px;color:var(--navy)}
-.why-card p{font-size:13px;color:var(--muted);line-height:1.6}
+.btn-hero{display:inline-flex;align-items:center;gap:10px;background:var(--y1);color:var(--g1);padding:16px 36px;border-radius:50px;font-weight:900;font-size:16px;text-decoration:none;letter-spacing:.3px;transition:transform .2s,box-shadow .2s}
+.btn-hero:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 12px 32px rgba(245,200,66,.4)}
+.btn-hero::after{content:'→';font-size:18px}
 
-.tl-table{width:100%;border-collapse:collapse;font-size:13px}
-.tl-table thead th{background:var(--navy);color:#fff;padding:10px 14px;text-align:left;font-weight:600}
-.tl-table tbody tr:nth-child(even) td{background:#faf8f3}
-.tl-table td{padding:10px 14px;border-bottom:1px solid var(--cream-dark);vertical-align:top}
+/* ── STATS ── */
+.stats{background:var(--y1);padding:32px 24px}
+.stats-inner{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0;text-align:center}
+.stat{padding:8px 16px;border-right:2px solid rgba(26,74,46,.15)}
+.stat:last-child{border-right:none}
+.stat-n{font-size:clamp(28px,4vw,40px);font-weight:900;color:var(--g1);line-height:1}
+.stat-l{font-size:12px;color:var(--g1);opacity:.65;margin-top:3px;font-weight:600}
+
+/* ── SECTION COMMON ── */
+.container{max-width:1000px;margin:0 auto;padding:0 28px}
+section{padding:72px 0}
+.sticker{display:inline-block;background:var(--g2);color:#fff;border-radius:12px;padding:5px 14px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;transform:rotate(-1deg)}
+.big-title{font-size:clamp(26px,4vw,40px);font-weight:900;color:var(--g1);line-height:1.15;margin-bottom:6px}
+.squiggle{width:60px;height:6px;background:repeating-linear-gradient(90deg,var(--y1) 0,var(--y1) 6px,transparent 6px,transparent 10px);margin-bottom:32px;border-radius:3px}
+
+/* ── WHY ── */
+.why-layout{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+@media(max-width:680px){.why-layout{grid-template-columns:1fr}}
+.why-photo{border-radius:28px;overflow:hidden;aspect-ratio:1/1;position:relative;transform:rotate(-1.5deg)}
+.why-photo img{width:100%;height:100%;object-fit:cover}
+.why-photo-badge{position:absolute;bottom:16px;left:16px;background:var(--y1);color:var(--g1);border-radius:12px;padding:8px 14px;font-size:12px;font-weight:700;transform:rotate(1.5deg)}
+.why-cards{display:flex;flex-direction:column;gap:14px}
+.why-card{background:var(--white);border-radius:20px;padding:20px 22px;display:flex;align-items:flex-start;gap:14px;border:2px solid var(--g5);transition:transform .2s,border-color .2s}
+.why-card:hover{transform:translateX(6px);border-color:var(--g3)}
+.why-em{font-size:28px;flex-shrink:0;margin-top:2px}
+.why-card h3{font-size:14px;font-weight:700;color:var(--g1);margin-bottom:4px}
+.why-card p{font-size:13px;color:var(--muted);line-height:1.5}
+
+/* ── TASKS ── */
+.tasks-section{background:var(--g1);padding:72px 0}
+.tasks-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:36px}
+.task-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:20px;transition:background .2s,transform .2s}
+.task-card:hover{background:rgba(255,255,255,.1);transform:translateY(-4px)}
+.task-em{font-size:28px;margin-bottom:10px;display:block}
+.task-card h3{font-size:13px;font-weight:700;color:#fff;margin-bottom:6px}
+.task-card p{font-size:12px;color:rgba(255,255,255,.55);line-height:1.5}
+
+.photo3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.photo3 .slot{border-radius:18px;overflow:hidden;aspect-ratio:4/3}
+.photo3 .slot img{width:100%;height:100%;object-fit:cover;display:block}
+@media(max-width:500px){.photo3{grid-template-columns:1fr 1fr}}
+
+/* ── YOUNGYOUNG BANNER ── */
+.yy-banner{border-radius:28px;overflow:hidden;position:relative;margin:64px 0}
+.yy-banner img{width:100%;aspect-ratio:21/8;object-fit:cover;display:block}
+.yy-caption{position:absolute;inset:0;background:linear-gradient(to right,rgba(26,74,46,.9) 40%,transparent);display:flex;flex-direction:column;justify-content:flex-end;padding:32px 36px}
+.yy-caption h3{font-size:clamp(18px,3vw,26px);font-weight:900;color:#fff;margin-bottom:6px}
+.yy-caption p{font-size:13px;color:var(--y1);font-weight:600}
+
+/* ── QUOTE ── */
+.quote-wrap{background:var(--g5);border-radius:28px;padding:48px;text-align:center;margin-bottom:72px;border:2px solid var(--g4);position:relative}
+.quote-wrap::before{content:'"';font-size:120px;color:var(--g4);position:absolute;top:-20px;left:28px;line-height:1;font-weight:900}
+.quote-wrap blockquote{font-size:clamp(17px,2.5vw,22px);font-weight:800;color:var(--g1);line-height:1.7;margin-bottom:12px}
+.quote-wrap em{color:var(--g2);font-style:normal}
+.quote-wrap cite{font-size:12px;color:var(--muted);letter-spacing:.5px;font-style:normal}
+
+/* ── REWARDS ── */
+.reward-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+@media(max-width:640px){.reward-grid{grid-template-columns:1fr}}
+.reward-steps{display:flex;flex-direction:column;gap:0}
+.reward-step{display:flex;gap:16px;padding:20px 0;border-bottom:2px dashed var(--g5)}
+.reward-step:last-child{border-bottom:none}
+.r-num{width:40px;height:40px;border-radius:14px;background:var(--g2);color:#fff;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.r-content h4{font-size:14px;font-weight:700;color:var(--g1);margin-bottom:4px}
+.r-content p{font-size:13px;color:var(--muted);margin-bottom:6px}
+.r-tags{display:flex;flex-wrap:wrap;gap:6px}
+.r-tag{background:var(--g5);color:var(--g2);border-radius:50px;padding:2px 10px;font-size:11px;font-weight:700}
+.r-tag.gold{background:var(--y3);color:#8a6500}
+.reward-photo{border-radius:24px;overflow:hidden;aspect-ratio:3/4;position:relative;transform:rotate(1deg)}
+.reward-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.reward-photo-label{position:absolute;bottom:14px;left:14px;right:14px;background:rgba(26,74,46,.85);color:#fff;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:600;text-align:center}
+
+/* ── CALCULATOR ── */
+.calc-bg{background:var(--g5);padding:72px 0}
+.calc-box{background:var(--white);border-radius:28px;padding:36px;border:2px solid var(--g4)}
+.calc-head{font-size:18px;font-weight:900;color:var(--g1);margin-bottom:4px}
+.calc-sub{font-size:13px;color:var(--muted);margin-bottom:20px;display:flex;flex-wrap:wrap;gap:14px}
+.leg{display:inline-flex;align-items:center;gap:6px;font-size:13px}
+.csec{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--g2);text-transform:uppercase;margin:18px 0 6px;display:flex;align-items:center;gap:8px}
+.csec::after{content:'';flex:1;height:1px;background:var(--g4)}
+.citem{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;border:2px solid transparent;transition:all .12s}
+.citem.clickable{cursor:pointer}
+.citem.clickable:hover{background:var(--g5);border-color:var(--g4)}
+.citem.checked{background:#e4f7ed;border-color:var(--g3)}
+.citem.must-item{background:var(--y3);border-color:var(--y2)}
+.citem input{width:16px;height:16px;accent-color:var(--g2);flex-shrink:0}
+.citem label{font-size:13px;flex:1;line-height:1.4}
+.citem .h{font-size:12px;font-weight:700;color:var(--g2);background:var(--g5);border-radius:8px;padding:2px 8px;white-space:nowrap}
+.result{margin-top:24px;background:var(--g1);border-radius:20px;padding:22px 26px;display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.r-tot{color:#fff}.r-tot span{font-size:13px;opacity:.6;display:block}
+.r-tot strong{font-size:36px;font-weight:900;color:var(--y1);line-height:1}
+.r-tot em{font-size:16px;font-weight:400;font-style:normal;opacity:.6}
+.r-right{flex:1;min-width:200px}
+.chip{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border-radius:50px;padding:5px 12px;font-size:12px;color:#fff;margin:3px;border:1px solid rgba(255,255,255,.12)}
+.chip.on{background:rgba(245,200,66,.2);border-color:rgba(245,200,66,.4);color:var(--y1)}
+.chip.off{opacity:.3}
+.prog-wrap{margin-top:12px}
+.prog-labels{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,.4);margin-bottom:5px}
+.prog-bg{background:rgba(255,255,255,.1);border-radius:10px;height:8px;overflow:hidden}
+.prog-fill{height:8px;border-radius:10px;background:linear-gradient(90deg,var(--g3),var(--y1));transition:width .3s}
+.r-hint{font-size:12px;color:rgba(255,255,255,.5);margin-top:8px}
+
+/* ── TIMELINE ── */
+.tl-wrap{overflow-x:auto;border-radius:20px;border:2px solid var(--g5)}
+.tl-table{width:100%;border-collapse:collapse;font-size:13px;background:var(--white)}
+.tl-table th{background:var(--g2);color:#fff;padding:12px 16px;text-align:left;font-weight:700}
+.tl-table td{padding:11px 16px;border-bottom:1px solid var(--g5);vertical-align:top}
 .tl-table tr:last-child td{border-bottom:none}
-.note-bar{background:#fff9e6;border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:10px 16px;font-size:13px;color:#7a6000;margin-top:16px;line-height:1.6}
+.tl-table tr:hover td{background:var(--g5)}
+.note{background:var(--y3);border-left:4px solid var(--y1);border-radius:0 14px 14px 0;padding:12px 18px;font-size:13px;color:#7a5c00;margin-top:16px;line-height:1.7}
 
-.reward-table{width:100%;border-collapse:collapse;background:var(--white);border-radius:12px;overflow:hidden;border:1px solid var(--cream-dark)}
-.reward-table th{background:var(--navy);color:#fff;padding:11px 16px;font-size:13px;font-weight:600;text-align:left}
-.reward-table td{padding:12px 16px;font-size:14px;border-bottom:1px solid var(--cream-dark);vertical-align:middle}
-.reward-table tr:last-child td{border-bottom:none}
-.reward-table tr:hover td{background:#faf8f3}
-.badge{display:inline-block;background:#e8f0fb;color:var(--navy);border-radius:5px;padding:2px 8px;font-size:12px;font-weight:600}
-.badge-gold{background:#fff3cd;color:#7a5c00}
+/* ── WHO ── */
+.who-layout{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center}
+@media(max-width:640px){.who-layout{grid-template-columns:1fr}}
+.who-photo{border-radius:28px;overflow:hidden;aspect-ratio:4/3;position:relative;transform:rotate(1deg)}
+.who-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.who-cards{display:flex;flex-direction:column;gap:14px}
+.who-card{background:var(--white);border-radius:20px;padding:22px;border:2px solid var(--g5)}
+.who-tag{display:inline-block;background:var(--g1);color:var(--y1);border-radius:50px;padding:4px 14px;font-size:11px;font-weight:700;margin-bottom:10px}
+.who-card h3{font-size:15px;font-weight:800;color:var(--g1);margin-bottom:8px}
+.who-card ul{padding-left:16px;font-size:13px;color:var(--muted);line-height:1.9}
 
-.calc-wrap{background:var(--white);border-radius:16px;border:1px solid var(--cream-dark);padding:28px}
-.calc-title{font-size:16px;font-weight:700;color:var(--navy-dark);margin-bottom:4px}
-.calc-sub{font-size:13px;color:var(--muted);margin-bottom:20px;display:flex;flex-wrap:wrap;gap:12px}
-.legend-item{display:inline-flex;align-items:center;gap:6px}
-.calc-section-head{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin:20px 0 6px;padding-left:2px}
-.calc-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;border:1px solid transparent;transition:background .12s}
-.calc-item.clickable{cursor:pointer}
-.calc-item.clickable:hover{background:#f5f0e8}
-.calc-item.checked{background:#f0f4ff;border-color:#c5d0f0}
-.calc-item.must-item{background:#fffbf0;border-color:#f0e4b0}
-.calc-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--navy);flex-shrink:0}
-.calc-item label{font-size:13px;flex:1;line-height:1.4}
-.calc-item .hrs{font-size:12px;font-weight:700;color:var(--gold);white-space:nowrap;background:#fff9e6;border-radius:4px;padding:2px 7px}
-.result-bar{margin-top:24px;background:var(--navy-dark);border-radius:12px;padding:20px 24px;display:flex;flex-wrap:wrap;gap:16px;align-items:center}
-.result-total{color:#fff}
-.result-total span{font-size:13px;opacity:.6;display:block}
-.result-total strong{font-size:32px;font-weight:800;color:var(--gold);line-height:1}
-.result-total strong em{font-size:16px;font-weight:400;font-style:normal;opacity:.7}
-.result-awards{flex:1;min-width:200px}
-.award-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border-radius:20px;padding:5px 12px;font-size:12px;color:#fff;margin:3px 3px 3px 0;border:1px solid rgba(255,255,255,.15)}
-.award-chip.lit{background:rgba(201,168,76,.25);border-color:rgba(201,168,76,.5);color:var(--gold-light)}
-.award-chip.dim{opacity:.35}
-.progress-wrap{margin-top:12px}
-.progress-label{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,.45);margin-bottom:4px}
-.progress-bg{background:rgba(255,255,255,.1);border-radius:10px;height:6px;overflow:hidden}
-.progress-fill{height:6px;border-radius:10px;background:var(--gold);transition:width .3s}
-.result-hint{font-size:12px;color:rgba(255,255,255,.5);margin-top:8px}
+/* ── STEPS ── */
+.steps-section{background:var(--g1);padding:72px 0}
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.step{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:24px 20px;text-align:center;transition:transform .2s}
+.step:hover{transform:translateY(-4px)}
+.step-n{width:44px;height:44px;border-radius:14px;background:var(--y1);color:var(--g1);font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.step h3{font-size:14px;font-weight:700;color:#fff;margin-bottom:6px}
+.step p{font-size:12px;color:rgba(255,255,255,.55);line-height:1.6}
+.free-bar{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 20px;font-size:13px;color:rgba(255,255,255,.65);margin-top:20px;line-height:1.7}
+.free-bar strong{color:var(--y1)}
 
-.who-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:500px){.who-grid{grid-template-columns:1fr}}
-.who-card{background:var(--white);border-radius:12px;padding:24px;border-bottom:3px solid var(--navy)}
-.who-card .tag{font-size:11px;font-weight:700;background:var(--navy);color:var(--gold);display:inline-block;border-radius:5px;padding:3px 10px;margin-bottom:10px;letter-spacing:.5px}
-.who-card h3{font-size:15px;font-weight:700;margin-bottom:8px;color:var(--navy-dark)}
-.who-card ul{padding-left:16px;font-size:14px;color:var(--muted);line-height:1.9}
+/* ── CTA ── */
+.cta-outer{padding:72px 0}
+.cta-box{background:var(--g2);border-radius:32px;padding:60px 40px;text-align:center;position:relative;overflow:hidden}
+.cta-box::before,.cta-box::after{content:'';position:absolute;border-radius:50%;pointer-events:none}
+.cta-box::before{width:300px;height:300px;background:radial-gradient(circle,rgba(245,200,66,.12),transparent);top:-100px;right:-80px}
+.cta-box::after{width:200px;height:200px;background:radial-gradient(circle,rgba(76,175,125,.15),transparent);bottom:-60px;left:-40px}
+.cta-box h2{font-size:clamp(26px,5vw,48px);font-weight:900;color:#fff;margin-bottom:10px;position:relative;z-index:1;line-height:1.1}
+.cta-box h2 span{color:var(--y1);display:block}
+.cta-box p{color:rgba(255,255,255,.7);margin-bottom:36px;font-size:15px;position:relative;z-index:1}
+.btn-cta{display:inline-flex;align-items:center;gap:10px;background:var(--y1);color:var(--g1);padding:18px 52px;border-radius:50px;font-weight:900;font-size:18px;text-decoration:none;transition:transform .2s,box-shadow .2s;position:relative;z-index:1}
+.btn-cta:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 16px 40px rgba(245,200,66,.45)}
+.btn-cta::after{content:'🎉';font-size:20px}
+.cta-meta{margin-top:16px;font-size:12px;color:rgba(255,255,255,.4);position:relative;z-index:1}
 
-.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
-.step-card{background:var(--white);border-radius:12px;padding:20px;text-align:center;border:1px solid var(--cream-dark)}
-.step-num{width:34px;height:34px;border-radius:50%;background:var(--navy);color:var(--gold);font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;border:2px solid var(--gold)}
-.step-card h3{font-size:14px;font-weight:700;margin-bottom:5px;color:var(--navy)}
-.step-card p{font-size:12px;color:#777;line-height:1.6}
+/* showcase */
+.showcase{border-radius:28px;overflow:hidden;margin:36px 0}
+.showcase img{width:100%;display:block;max-height:520px;object-fit:cover}
 
-.quote-block{background:var(--navy);border-radius:14px;padding:32px 36px;text-align:center;margin-bottom:48px}
-.quote-block blockquote{font-size:clamp(15px,2.5vw,19px);color:#fff;font-weight:500;line-height:1.8;margin-bottom:10px}
-.quote-block blockquote em{color:var(--gold);font-style:normal}
-.quote-block cite{font-size:11px;color:rgba(255,255,255,.35);letter-spacing:1px;font-style:normal}
-
-.cta-section{background:var(--navy-dark);color:#fff;border-radius:16px;padding:50px 32px;text-align:center;margin-bottom:32px;position:relative;overflow:hidden}
-.cta-section::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.cta-section::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.cta-section h2{font-size:clamp(20px,4vw,32px);font-weight:800;margin-bottom:8px}
-.cta-section h2 span{color:var(--gold)}
-.cta-section p{opacity:.7;margin-bottom:30px;font-size:15px}
-.btn-gold{display:inline-block;background:var(--gold);color:var(--navy-dark);padding:14px 42px;border-radius:50px;font-weight:800;font-size:16px;letter-spacing:.5px;text-decoration:none;transition:background .15s,transform .15s}
-.btn-gold:hover{background:var(--gold-light);transform:translateY(-2px)}
-.cta-meta{margin-top:16px;font-size:12px;opacity:.4}
-
-.contact-bar{background:var(--white);border-radius:12px;border:1px solid var(--cream-dark);padding:20px 24px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:center;font-size:13px;color:var(--muted);margin-bottom:56px}
-.contact-item{display:flex;align-items:center;gap:7px}
-.cdot{width:5px;height:5px;border-radius:50%;background:var(--gold)}
+/* ── CONTACT ── */
+.contact{background:var(--white);border-radius:24px;border:2px solid var(--g5);padding:28px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:center;font-size:13px;color:var(--muted);margin-bottom:72px}
+.ci{display:flex;align-items:center;gap:8px}
+.cd{width:7px;height:7px;border-radius:50%;background:var(--g3);flex-shrink:0}
 </style>
 </head>
 <body>
 
+<!-- HERO -->
 <div class="hero">
-  <div style="display:flex;align-items:center;justify-content:space-between;max-width:920px;margin:0 auto 32px;padding:0 4px;flex-wrap:wrap;gap:12px">
-    <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/logo-culture.png" alt="新北市政府文化局" style="height:44px">
-    <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/NTPC Logo-03.png" alt="新北文化大使" style="height:48px">
-  </div>
-  <div class="hero-badge">新北市政府文化局 主辦</div>
-  <h1>新北<span>文化大使</span></h1>
-  <p class="hero-tagline">文化傳承，世代前進</p>
-  <p>以青年為核心，轉譯並推廣新北文化事務<br>讓你從旁觀者成為文化專案的真正執行者</p>
-  <div class="hero-deadline">
-    <div class="deadline-box"><span>報名截止</span><strong>5月13日（二）24:00</strong></div>
-    <div class="deadline-box"><span>書審結果通知</span><strong>5月15日前 Email 通知</strong></div>
-    <div class="deadline-box"><span>實體甄選</span><strong>5月17日（日）08:30</strong></div>
+  <div class="deco deco-1"></div>
+  <div class="deco deco-2"></div>
+  <div class="deco deco-3"></div>
+  <div class="hero-bg-text">文化大使</div>
+  <div class="hero-inner">
+    <div class="hero-logos">
+      <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/logo-culture.png" alt="新北市政府文化局">
+      <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/NTPC Logo-03.png" alt="新北文化大使">
+    </div>
+    <div class="hero-tag">新北市政府文化局 主辦 · 115年</div>
+    <h1><span class="line1">新北</span><span class="line2">文化大使</span></h1>
+    <div class="hero-slash">文化傳承 × 世代前進 × 青年力量</div>
+    <p class="hero-desc">以青年為核心，轉譯並推廣新北文化事務。讓你從旁觀者，成為文化專案的真正執行者！</p>
+    <div class="hero-pills">
+      <div class="hero-pill"><small>報名截止</small><strong>5/13（二）24:00</strong></div>
+      <div class="hero-pill"><small>書審通知</small><strong>5/15 前 Email</strong></div>
+      <div class="hero-pill"><small>實體甄選</small><strong>5/17（日）08:30</strong></div>
+    </div>
+    <a class="btn-hero" href="https://wceo.regfox.com/ntpcca2026" target="_blank" rel="noopener">立即報名</a>
   </div>
 </div>
 
-<div class="stats-bar">
+<!-- STATS -->
+<div class="stats">
   <div class="stats-inner">
-    <div><div class="stat-num">6年</div><div class="stat-label">持續成長的品牌</div></div>
-    <div><div class="stat-num">2,286</div><div class="stat-label">歷年培訓人次</div></div>
-    <div><div class="stat-num">30,000</div><div class="stat-label">114年活動人流</div></div>
-    <div><div class="stat-num">150名</div><div class="stat-label">115年錄取名額</div></div>
+    <div class="stat"><div class="stat-n">6年</div><div class="stat-l">持續成長的品牌</div></div>
+    <div class="stat"><div class="stat-n">2,286</div><div class="stat-l">歷年培訓人次</div></div>
+    <div class="stat"><div class="stat-n">30,000</div><div class="stat-l">114年活動人流</div></div>
+    <div class="stat"><div class="stat-n">150名</div><div class="stat-l">115年錄取名額</div></div>
   </div>
 </div>
 
+<!-- WHY -->
 <section>
   <div class="container">
-    <div class="section-label">為什麼加入</div>
-    <div class="section-title">青年力量，推動新北文化朝新世代前進</div>
-    <div class="gold-line"></div>
-    <div class="split img-left">
-      <div class="split-img">
-        <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/group-photo.jpg" alt="活動大合照">
-        <div class="img-caption">找到對的人，讓文化傳得更遠</div>
-      </div>
-      <div class="split-text">
-        <div class="why-grid" style="grid-template-columns:1fr">
-          <div class="why-card"><div class="why-icon">🎓</div><h3>學習歷程加分</h3><p>官方證書與服務時數，高中生提升備審資料含金量，表現優秀者可獲文化局推薦信</p></div>
-          <div class="why-card"><div class="why-icon">🌏</div><h3>多元文化交流實戰</h3><p>接待國內外民眾、規劃文化活動，與來自 23 個國家的青年進行跨文化互動</p></div>
-          <div class="why-card"><div class="why-icon">🎨</div><h3>策展與企劃實作</h3><p>從零策劃文化活動、管理 Instagram 帳號，累積真實可見的作品集</p></div>
+    <div class="why-layout">
+      <div>
+        <div class="sticker">為什麼加入</div>
+        <div class="big-title">青年力量，<br>讓文化傳得更遠</div>
+        <div class="squiggle"></div>
+        <div class="why-cards">
+          <div class="why-card"><div class="why-em">🎓</div><div><h3>學習歷程加分</h3><p>官方證書與服務時數，高中生提升備審資料含金量，表現優秀者可獲文化局推薦信</p></div></div>
+          <div class="why-card"><div class="why-em">🌏</div><div><h3>多元文化交流實戰</h3><p>接待國內外民眾、規劃文化活動，與來自 23 個國家的青年進行跨文化互動</p></div></div>
+          <div class="why-card"><div class="why-em">🎨</div><div><h3>策展與企劃實作</h3><p>從零策劃文化活動、管理 Instagram 帳號，累積真實可見的作品集</p></div></div>
         </div>
       </div>
+      <div class="why-photo">
+        <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/group-photo.jpg" alt="活動大合照">
+        <div class="why-photo-badge">找到對的人，讓文化傳得更遠 ✨</div>
+      </div>
     </div>
   </div>
 </section>
 
-<section style="background:var(--white);padding:56px 0">
+<!-- TASKS -->
+<div class="tasks-section">
   <div class="container">
-    <div class="section-label">計畫內容</div>
-    <div class="section-title">你在這個計畫裡會做什麼？</div>
-    <div class="gold-line"></div>
+    <div class="sticker" style="background:var(--y1);color:var(--g1)">計畫內容</div>
+    <div class="big-title" style="color:#fff;margin-top:10px">你在這個計畫<br>裡會做什麼？</div>
+    <div class="squiggle" style="background:repeating-linear-gradient(90deg,rgba(255,255,255,.3) 0,rgba(255,255,255,.3) 6px,transparent 6px,transparent 10px);margin-bottom:36px"></div>
     <div class="tasks-grid">
-      <div class="task-card"><h3>📱 文化推廣平台經營</h3><p>組成青年團隊，共同經營「新北文化大使」官方 Instagram，包含文字、照片、影片創作</p></div>
-      <div class="task-card"><h3>🗺️ 文化解謎遊戲</h3><p>配合在地文化特色，設計實境解謎任務，帶民眾穿越歷史、探索文化基地</p></div>
-      <div class="task-card"><h3>🏪 文化推廣攤位</h3><p>依據活動主題策劃市集互動遊戲攤位，讓更多民眾認識新北文化技藝與故事</p></div>
-      <div class="task-card"><h3>🧭 文化蹲點及小旅行</h3><p>深入文化館舍或社造場域，與文化職人近距離觀摩，設計活動邀請國內外民眾參與</p></div>
-      <div class="task-card"><h3>⭐ 年度青年品牌活動</h3><p>共同辦理第三屆「Young Young 都來街頭玩」，結合老中青三代，共創文化世代傳承</p></div>
+      <div class="task-card"><span class="task-em">📱</span><h3>文化推廣平台經營</h3><p>組成青年團隊，共同經營官方 Instagram，包含文字、照片、影片創作</p></div>
+      <div class="task-card"><span class="task-em">🗺️</span><h3>文化解謎遊戲</h3><p>設計實境解謎任務，帶民眾穿越歷史、探索文化基地</p></div>
+      <div class="task-card"><span class="task-em">🏪</span><h3>文化推廣攤位</h3><p>策劃市集互動遊戲攤位，讓更多民眾認識新北文化技藝與故事</p></div>
+      <div class="task-card"><span class="task-em">🧭</span><h3>文化蹲點及小旅行</h3><p>深入文化館舍，與職人近距離互動，設計活動邀請國內外民眾</p></div>
+      <div class="task-card"><span class="task-em">⭐</span><h3>年度青年品牌活動</h3><p>共同辦理第三屆「Young Young 都來街頭玩」，結合老中青三代</p></div>
     </div>
-    <div class="photo-row">
-      <div class="ph-slot"><img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/culture-mystery.jpg" alt="文化解謎照片"></div>
-      <div class="ph-slot"><img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/culture-booth.jpg" alt="文化攤位推廣照片"></div>
-      <div class="ph-slot"><img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/culture-trip.jpg" alt="文化小旅行照片"></div>
-    </div>
-  </div>
-</section>
-
-<div class="container" style="padding-top:48px">
-  <div class="photo-strip">
-    <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/youngyoung.jpg" alt="YoungYoung 都來街頭玩">
-    <div class="photo-strip-caption">
-      <h3>YoungYoung 都來街頭玩 — 第三屆即將登場</h3>
-      <p> 10月17日（六）· 地點待定</p>
+    <div class="photo3">
+      <div class="slot"><img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/culture-mystery.jpg" alt="文化解謎"></div>
+      <div class="slot"><img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/culture-booth.jpg" alt="文化攤位"></div>
+      <div class="slot"><img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/culture-trip.jpg" alt="文化小旅行"></div>
     </div>
   </div>
 </div>
 
+<!-- YOUNGYOUNG -->
 <div class="container">
-  <div class="quote-block">
-    <blockquote>「讓深奧的<em>文化資產</em>，成為當代大眾有感的語言。」</blockquote>
+  <div class="yy-banner">
+    <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/youngyoung.jpg" alt="YoungYoung 都來街頭玩">
+    <div class="yy-caption">
+      <h3>YoungYoung 都來街頭玩<br>第三屆即將登場 🎊</h3>
+      <p>30,000 人次 · 23 個國家 · 10/17（六）· 地點待定</p>
+    </div>
+  </div>
+</div>
+
+<!-- QUOTE -->
+<div class="container">
+  <div class="quote-wrap">
+    <blockquote>「讓深奧的<em>文化資產</em>，<br>成為當代大眾有感的語言。」</blockquote>
     <cite>— 115年新北市青年推廣文化計畫 計畫願景</cite>
   </div>
 </div>
 
+<!-- REWARDS -->
 <section style="padding-top:0">
   <div class="container">
-    <div class="section-label">獎勵機制</div>
-    <div class="section-title">參與即有收穫，全年累積最豐富</div>
-    <div class="gold-line"></div>
-    <div class="split img-right">
-      <div class="split-text">
-        <div style="overflow-x:auto">
-        <table class="reward-table">
-          <thead><tr><th>累積條件</th><th>你可以拿到</th></tr></thead>
-          <tbody>
-            <tr><td>完成任一文化推廣專案活動<br><small style="color:var(--muted)">含活動籌備 + 當日出席</small></td><td>🎁 活動獎品 ＋ <span class="badge">服務學習時數章</span></td></tr>
-            <tr><td>全年度 <strong>≥ 80 小時</strong><br><small style="color:var(--muted)">包含必要項目</small></td><td>🏅 <span class="badge">新北文化大使正式證書</span> ＋ 勳章</td></tr>
-            <tr><td>全年度 <strong>≥ 100 小時</strong> ＋ 互評達標</td><td>📜 <span class="badge-gold badge">文化局官方推薦信</span>（升學 / 就業）</td></tr>
-            <tr><td>曾獲證書者參與複訓</td><td>🎖️ <span class="badge">中隊長 / 儲備大隊長</span> 資格 ＋ 專業培訓優先資格</td></tr>
-          </tbody>
-        </table>
-        </div>
-        <p style="font-size:13px;color:var(--muted);margin-top:14px">💡 大學生可申請實習學分，高中生可計入學習歷程。課程均安排於假日或暑假，不影響平日上課。</p>
+    <div class="sticker">獎勵機制</div>
+    <div class="big-title" style="margin-top:10px">參與就有收穫，<br>越投入越豐富！</div>
+    <div class="squiggle"></div>
+    <div class="reward-grid">
+      <div class="reward-steps">
+        <div class="reward-step"><div class="r-num">1</div><div class="r-content"><h4>完成任一文化推廣專案活動</h4><p>含活動籌備 + 當日出席</p><div class="r-tags"><span class="r-tag">活動獎品</span><span class="r-tag">服務學習時數章</span></div></div></div>
+        <div class="reward-step"><div class="r-num">2</div><div class="r-content"><h4>全年度 ≥ 80 小時（含必要項目）</h4><p>大學生可申請實習學分，高中生可計入學習歷程</p><div class="r-tags"><span class="r-tag">新北文化大使正式證書</span><span class="r-tag">勳章</span></div></div></div>
+        <div class="reward-step"><div class="r-num">3</div><div class="r-content"><h4>全年度 ≥ 100 小時 ＋ 互評達標</h4><p>升學 / 就業加分</p><div class="r-tags"><span class="r-tag gold">文化局官方推薦信</span></div></div></div>
+        <div class="reward-step"><div class="r-num">4</div><div class="r-content"><h4>曾獲證書者參與複訓</h4><p>專業培訓優先資格</p><div class="r-tags"><span class="r-tag">中隊長 / 儲備大隊長資格</span></div></div></div>
       </div>
-      <div class="split-img">
-        <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/award.jpg" alt="頒獎照片">
-        <div class="img-caption">2025年授證典禮</div>
+      <div class="reward-photo">
+        <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/award.jpg" alt="2025年授證典禮">
+        <div class="reward-photo-label">2025年授證典禮</div>
       </div>
     </div>
   </div>
 </section>
 
-<section style="background:var(--navy-dark);padding:56px 0">
+<!-- CALCULATOR -->
+<div class="calc-bg">
   <div class="container">
-    <div class="section-label" style="color:var(--gold)">互動試算</div>
-    <div class="section-title" style="color:#fff">你能累積多少時數？</div>
-    <div class="gold-line"></div>
-    <p style="color:rgba(255,255,255,.6);font-size:14px;margin-bottom:24px">勾選你預計參與的活動，即時看看能拿到什麼獎勵！</p>
-    <div class="calc-wrap">
-      <div class="calc-title">選擇你預計參與的活動</div>
+    <div class="sticker">互動試算</div>
+    <div class="big-title" style="margin-top:10px">你能累積多少時數？</div>
+    <div class="squiggle"></div>
+    <div class="calc-box">
+      <div class="calc-head">勾選你預計參與的活動 👇</div>
       <div class="calc-sub">
-        <span class="legend-item"><span style="width:8px;height:8px;border-radius:50%;background:#c9a84c;display:inline-block"></span>必要項目（已自動勾選）</span>
-        <span class="legend-item"><span style="width:8px;height:8px;border-radius:50%;background:#1a3a6b;display:inline-block"></span>選擇性參與</span>
+        <span class="leg"><span style="width:8px;height:8px;border-radius:50%;background:#f5c842;display:inline-block"></span>必要項目（已勾選）</span>
+        <span class="leg"><span style="width:8px;height:8px;border-radius:50%;background:#2d7a4f;display:inline-block"></span>選擇性參與</span>
       </div>
-      <div id="calc-items"></div>
-      <div class="result-bar">
-        <div class="result-total">
-          <span>預計累積時數</span>
-          <strong><span id="total-hrs">0</span><em> 小時</em></strong>
-        </div>
-        <div class="result-awards">
-          <div id="award-chips"></div>
-          <div class="progress-wrap">
-            <div class="progress-label"><span>0hr</span><span>80hr 證書</span><span>100hr 推薦信</span></div>
-            <div class="progress-bg"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+      <div id="ci"></div>
+      <div class="result">
+        <div class="r-tot"><span>預計累積時數</span><strong><span id="th">0</span><em> 小時</em></strong></div>
+        <div class="r-right">
+          <div id="ac"></div>
+          <div class="prog-wrap">
+            <div class="prog-labels"><span>0hr</span><span>80hr 證書</span><span>100hr 推薦信</span></div>
+            <div class="prog-bg"><div class="prog-fill" id="pf" style="width:0%"></div></div>
           </div>
-          <div class="result-hint" id="result-hint">勾選活動後即時顯示可獲得的獎勵</div>
+          <div class="r-hint" id="rh">勾選活動後即時顯示可獲得的獎勵</div>
         </div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
-<section style="background:var(--white);padding:56px 0">
+<!-- TIMELINE -->
+<section>
   <div class="container">
-    <div class="section-label">完整時程</div>
-    <div class="section-title">115年 課程與活動行事曆</div>
-    <div class="gold-line"></div>
-    <div style="overflow-x:auto">
+    <div class="sticker">完整時程</div>
+    <div class="big-title" style="margin-top:10px">115年 課程與活動行事曆</div>
+    <div class="squiggle"></div>
+    <div class="tl-wrap">
     <table class="tl-table">
       <thead><tr><th>日期</th><th>活動名稱</th><th>地點</th></tr></thead>
       <tbody>
@@ -302,7 +372,7 @@ section{padding:56px 0}
         <tr><td>6/28（日）16:00–20:00</td><td>帶著華裔青年遊新北</td><td>新北市各地</td></tr>
         <tr><td>7/18（六）09:00–12:00</td><td>市集主理人手札：打造青年文化品牌</td><td>新北市政府 603 大禮堂</td></tr>
         <tr><td>7/18（六）13:30–15:30</td><td>從腦洞到行動：文化專案的架構拆解術</td><td>新北市政府 603 大禮堂</td></tr>
-        <tr><td>8/14（五）10:00–17:00<br>8/21（五）10:00–17:00</td><td>社造蹲點及文化培訓課程</td><td>三峽 / 淡水 / 板橋（擇一）</td></tr>
+        <tr><td>8/14（五）、8/21（五）10:00–17:00</td><td>社造蹲點及文化培訓課程</td><td>三峽 / 淡水 / 板橋（擇一）</td></tr>
         <tr><td>8/22（六）10:00–12:00</td><td>社造文化小旅行</td><td>三峽 / 淡水 / 板橋（擇一）</td></tr>
         <tr><td>9月</td><td>走讀眷村</td><td>空軍三重一村</td></tr>
         <tr><td>9/26（六）09:00–12:00</td><td>視覺陳列打造「五感沉浸」的市集美學</td><td>新北市政府 603 大禮堂</td></tr>
@@ -312,164 +382,120 @@ section{padding:56px 0}
       </tbody>
     </table>
     </div>
-    <div class="note-bar">主辦單位保留隨時修正、暫停、終止或解釋本活動之最終權利（包括但不限於更換活動、提前終止或延長活動時間之最終決定權等事項），並以「新北文化大使」官方 IG 公告為準。</div>
+    <div class="note">主辦單位保留隨時修正、暫停、終止或解釋本活動之最終權利（包括但不限於更換活動、提前終止或延長活動時間之最終決定權等事項），並以「新北文化大使」官方 IG 公告為準。</div>
   </div>
 </section>
 
-<section>
+<!-- WHO -->
+<section style="background:var(--g5);padding:72px 0">
   <div class="container">
-    <div class="section-label">報名資格</div>
-    <div class="section-title">誰可以加入？</div>
-    <div class="gold-line"></div>
-    <div class="split img-left">
-      <div class="split-img">
-        <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/activity-2.jpg" alt="學員活動照片" style="width:100%;height:100%;object-fit:cover">
-        <div class="img-caption">文化的聲量，從街頭延伸到螢幕</div>
+    <div class="sticker">報名資格</div>
+    <div class="big-title" style="margin-top:10px">誰可以加入？</div>
+    <div class="squiggle"></div>
+    <div class="who-layout">
+      <div class="who-photo">
+        <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/activity-2.jpg" alt="學員活動照片">
       </div>
-      <div class="split-text">
-        <div class="who-grid" style="grid-template-columns:1fr">
-          <div class="who-card">
-            <span class="tag">在學學生（15歲以上）</span>
-            <h3>🎒 學生身分</h3>
-            <ul>
-              <li>全國公私立高中職及大專院校在校生</li>
-              <li>設籍或就讀新北市、新住民 / 外籍生優先</li>
-              <li>不限科系，具文化相關專長或社群經驗尤佳</li>
-              <li>大學生可申請實習學分</li>
-            </ul>
-          </div>
-          <div class="who-card">
-            <span class="tag">社會青年（35歲以下）</span>
-            <h3>💼 社會人士</h3>
-            <ul>
-              <li>未超過 35 歲之社會人士</li>
-              <li>從事文化推廣相關工作或具相關經驗者</li>
-              <li>學習態度積極、具高度團隊精神</li>
-            </ul>
-          </div>
-        </div>
+      <div class="who-cards">
+        <div class="who-card"><span class="who-tag">在學學生（15歲以上）</span><h3>🎒 學生身分</h3><ul><li>全國公私立高中職及大專院校在校生</li><li>設籍或就讀新北市、新住民 / 外籍生優先</li><li>不限科系，具文化相關專長或社群經驗尤佳</li><li>大學生可申請實習學分</li></ul></div>
+        <div class="who-card"><span class="who-tag">社會青年（35歲以下）</span><h3>💼 社會人士</h3><ul><li>未超過 35 歲之社會人士</li><li>從事文化推廣相關工作或具相關經驗者</li><li>學習態度積極、具高度團隊精神</li></ul></div>
       </div>
     </div>
   </div>
 </section>
 
-<section style="background:var(--white);padding:56px 0">
+<!-- STEPS -->
+<div class="steps-section">
   <div class="container">
-    <div class="section-label">報名流程</div>
-    <div class="section-title">四步驟，輕鬆完成報名</div>
-    <div class="gold-line"></div>
-    <div class="steps">
-      <div class="step-card"><div class="step-num">1</div><h3>線上報名</h3><p>點擊下方按鈕填妥報名表並上傳相關表件，即日起至 5月13日截止</p></div>
-      <div class="step-card"><div class="step-num">2</div><h3>書面審核</h3><p>採先到先審制，5月15日前以 Email 通知書審結果</p></div>
-      <div class="step-card"><div class="step-num">3</div><h3>實體甄選</h3><p>5月17日（日）08:30–17:30 於新北市政府 603 大禮堂，需全程參與</p></div>
-      <div class="step-card"><div class="step-num">4</div><h3>正式錄取！</h3><p>最終錄取名額以 150 名為限，加入後開始你的文化推廣之旅</p></div>
+    <div class="sticker" style="background:var(--y1);color:var(--g1)">報名流程</div>
+    <div class="big-title" style="color:#fff;margin-top:10px">四步驟，搞定報名！</div>
+    <div class="squiggle" style="background:repeating-linear-gradient(90deg,rgba(255,255,255,.3) 0,rgba(255,255,255,.3) 6px,transparent 6px,transparent 10px);margin-bottom:36px"></div>
+    <div class="steps-grid">
+      <div class="step"><div class="step-n">1</div><h3>線上報名</h3><p>填妥報名表並上傳相關表件，即日起至 5月13日截止</p></div>
+      <div class="step"><div class="step-n">2</div><h3>書面審核</h3><p>採先到先審制，5月15日前以 Email 通知書審結果</p></div>
+      <div class="step"><div class="step-n">3</div><h3>實體甄選</h3><p>5/17（日）08:30–17:30 於新北市政府 603 大禮堂，需全程參與</p></div>
+      <div class="step"><div class="step-n">4</div><h3>正式錄取！🎉</h3><p>最終錄取 150 名，加入後開始你的文化推廣之旅</p></div>
     </div>
-    <div class="note-bar" style="margin-top:20px">參與各項課程及活動均為<strong>免費</strong>。需自行支付至活動集合地點之交通費及餐費，主辦單位將視情況提供部分膳食或等同現金之補貼。</div>
+    <div class="free-bar">參與各項課程及活動均為<strong>免費</strong>。需自行支付至活動集合地點之交通費及餐費，主辦單位將視情況提供部分膳食或等同現金之補貼。</div>
   </div>
-</section>
+</div>
 
-<div class="container" style="padding-top:56px">
-  <div class="cta-section">
-    <h2>新北文化大使，<span>等你來！</span></h2>
-    <p>文化傳承，世代前進。立即填寫報名表，截止日 5月13日（二）24:00</p>
-    <a class="btn-gold" href="https://wceo.regfox.com/ntpcca2026" target="_blank" rel="noopener">立即前往報名 ↗</a>
-    <div class="cta-meta">點擊後將前往官方報名系統 · 報名完成後將於5月15日前收到書審通知</div>
-  </div>
-  <div style="border-radius:16px;overflow:hidden;margin-bottom:32px">
-    <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/activity-3.jpg" alt="新北5彩文化" style="width:100%;display:block;max-height:480px;object-fit:cover">
-  </div>
-  <div class="contact-bar">
-    <div class="contact-item"><div class="cdot"></div><strong>專案辦公室：</strong>新北市青年推廣文化計畫專案小組</div>
-    <div class="contact-item"><div class="cdot"></div><strong>電子郵件：</strong>ntpcca@wceo.org</div>
-    <div class="contact-item"><div class="cdot"></div><strong>諮詢專線：</strong>0911-299-894（呂小姐）</div>
-    <div class="contact-item"><div class="cdot"></div><strong>Instagram：</strong>@ntpcyouthculture</div>
-    <div class="contact-item"><div class="cdot"></div><strong>主辦：</strong>新北市政府文化局</div>
+<!-- CTA -->
+<div class="cta-outer">
+  <div class="container">
+    <div class="cta-box">
+      <h2>新北文化大使，<span>等你來！</span></h2>
+      <p>文化傳承，世代前進。截止日 5月13日（二）24:00</p>
+      <a class="btn-cta" href="https://wceo.regfox.com/ntpcca2026" target="_blank" rel="noopener">立即前往報名</a>
+      <div class="cta-meta">點擊後將前往官方報名系統 · 報名完成後將於5月15日前收到書審通知</div>
+    </div>
+    <div class="showcase">
+      <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/activity-3.jpg" alt="活動照片">
+    </div>
+    <div class="contact">
+      <div class="ci"><div class="cd"></div><strong>專案辦公室：</strong>新北市青年推廣文化計畫專案小組</div>
+      <div class="ci"><div class="cd"></div><strong>電子郵件：</strong>ntpcca@wceo.org</div>
+      <div class="ci"><div class="cd"></div><strong>諮詢專線：</strong>0911-299-894（呂小姐）</div>
+      <div class="ci"><div class="cd"></div><strong>Instagram：</strong><a href="https://www.instagram.com/ntpcyouthculture" target="_blank" rel="noopener" style="color:var(--g2);font-weight:700">@ntpcyouthculture</a></div>
+      <div class="ci"><div class="cd"></div><strong>主辦：</strong>新北市政府文化局</div>
+    </div>
   </div>
 </div>
 
 <script>
-const GOLD = '#c9a84c';
-const NAVY = '#1a3a6b';
-
-const ACTIVITIES = [
-  {id:'a1',  label:'大使宇宙初見面：實體甄選課程（5/17）',           hrs:8,   must:true,  dot:GOLD, section:'團隊建立及團隊凝聚課程'},
-  {id:'a15', label:'大使宇宙再升級：團隊凝聚課程（9/26 下午）',       hrs:3,   must:false, dot:NAVY, section:'團隊建立及團隊凝聚課程'},
-  {id:'a2',  label:'新莊廟街走讀（5/23 上午）',                      hrs:3,   must:false, dot:NAVY, section:'文化推廣課程'},
-  {id:'a3',  label:'新莊微型藝術策展面面談（5/23 下午）',             hrs:2,   must:false, dot:NAVY, section:'文化推廣課程'},
-  {id:'a4',  label:'POV 解鎖新北文化開箱實戰課（6/6 上午）',         hrs:2.5, must:false, dot:NAVY, section:'文化推廣課程'},
-  {id:'a6',  label:'聽見綠美圖：聲音策展學（英文授課）（6/14）',     hrs:2,   must:false, dot:NAVY, section:'文化推廣課程'},
-  {id:'a8',  label:'市集主理人手札（7/18 上午）',                     hrs:3,   must:false, dot:NAVY, section:'文化推廣課程'},
-  {id:'a9',  label:'從腦洞到行動：文化專案架構拆解術（7/18 下午）',   hrs:3,   must:false, dot:NAVY, section:'文化推廣課程'},
-  {id:'a13', label:'走讀眷村（9月）',                                 hrs:3,   must:false, dot:NAVY, section:'文化推廣課程'},
-  {id:'a14', label:'視覺陳列：五感沉浸市集美學（9/26 上午）',         hrs:3,   must:false, dot:NAVY, section:'文化推廣課程'},
-  {id:'a5',  label:'潮盛新莊（6/6）',                                hrs:10,  must:false, dot:NAVY, section:'文化推廣專案活動（需擇一場參與）'},
-  {id:'a16', label:'眷村文化節（9–10月）',                            hrs:12,  must:false, dot:NAVY, section:'文化推廣專案活動（需擇一場參與）'},
-  {id:'a7',  label:'帶著華裔青年遊新北（6/28）',                      hrs:8,   must:false, dot:NAVY, section:'國際青年交流活動'},
-  {id:'a11', label:'社造蹲點及文化培訓課程（8/14 ＋ 8/21）',          hrs:14,  must:true,  dot:GOLD, section:'文化推廣交流活動'},
-  {id:'a12', label:'社造文化小旅行（8/22）',                          hrs:4,   must:true,  dot:GOLD, section:'文化推廣交流活動'},
-  {id:'a17', label:'YoungYoung 都來街頭玩（10/17）',                  hrs:20,  must:true,  dot:GOLD, section:'文化推廣交流活動'},
+const G='#f5c842',N='#2d7a4f';
+const A=[
+  {id:'a1',l:'大使宇宙初見面：實體甄選課程（5/17）',h:8,m:true,d:G,s:'團隊建立及團隊凝聚課程'},
+  {id:'a15',l:'大使宇宙再升級：團隊凝聚課程（9/26 下午）',h:3,m:false,d:N,s:'團隊建立及團隊凝聚課程'},
+  {id:'a2',l:'新莊廟街走讀（5/23 上午）',h:3,m:false,d:N,s:'文化推廣課程'},
+  {id:'a3',l:'新莊微型藝術策展面面談（5/23 下午）',h:2,m:false,d:N,s:'文化推廣課程'},
+  {id:'a4',l:'POV 解鎖新北文化開箱實戰課（6/6 上午）',h:2.5,m:false,d:N,s:'文化推廣課程'},
+  {id:'a6',l:'聽見綠美圖：聲音策展學（英文授課）（6/14）',h:2,m:false,d:N,s:'文化推廣課程'},
+  {id:'a8',l:'市集主理人手札（7/18 上午）',h:3,m:false,d:N,s:'文化推廣課程'},
+  {id:'a9',l:'從腦洞到行動：文化專案架構拆解術（7/18 下午）',h:3,m:false,d:N,s:'文化推廣課程'},
+  {id:'a13',l:'走讀眷村（9月）',h:3,m:false,d:N,s:'文化推廣課程'},
+  {id:'a14',l:'視覺陳列：五感沉浸市集美學（9/26 上午）',h:3,m:false,d:N,s:'文化推廣課程'},
+  {id:'a5',l:'潮盛新莊（6/6）',h:10,m:false,d:N,s:'文化推廣專案活動（需擇一場參與）'},
+  {id:'a16',l:'眷村文化節（9–10月）',h:12,m:false,d:N,s:'文化推廣專案活動（需擇一場參與）'},
+  {id:'a7',l:'帶著華裔青年遊新北（6/28）',h:8,m:false,d:N,s:'國際青年交流活動'},
+  {id:'a11',l:'社造蹲點及文化培訓課程（8/14＋8/21）',h:14,m:true,d:G,s:'文化推廣交流活動'},
+  {id:'a12',l:'社造文化小旅行（8/22）',h:4,m:true,d:G,s:'文化推廣交流活動'},
+  {id:'a17',l:'YoungYoung 都來街頭玩（10/17）',h:20,m:true,d:G,s:'文化推廣交流活動'},
 ];
-
-const state = {};
-
-function buildCalc() {
-  const container = document.getElementById('calc-items');
-  let currentSection = '';
-  let html = '';
-  ACTIVITIES.forEach(a => {
-    if (a.must) state[a.id] = true;
-    else state[a.id] = false;
-    if (a.section !== currentSection) {
-      currentSection = a.section;
-      html += `<div class="calc-section-head">${currentSection}</div>`;
-    }
-    const dot = `<span style="width:7px;height:7px;border-radius:50%;background:${a.dot};flex-shrink:0;display:inline-block"></span>`;
-    const mustLabel = a.must ? ' <span style="font-size:11px;color:#c9a84c;font-weight:700">（必要）</span>' : '';
-    const itemClass = a.must ? 'calc-item must-item' : 'calc-item clickable';
-    const clickAttr = a.must ? '' : `onclick="toggle('${a.id}')"`;
-    html += `
-      <div class="${itemClass}" id="wrap-${a.id}" ${clickAttr}>
-        <input type="checkbox" id="${a.id}" ${a.must ? 'checked disabled' : ''} style="${a.must ? 'pointer-events:none' : ''}">
-        ${dot}
-        <label for="${a.id}" style="${a.must ? '' : 'cursor:pointer'}">${a.label}${mustLabel}</label>
-        <span class="hrs">${a.hrs}hr</span>
-      </div>`;
+const st={};
+function build(){
+  const c=document.getElementById('ci');let cur='',html='';
+  A.forEach(a=>{
+    if(a.m)st[a.id]=true;else st[a.id]=false;
+    if(a.s!==cur){cur=a.s;html+=`<div class="csec">${cur}</div>`;}
+    const dot=`<span style="width:7px;height:7px;border-radius:50%;background:${a.d};flex-shrink:0;display:inline-block"></span>`;
+    const ml=a.m?` <span style="font-size:11px;color:#f5c842;font-weight:700">（必要）</span>`:'';
+    const ic=a.m?'citem must-item':'citem clickable';
+    const ca=a.m?'':`onclick="tog('${a.id}')"`;
+    html+=`<div class="${ic}" id="w${a.id}" ${ca}><input type="checkbox" id="${a.id}" ${a.m?'checked disabled':''} style="${a.m?'pointer-events:none':''}">${dot}<label for="${a.id}" style="${a.m?'':'cursor:pointer'}">${a.l}${ml}</label><span class="h">${a.h}hr</span></div>`;
   });
-  container.innerHTML = html;
-  update();
+  c.innerHTML=html;upd();
 }
-
-function toggle(id) {
-  state[id] = !state[id];
-  const cb = document.getElementById(id);
-  const wrap = document.getElementById('wrap-' + id);
-  cb.checked = state[id];
-  wrap.classList.toggle('checked', state[id]);
-  update();
+function tog(id){
+  st[id]=!st[id];
+  document.getElementById(id).checked=st[id];
+  document.getElementById('w'+id).classList.toggle('checked',st[id]);
+  upd();
 }
-
-function update() {
-  const total = ACTIVITIES.reduce((s, a) => s + (state[a.id] ? a.hrs : 0), 0);
-  const disp = total % 1 === 0 ? total : total.toFixed(1);
-  document.getElementById('total-hrs').textContent = disp;
-  document.getElementById('prog-fill').style.width = Math.min(total / 100 * 100, 100) + '%';
-  const awards = [
-    {label:'🎁 活動獎品 + 時數章', met: total >= 2},
-    {label:'🏅 正式證書 + 勳章',   met: total >= 80},
-    {label:'📜 文化局推薦信',       met: total >= 100},
-  ];
-  document.getElementById('award-chips').innerHTML = awards.map(aw =>
-    `<span class="award-chip ${aw.met ? 'lit' : 'dim'}">${aw.met ? '✓ ' : ''}${aw.label}</span>`
-  ).join('');
-  let hint = '';
-  if (total === 0) hint = '勾選活動後即時顯示可獲得的獎勵';
-  else if (total < 80) hint = `還需 ${(80 - total).toFixed(1).replace(/\.0$/, '')} 小時可獲得正式證書`;
-  else if (total < 100) hint = `還需 ${(100 - total).toFixed(1).replace(/\.0$/, '')} 小時可申請文化局推薦信`;
-  else hint = '🎉 恭喜！你已達到申請推薦信的時數門檻！';
-  document.getElementById('result-hint').textContent = hint;
+function upd(){
+  const t=A.reduce((s,a)=>s+(st[a.id]?a.h:0),0);
+  document.getElementById('th').textContent=t%1===0?t:t.toFixed(1);
+  document.getElementById('pf').style.width=Math.min(t/100*100,100)+'%';
+  const aw=[{l:'🎁 活動獎品 + 時數章',ok:t>=2},{l:'🏅 正式證書 + 勳章',ok:t>=80},{l:'📜 文化局推薦信',ok:t>=100}];
+  document.getElementById('ac').innerHTML=aw.map(a=>`<span class="chip ${a.ok?'on':'off'}">${a.ok?'✓ ':''}${a.l}</span>`).join('');
+  let h='';
+  if(t===0)h='勾選活動後即時顯示可獲得的獎勵';
+  else if(t<80)h=`還需 ${(80-t).toFixed(1).replace(/\.0$/,'')} 小時可獲得正式證書`;
+  else if(t<100)h=`還需 ${(100-t).toFixed(1).replace(/\.0$/,'')} 小時可申請文化局推薦信`;
+  else h='🎉 恭喜！你已達到申請推薦信的時數門檻！';
+  document.getElementById('rh').textContent=h;
 }
-
-buildCalc();
+build();
 </script>
 </body>
 </html>
