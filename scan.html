@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>NTPC 2026 出席掃描</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1a2744;--gold:#c9a84c;--gold-light:#f0d98a;
+  --green:#2d7a4f;--green-bg:#e8f5ee;--green-border:#86efac;
+  --red:#dc2626;--red-bg:#fef2f2;--red-border:#fca5a5;
+  --amber:#92400e;--amber-bg:#fffbeb;--amber-border:#fcd34d;
+}
+html,body{height:100%;background:var(--navy);color:#fff;font-family:'Noto Sans TC',sans-serif;margin:0}
+body{display:flex;flex-direction:column;align-items:center;min-height:100vh}
+
+/* SETUP */
+#setup{width:100%;max-width:480px;padding:1.5rem 1.2rem;display:flex;flex-direction:column;gap:.9rem}
+#setup h1{font-family:'Space Mono',monospace;font-size:.95rem;color:var(--gold-light);letter-spacing:.5px}
+.field label{font-size:.7rem;color:rgba(255,255,255,.45);display:block;margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.5px}
+.field input{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:.6rem .85rem;font-size:.9rem;color:#fff;font-family:'Noto Sans TC',sans-serif}
+.field input:focus{outline:none;border-color:var(--gold)}
+.field input::placeholder{color:rgba(255,255,255,.25);font-size:.8rem}
+.note{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);border-radius:8px;padding:.75rem 1rem;font-size:.78rem;color:rgba(255,255,255,.6);line-height:1.7}
+.note strong{color:var(--gold-light)}
+.btn-go{width:100%;background:var(--gold);color:var(--navy);border:none;border-radius:10px;padding:.8rem;font-family:'Space Mono',monospace;font-weight:700;font-size:.9rem;cursor:pointer}
+
+/* SCANNER */
+#scanner{display:none;flex-direction:column;align-items:center;width:100%;max-width:480px}
+.topbar{width:100%;display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:rgba(0,0,0,.25)}
+.session-title{font-family:'Space Mono',monospace;font-size:.75rem;font-weight:700;color:var(--gold-light);text-align:center;flex:1}
+.status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite;vertical-align:middle;margin-right:5px}
+.status-dot.off{background:#f87171;animation:none}
+.status-dot.pending{background:#fbbf24;animation:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.status-text{font-size:.65rem;color:rgba(255,255,255,.45)}
+
+.cam-wrap{width:100%;background:#000;position:relative;flex-shrink:0}
+video{width:100%;display:block;max-height:52vh;object-fit:cover}
+canvas{display:none}
+.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.frame{width:210px;height:210px;position:relative}
+.frame::before,.frame::after,.frame span::before,.frame span::after{content:'';position:absolute;width:30px;height:30px;border-color:var(--gold);border-style:solid}
+.frame::before{top:0;left:0;border-width:3px 0 0 3px}
+.frame::after{top:0;right:0;border-width:3px 3px 0 0}
+.frame span::before{bottom:0;left:0;border-width:0 0 3px 3px}
+.frame span::after{bottom:0;right:0;border-width:0 3px 3px 0}
+.scanline{position:absolute;left:8px;right:8px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:scan 2.2s ease-in-out infinite}
+@keyframes scan{0%,100%{top:14px;opacity:.25}50%{top:194px;opacity:1}}
+
+.panel{width:100%;padding:.85rem 1.1rem 1.5rem}
+.stats{display:flex;gap:.65rem;margin-bottom:.85rem}
+.stat{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.6rem .4rem;text-align:center}
+.stat .num{font-family:'Space Mono',monospace;font-size:1.15rem;font-weight:700;color:var(--gold-light)}
+.stat .lbl{font-size:.6rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
+
+.flash{border-radius:14px;padding:1rem 1.1rem;margin-bottom:.85rem;display:none;animation:pop .18s ease}
+@keyframes pop{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
+.flash.show{display:block}
+.flash.ok{background:var(--green-bg);border:2px solid var(--green-border)}
+.flash.dup{background:var(--amber-bg);border:2px solid var(--amber-border)}
+.flash.err{background:var(--red-bg);border:2px solid var(--red-border)}
+.flash-name{font-size:1.25rem;font-weight:700;color:#1a2744;margin-bottom:2px}
+.flash-id{font-family:'Space Mono',monospace;font-size:.72rem;color:#6b7280}
+.flash-msg{font-size:.82rem;font-weight:500;margin-top:.35rem}
+.flash.ok .flash-msg{color:var(--green)}
+.flash.dup .flash-msg{color:var(--amber)}
+.flash.err .flash-msg{color:var(--red)}
+
+.manual{display:flex;gap:.5rem;margin-bottom:.85rem}
+.manual input{flex:1;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:.55rem .8rem;font-size:.82rem;color:#fff;font-family:'Space Mono',monospace}
+.manual input::placeholder{color:rgba(255,255,255,.28)}
+.manual input:focus{outline:none;border-color:var(--gold)}
+.btn-send{background:rgba(201,168,76,.18);border:1px solid var(--gold);color:var(--gold-light);border-radius:8px;padding:.55rem 1rem;font-family:'Space Mono',monospace;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap}
+
+.log-hd{font-size:.63rem;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1px;margin-bottom:.4rem;display:flex;justify-content:space-between}
+.log-list{list-style:none;max-height:180px;overflow-y:auto}
+.log-list li{display:flex;align-items:center;gap:.5rem;padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.78rem}
+.log-name{flex:1;color:rgba(255,255,255,.8)}
+.log-num{font-family:'Space Mono',monospace;font-size:.65rem;color:rgba(255,255,255,.35)}
+.log-t{font-family:'Space Mono',monospace;font-size:.62rem;color:rgba(255,255,255,.3);white-space:nowrap}
+.log-ok{color:#4ade80}.log-dup{color:#fbbf24}.log-err{color:#f87171}
+.cam-hint{text-align:center;padding:.8rem;font-size:.75rem;color:rgba(255,255,255,.3);line-height:1.8}
+</style>
+</head>
+<body>
+
+<div id="setup">
+  <h1>📋 NTPC 2026 出席掃描</h1>
+  <p style="font-size:.78rem;color:rgba(255,255,255,.4);line-height:1.7">
+    掃描前請先填入 Apps Script 網址。<br>留空則進入「測試模式」，資料不會傳送。
+  </p>
+  <div class="field">
+    <label>Apps Script 部署網址</label>
+    <input type="url" id="inp-script" placeholder="https://script.google.com/macros/s/...（可留空，測試模式）">
+  </div>
+  <button class="btn-go" onclick="startScan()">開始掃描</button>
+</div>
+
+<div id="scanner">
+  <div class="topbar">
+    <div><span class="status-dot" id="dot"></span><span class="status-text" id="conn-lbl">--</span></div>
+    <div class="session-title" id="sess-title">NTPC 2026 出席掃描</div>
+    <button onclick="location.reload()" style="background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.4);border-radius:6px;padding:3px 8px;font-size:.62rem;cursor:pointer">重設</button>
+  </div>
+
+  <div class="cam-wrap">
+    <video id="video" autoplay playsinline muted></video>
+    <canvas id="canvas"></canvas>
+    <div class="overlay"><div class="frame"><span></span><div class="scanline"></div></div></div>
+  </div>
+
+  <div class="panel">
+    <div class="stats">
+      <div class="stat"><div class="num" id="n-ok">0</div><div class="lbl">已記錄</div></div>
+      <div class="stat"><div class="num" id="n-dup">0</div><div class="lbl">重複</div></div>
+      <div class="stat"><div class="num" id="n-err">0</div><div class="lbl">找不到</div></div>
+    </div>
+    <div class="flash" id="flash">
+      <div class="flash-name" id="f-name"></div>
+      <div class="flash-id" id="f-id"></div>
+      <div class="flash-msg" id="f-msg"></div>
+    </div>
+    <div class="manual">
+      <input type="text" id="m-input" placeholder="手動輸入編號，如 NTPCCA-001" onkeydown="if(event.key==='Enter')manualGo()">
+      <button class="btn-send" onclick="manualGo()">查詢</button>
+    </div>
+    <div class="log-hd"><span>掃描紀錄</span><span id="mode-badge"></span></div>
+    <ul class="log-list" id="log"></ul>
+    <div class="cam-hint" id="cam-hint" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+const DB = {
+  'NTPCCA-001':{name:'呂家維'},'NTPCCA-002':{name:'黃玉桂'},'NTPCCA-003':{name:'蘇玟如'},
+  'NTPCCA-004':{name:'張廷羽'},'NTPCCA-005':{name:'林正邦'},'NTPCCA-007':{name:'呂柏陞'},
+  'NTPCCA-010':{name:'葉亞竺'},'NTPCCA-011':{name:'林彥群'},'NTPCCA-012':{name:'邱子倫'},
+  'NTPCCA-013':{name:'周昕嬡'},'NTPCCA-015':{name:'張瑞庭'},'NTPCCA-018':{name:'黃奕榛'},
+  'NTPCCA-019':{name:'謝蕙安'},'NTPCCA-021':{name:'蔡湘寗'},'NTPCCA-022':{name:'蘇安予'},
+  'NTPCCA-023':{name:'林雨欣'},'NTPCCA-024':{name:'吳冠潁'},'NTPCCA-025':{name:'林育德'},
+  'NTPCCA-026':{name:'褚俊儒'},'NTPCCA-027':{name:'張芝穎'},'NTPCCA-028':{name:'陳宥蓉'},
+  'NTPCCA-029':{name:'李宇宥'},'NTPCCA-030':{name:'鍾欣庭'},'NTPCCA-031':{name:'李品潔'},
+  'NTPCCA-032':{name:'蔡昀珊'},'NTPCCA-033':{name:'陳立儒'},'NTPCCA-034':{name:'邱筠媜'},
+  'NTPCCA-035':{name:'陳怡婷'},'NTPCCA-036':{name:'陳品嫻'},'NTPCCA-037':{name:'李宜庭'},
+  'NTPCCA-038':{name:'陳聖媛'},'NTPCCA-039':{name:'周筱涵'},'NTPCCA-041':{name:'梁家珍'},
+  'NTPCCA-042':{name:'廖徽瑜'},'NTPCCA-043':{name:'廖品媛'},'NTPCCA-044':{name:'李姿羽'},
+  'NTPCCA-045':{name:'楊堤米'},'NTPCCA-047':{name:'李宇豪'},'NTPCCA-048':{name:'林巧詒'},
+  'NTPCCA-049':{name:'林彤恩'},'NTPCCA-050':{name:'袁睿'}, 'NTPCCA-051':{name:'廖湘宜'},
+  'NTPCCA-052':{name:'鄧行甫'},'NTPCCA-053':{name:'洪叔妤'},'NTPCCA-054':{name:'楊庭瑄'},
+  'NTPCCA-055':{name:'袁宇彤'},'NTPCCA-056':{name:'廖怡瑄'},'NTPCCA-057':{name:'李欣芸'},
+  'NTPCCA-059':{name:'王妘莛'},'NTPCCA-060':{name:'葉詠妍'},'NTPCCA-061':{name:'陳醇容'},
+  'NTPCCA-062':{name:'彭梓綺'},'NTPCCA-063':{name:'蔡心柔'},'NTPCCA-064':{name:'高佳愉'},
+  'NTPCCA-065':{name:'周以喬'},'NTPCCA-066':{name:'王沛璇'},'NTPCCA-067':{name:'林思涵'},
+  'NTPCCA-068':{name:'黃宇婕'},'NTPCCA-069':{name:'李盈璇'},'NTPCCA-071':{name:'李宥辰'},
+  'NTPCCA-072':{name:'游舒涵'},'NTPCCA-074':{name:'李宇宣'},'NTPCCA-075':{name:'林詩嫻'},
+  'NTPCCA-076':{name:'張嘉芳'},'NTPCCA-078':{name:'闕佑芯'},'NTPCCA-079':{name:'鍾岩祐'},
+  'NTPCCA-080':{name:'李秉峰'},'NTPCCA-081':{name:'林宸睿'},'NTPCCA-082':{name:'翁允甜'},
+  'NTPCCA-083':{name:'劉冠廷'},'NTPCCA-085':{name:'吳心田'},'NTPCCA-086':{name:'李志衡'},
+  'NTPCCA-087':{name:'高萍袖'},'NTPCCA-088':{name:'孫譽恩'},'NTPCCA-089':{name:'陳乃嘉'},
+  'NTPCCA-090':{name:'程鈺芳'},'NTPCCA-091':{name:'孫瑋成'},'NTPCCA-092':{name:'姚守恩'},
+  'NTPCCA-093':{name:'洪苡甯'},'NTPCCA-094':{name:'黃晨堯'},'NTPCCA-095':{name:'林子芸'},
+  'NTPCCA-096':{name:'蔡欣芸'},'NTPCCA-097':{name:'高珮綺'},'NTPCCA-098':{name:'杜育葳'},
+  'NTPCCA-099':{name:'周炳宏'},
+};
+
+let SCRIPT='', testMode=true, scanning=false, cooldown=false;
+let seen=new Set(), stats={ok:0,dup:0,err:0};
+
+function startScan() {
+  SCRIPT=(document.getElementById('inp-script').value||'').trim();
+  testMode=!SCRIPT;
+  document.getElementById('setup').style.display='none';
+  document.getElementById('scanner').style.display='flex';
+  setConn(testMode?'test':'connecting');
+  document.getElementById('mode-badge').textContent=testMode?'⚠ 測試模式':'';
+  document.getElementById('sess-title').textContent=testMode?'NTPC 2026（測試模式）':'NTPC 2026 出席掃描';
+  initCam();
+}
+
+async function initCam() {
+  try {
+    const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});
+    const v=document.getElementById('video');
+    v.srcObject=s; v.play();
+    scanning=true;
+    requestAnimationFrame(loop);
+    if(!testMode) setConn('ready');
+  } catch(e) {
+    const h=document.getElementById('cam-hint');
+    h.style.display='block';
+    h.textContent='相機無法啟動，請使用下方手動輸入。('+e.message+')';
+    if(!testMode) setConn('ready');
+  }
+}
+
+function loop() {
+  if(!scanning) return;
+  const v=document.getElementById('video'),c=document.getElementById('canvas'),ctx=c.getContext('2d');
+  if(v.readyState===v.HAVE_ENOUGH_DATA){
+    c.width=v.videoWidth;c.height=v.videoHeight;ctx.drawImage(v,0,0);
+    const img=ctx.getImageData(0,0,c.width,c.height);
+    const code=jsQR(img.data,img.width,img.height,{inversionAttempts:'dontInvert'});
+    if(code&&!cooldown){handle(code.data.trim());cooldown=true;setTimeout(()=>{cooldown=false;},3000);}
+  }
+  requestAnimationFrame(loop);
+}
+
+function manualGo(){const v=document.getElementById('m-input').value.trim();if(!v)return;document.getElementById('m-input').value='';handle(v);}
+
+async function handle(raw) {
+  const id=raw.toUpperCase().trim(), info=DB[id], name=info?info.name:'';
+  const t=new Date().toLocaleString('zh-TW',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+  if(!info){stats.err++;flash('err',id,'','此編號不在名單中');addLog(id,'',t,'err');upStats();return;}
+  if(seen.has(id)){stats.dup++;flash('dup',name,id,'⚠ 此編號今天已記錄過');addLog(id,name,t,'dup');upStats();return;}
+  seen.add(id);stats.ok++;
+  flash('ok',name,id,'✓ 已記錄　'+t);addLog(id,name,t,'ok');upStats();
+  if(!testMode){setConn('sending');await send(id,name,t);}
+}
+
+async function send(id,name,time){
+  try{await fetch(SCRIPT+'?'+new URLSearchParams({id,name,time}).toString(),{method:'GET',mode:'no-cors'});setConn('ready');}
+  catch{setConn('error');}
+}
+
+function flash(type,n,id,msg){
+  const el=document.getElementById('flash');
+  el.className='flash show '+type;
+  document.getElementById('f-name').textContent=n||id;
+  document.getElementById('f-id').textContent=n?id:'';
+  document.getElementById('f-msg').textContent=msg;
+  clearTimeout(el._t);el._t=setTimeout(()=>{el.className='flash';},3500);
+}
+
+function addLog(id,name,t,type){
+  const ul=document.getElementById('log'),li=document.createElement('li');
+  const ico=type==='ok'?'<span class="log-ok">✓</span>':type==='dup'?'<span class="log-dup">⚠</span>':'<span class="log-err">✗</span>';
+  li.innerHTML=ico+'<span class="log-name">'+(name||id)+'</span><span class="log-num">'+(name?id:'')+'</span><span class="log-t">'+t+'</span>';
+  ul.insertBefore(li,ul.firstChild);if(ul.children.length>30)ul.removeChild(ul.lastChild);
+}
+
+function upStats(){
+  document.getElementById('n-ok').textContent=stats.ok;
+  document.getElementById('n-dup').textContent=stats.dup;
+  document.getElementById('n-err').textContent=stats.err;
+}
+
+function setConn(s){
+  const d=document.getElementById('dot'),l=document.getElementById('conn-lbl');
+  const m={test:['off','測試模式（不傳送）'],connecting:['pending','連線中…'],ready:['','已連線'],sending:['pending','傳送中…'],error:['off','傳送失敗']};
+  const [c,tx]=m[s]||['',''];
+  d.className='status-dot'+(c?' '+c:'');l.textContent=tx;
+}
+</script>
+</body>
+</html>
