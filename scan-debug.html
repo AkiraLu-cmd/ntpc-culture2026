@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>QR 診斷工具</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#111;color:#fff;font-family:monospace;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:.9rem;color:#f0d98a;padding:1rem;text-align:center}
+.cam-wrap{width:100%;max-width:480px;background:#000;position:relative}
+video{width:100%;display:block;max-height:60vw;object-fit:cover}
+canvas{display:none}
+.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.box{width:55vw;height:55vw;max-width:200px;max-height:200px;border:2px solid #f0d98a}
+
+.result{width:100%;max-width:480px;padding:1rem;margin-top:.5rem}
+.r-box{background:#1a1a1a;border:1px solid #333;border-radius:8px;padding:1rem;margin-bottom:.75rem;word-break:break-all;font-size:.85rem;line-height:1.6}
+.r-box.found{border-color:#86efac}
+.r-box.notfound{border-color:#fca5a5}
+.label{font-size:.65rem;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:.3rem}
+.val{color:#fff;font-size:1rem}
+.val.green{color:#4ade80}
+.val.red{color:#f87171}
+.val.gold{color:#f0d98a;font-size:.8rem}
+
+.fps{position:absolute;top:4px;right:6px;font-size:.6rem;color:rgba(255,255,255,.4);font-family:monospace}
+.status{font-size:.7rem;color:#888;text-align:center;padding:.5rem}
+</style>
+</head>
+<body>
+<h1>📷 QR Code 診斷工具</h1>
+
+<div class="cam-wrap">
+  <video id="v" autoplay playsinline muted webkit-playsinline></video>
+  <canvas id="c"></canvas>
+  <div class="overlay"><div class="box"></div></div>
+  <div class="fps" id="fps">--</div>
+</div>
+
+<div class="result">
+  <div class="status" id="status">啟動相機中…</div>
+
+  <div class="r-box" id="raw-box" style="display:none">
+    <div class="label">📦 QR Code 原始內容（Raw）</div>
+    <div class="val gold" id="raw-val"></div>
+  </div>
+
+  <div class="r-box" id="match-box" style="display:none">
+    <div class="label">🔍 名單比對結果</div>
+    <div class="val" id="match-val"></div>
+  </div>
+
+  <div class="r-box" style="background:#0a0a0a">
+    <div class="label">📋 掃描歷史（最近 10 筆）</div>
+    <ul id="history" style="list-style:none;font-size:.75rem;margin-top:.3rem"></ul>
+  </div>
+</div>
+
+<script>
+const DB = {
+  'NTPCCA-001':'呂家維','NTPCCA-002':'黃玉桂','NTPCCA-003':'蘇玟如',
+  'NTPCCA-004':'張廷羽','NTPCCA-005':'林正邦','NTPCCA-007':'呂柏陞',
+  'NTPCCA-010':'葉亞竺','NTPCCA-011':'林彥群','NTPCCA-012':'邱子倫',
+  'NTPCCA-013':'周昕嬡','NTPCCA-015':'張瑞庭','NTPCCA-018':'黃奕榛',
+  'NTPCCA-019':'謝蕙安','NTPCCA-021':'蔡湘寗','NTPCCA-022':'蘇安予',
+  'NTPCCA-023':'林雨欣','NTPCCA-024':'吳冠潁','NTPCCA-025':'林育德',
+  'NTPCCA-026':'褚俊儒','NTPCCA-027':'張芝穎','NTPCCA-028':'陳宥蓉',
+  'NTPCCA-029':'李宇宥','NTPCCA-030':'鍾欣庭','NTPCCA-031':'李品潔',
+  'NTPCCA-032':'蔡昀珊','NTPCCA-033':'陳立儒','NTPCCA-034':'邱筠媜',
+  'NTPCCA-035':'陳怡婷','NTPCCA-036':'陳品嫻','NTPCCA-037':'李宜庭',
+  'NTPCCA-038':'陳聖媛','NTPCCA-039':'周筱涵','NTPCCA-041':'梁家珍',
+  'NTPCCA-042':'廖徽瑜','NTPCCA-043':'廖品媛','NTPCCA-044':'李姿羽',
+  'NTPCCA-045':'楊堤米','NTPCCA-047':'李宇豪','NTPCCA-048':'林巧詒',
+  'NTPCCA-049':'林彤恩','NTPCCA-050':'袁睿', 'NTPCCA-051':'廖湘宜',
+  'NTPCCA-052':'鄧行甫','NTPCCA-053':'洪叔妤','NTPCCA-054':'楊庭瑄',
+  'NTPCCA-055':'袁宇彤','NTPCCA-056':'廖怡瑄','NTPCCA-057':'李欣芸',
+  'NTPCCA-059':'王妘莛','NTPCCA-060':'葉詠妍','NTPCCA-061':'陳醇容',
+  'NTPCCA-062':'彭梓綺','NTPCCA-063':'蔡心柔','NTPCCA-064':'高佳愉',
+  'NTPCCA-065':'周以喬','NTPCCA-066':'王沛璇','NTPCCA-067':'林思涵',
+  'NTPCCA-068':'黃宇婕','NTPCCA-069':'李盈璇','NTPCCA-071':'李宥辰',
+  'NTPCCA-072':'游舒涵','NTPCCA-074':'李宇宣','NTPCCA-075':'林詩嫻',
+  'NTPCCA-076':'張嘉芳','NTPCCA-078':'闕佑芯','NTPCCA-079':'鍾岩祐',
+  'NTPCCA-080':'李秉峰','NTPCCA-081':'林宸睿','NTPCCA-082':'翁允甜',
+  'NTPCCA-083':'劉冠廷','NTPCCA-085':'吳心田','NTPCCA-086':'李志衡',
+  'NTPCCA-087':'高萍袖','NTPCCA-088':'孫譽恩','NTPCCA-089':'陳乃嘉',
+  'NTPCCA-090':'程鈺芳','NTPCCA-091':'孫瑋成','NTPCCA-092':'姚守恩',
+  'NTPCCA-093':'洪苡甯','NTPCCA-094':'黃晨堯','NTPCCA-095':'林子芸',
+  'NTPCCA-096':'蔡欣芸','NTPCCA-097':'高珮綺','NTPCCA-098':'杜育葳',
+  'NTPCCA-099':'周炳宏',
+};
+
+let scanning=false, frameCount=0, lastFpsTime=Date.now(), cooldown=false;
+
+async function init() {
+  const v=document.getElementById('v');
+  const constraints=[
+    {video:{facingMode:{exact:'environment'},width:{ideal:1280},height:{ideal:720}}},
+    {video:{facingMode:'environment'}},
+    {video:true}
+  ];
+  let stream=null;
+  for(const c of constraints){
+    try{stream=await navigator.mediaDevices.getUserMedia(c);break;}
+    catch(e){continue;}
+  }
+  if(!stream){
+    document.getElementById('status').textContent='❌ 相機無法啟動：'+((await navigator.mediaDevices.getUserMedia({video:true}).catch(e=>e)).message||'未知錯誤');
+    return;
+  }
+
+  // 顯示相機資訊
+  const track=stream.getVideoTracks()[0];
+  const settings=track.getSettings();
+  document.getElementById('status').textContent=
+    `✅ 相機已啟動｜${settings.width||'?'}×${settings.height||'?'}｜${track.label||'未知鏡頭'}`;
+
+  v.srcObject=stream;
+  v.addEventListener('loadedmetadata',()=>{
+    v.play().then(()=>{
+      scanning=true;
+      setTimeout(scan,100);
+    }).catch(e=>{
+      document.getElementById('status').textContent='播放失敗：'+e.message;
+    });
+  });
+}
+
+function scan() {
+  if(!scanning) return;
+  const v=document.getElementById('v'),c=document.getElementById('c'),ctx=c.getContext('2d');
+
+  // FPS 計算
+  frameCount++;
+  const now=Date.now();
+  if(now-lastFpsTime>=1000){
+    document.getElementById('fps').textContent=frameCount+'fps';
+    frameCount=0; lastFpsTime=now;
+  }
+
+  if(v.readyState===v.HAVE_ENOUGH_DATA && v.videoWidth>0){
+    c.width=v.videoWidth; c.height=v.videoHeight;
+    ctx.drawImage(v,0,0);
+    const img=ctx.getImageData(0,0,c.width,c.height);
+
+    // 嘗試兩種模式
+    let code=jsQR(img.data,img.width,img.height,{inversionAttempts:'attemptBoth'});
+
+    if(code && !cooldown){
+      cooldown=true;
+      setTimeout(()=>{cooldown=false;},2000);
+      showResult(code.data);
+    }
+  }
+  setTimeout(scan,100);
+}
+
+function showResult(raw) {
+  const trimmed=raw.trim();
+  const upper=trimmed.toUpperCase();
+
+  // 原始內容
+  document.getElementById('raw-box').style.display='block';
+  document.getElementById('raw-val').textContent=
+    JSON.stringify(trimmed)+'\n長度：'+trimmed.length+'字元';
+
+  // 名單比對
+  const name=DB[upper];
+  const mb=document.getElementById('match-box');
+  mb.style.display='block';
+  if(name){
+    mb.className='r-box found';
+    document.getElementById('match-val').className='val green';
+    document.getElementById('match-val').textContent='✅ 找到！'+upper+' → '+name;
+  } else {
+    mb.className='r-box notfound';
+    document.getElementById('match-val').className='val red';
+    document.getElementById('match-val').textContent='❌ 找不到\n原始：'+trimmed+'\n大寫：'+upper;
+  }
+
+  // 歷史
+  const ul=document.getElementById('history'),li=document.createElement('li');
+  li.style.cssText='padding:.2rem 0;border-bottom:1px solid #222;color:#aaa';
+  li.textContent=(name?'✅ ':'❌ ')+trimmed+(name?' → '+name:'');
+  ul.insertBefore(li,ul.firstChild);
+  if(ul.children.length>10) ul.removeChild(ul.lastChild);
+}
+
+init();
+</script>
+</body>
+</html>
