@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>NTPC 2026 出席掃描</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -34,12 +33,10 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100vh}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 .slbl{font-size:.65rem;color:rgba(255,255,255,.45)}
 
-/* ★ 關鍵：video 不設 max-height，讓 iOS 完整渲染 */
 .cam-wrap{width:100%;background:#000;position:relative;overflow:hidden}
 video{width:100%;display:block;object-fit:cover}
-canvas{display:none}
 .overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
-.frame{width:60vw;height:60vw;max-width:240px;max-height:240px;position:relative}
+.frame{width:70vw;height:70vw;max-width:280px;max-height:280px;position:relative}
 .frame::before,.frame::after,.frame span::before,.frame span::after{content:'';position:absolute;width:28px;height:28px;border-color:var(--gold);border-style:solid}
 .frame::before{top:0;left:0;border-width:3px 0 0 3px}
 .frame::after{top:0;right:0;border-width:3px 3px 0 0}
@@ -47,7 +44,6 @@ canvas{display:none}
 .frame span::after{bottom:0;right:0;border-width:0 3px 3px 0}
 .scanline{position:absolute;left:8px;right:8px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:scan 2s ease-in-out infinite}
 @keyframes scan{0%,100%{top:12px;opacity:.25}50%{top:calc(100% - 14px);opacity:1}}
-.fps-badge{position:absolute;top:4px;right:6px;font-family:monospace;font-size:.6rem;color:rgba(255,255,255,.4)}
 
 .panel{width:100%;padding:.85rem 1.1rem 1.5rem}
 .stats{display:flex;gap:.65rem;margin-bottom:.85rem}
@@ -106,10 +102,8 @@ canvas{display:none}
   </div>
 
   <div class="cam-wrap">
-    <video id="video" autoplay playsinline muted webkit-playsinline x5-playsinline></video>
-    <canvas id="canvas"></canvas>
+    <video id="video" autoplay playsinline muted webkit-playsinline></video>
     <div class="overlay"><div class="frame"><span></span><div class="scanline"></div></div></div>
-    <div class="fps-badge" id="fps">--</div>
   </div>
 
   <div class="panel">
@@ -133,7 +127,10 @@ canvas{display:none}
   </div>
 </div>
 
-<script>
+<script type="module">
+// ★ 改用 ZXing — 對印刷品、低對比、傾斜辨識率遠高於 jsQR
+import { BrowserMultiFormatReader } from 'https://cdn.jsdelivr.net/npm/@zxing/library@0.20.0/+esm';
+
 const DB = {
   'NTPCCA-001':{name:'呂家維'},'NTPCCA-002':{name:'黃玉桂'},'NTPCCA-003':{name:'蘇玟如'},
   'NTPCCA-004':{name:'張廷羽'},'NTPCCA-005':{name:'林正邦'},'NTPCCA-007':{name:'呂柏陞'},
@@ -166,11 +163,10 @@ const DB = {
   'NTPCCA-099':{name:'周炳宏'},
 };
 
-let SCRIPT='', testMode=true, scanning=false, cooldown=false;
+let SCRIPT='', testMode=true, cooldown=false;
 let seen=new Set(), stats={ok:0,dup:0,err:0};
-let fpsCount=0, fpsLast=Date.now();
 
-function startScan() {
+window.startScan = function() {
   SCRIPT=(document.getElementById('inp-script').value||'').trim();
   testMode=!SCRIPT;
   document.getElementById('setup').style.display='none';
@@ -178,91 +174,47 @@ function startScan() {
   setConn(testMode?'test':'connecting');
   document.getElementById('mode-badge').textContent=testMode?'⚠ 測試模式':'';
   document.getElementById('sess-title').textContent=testMode?'NTPC 2026（測試模式）':'NTPC 2026 出席掃描';
-  initCam();
-}
+  initScanner();
+};
 
-async function initCam() {
-  const v = document.getElementById('video');
-
-  // 先嘗試後鏡頭，失敗就降級
-  const constraints = [
-    { video: { facingMode: { exact: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } } },
-    { video: { facingMode: 'environment' } },
-    { video: { width: { ideal: 1280 }, height: { ideal: 720 } } },
-    { video: true }
-  ];
-
-  let stream = null;
-  for (const c of constraints) {
-    try { stream = await navigator.mediaDevices.getUserMedia(c); break; }
-    catch(e) { continue; }
-  }
-
-  if (!stream) {
-    showMsg('相機無法啟動，請確認已允許相機權限，或使用下方手動輸入。');
-    if (!testMode) setConn('ready');
-    return;
-  }
-
-  v.srcObject = stream;
-
-  // ★ iOS Chrome 的關鍵：用 oncanplay 而非 loadedmetadata
-  //   oncanplay 確保影格已準備好可以繪製
-  v.oncanplay = () => {
-    v.play().then(() => {
-      scanning = true;
-      // ★ 用 requestAnimationFrame，不用 setTimeout
-      //   但要等 play() resolve 之後才開始，避免 iOS 節流
-      requestAnimationFrame(scanFrame);
-      if (!testMode) setConn('ready');
-    }).catch(e => showMsg('播放失敗：' + e.message));
-  };
-}
-
-// ★ 每隔 3 幀才跑一次 jsQR（避免 CPU 過載拖慢 fps）
-let frameSkip = 0;
-function scanFrame() {
-  if (!scanning) return;
-  requestAnimationFrame(scanFrame);
-
-  // FPS 統計
-  fpsCount++;
-  const now = Date.now();
-  if (now - fpsLast >= 1000) {
-    document.getElementById('fps').textContent = fpsCount + 'fps';
-    fpsCount = 0; fpsLast = now;
-  }
-
-  // 每 3 幀辨識一次
-  frameSkip++;
-  if (frameSkip < 3) return;
-  frameSkip = 0;
-
-  const v = document.getElementById('video');
-  const c = document.getElementById('canvas');
-
-  if (v.readyState < v.HAVE_ENOUGH_DATA || v.videoWidth === 0) return;
-
-  const ctx = c.getContext('2d');
-  c.width  = v.videoWidth;
-  c.height = v.videoHeight;
-  ctx.drawImage(v, 0, 0, c.width, c.height);
-
-  const img  = ctx.getImageData(0, 0, c.width, c.height);
-  const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'attemptBoth' });
-
-  if (code && !cooldown) {
-    cooldown = true;
-    setTimeout(() => { cooldown = false; }, 3000);
-    handle(code.data.trim());
-  }
-}
-
-function manualGo() {
-  const v = document.getElementById('m-input').value.trim();
-  if (!v) return;
-  document.getElementById('m-input').value = '';
+window.manualGo = function() {
+  const v=document.getElementById('m-input').value.trim();
+  if(!v) return;
+  document.getElementById('m-input').value='';
   handle(v);
+};
+
+async function initScanner() {
+  const video = document.getElementById('video');
+  const codeReader = new BrowserMultiFormatReader();
+
+  try {
+    // ZXing 直接接管 video element，自動處理相機和辨識
+    const devices = await BrowserMultiFormatReader.listVideoInputDevices();
+
+    // 優先選後鏡頭
+    let deviceId = undefined;
+    const back = devices.find(d =>
+      /back|rear|environment/i.test(d.label) || devices.length === 1
+    );
+    if (back) deviceId = back.deviceId;
+    else if (devices.length > 0) deviceId = devices[devices.length - 1].deviceId;
+
+    if (!testMode) setConn('ready');
+
+    // ★ ZXing 的 decodeFromVideoDevice 會持續掃描，每次掃到就呼叫 callback
+    codeReader.decodeFromVideoDevice(deviceId, video, (result, err) => {
+      if (result && !cooldown) {
+        cooldown = true;
+        setTimeout(() => { cooldown = false; }, 3000);
+        handle(result.getText());
+      }
+      // err 在沒掃到時是正常的，不需要處理
+    });
+
+  } catch(e) {
+    showMsg('相機無法啟動：' + e.message);
+  }
 }
 
 async function handle(raw) {
