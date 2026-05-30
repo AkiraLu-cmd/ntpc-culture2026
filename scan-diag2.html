@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>NTPC 2026 掃描診斷</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#111;color:#fff;font-family:monospace;display:flex;flex-direction:column;align-items:center;padding:1rem;min-height:100vh;gap:1rem}
+h1{font-size:.9rem;color:#f0d98a;text-align:center}
+.btn{width:100%;max-width:360px;background:#c9a84c;color:#1a2744;border:none;border-radius:12px;padding:1rem;font-size:1rem;font-weight:700;cursor:pointer}
+#file-in{display:none}
+.box{width:100%;max-width:360px;background:#1a1a1a;border:1px solid #333;border-radius:8px;padding:.8rem;font-size:.78rem;line-height:1.8;word-break:break-all}
+.box.ok{border-color:#86efac}
+.box.err{border-color:#fca5a5}
+img#preview{width:100%;max-width:360px;border-radius:8px;display:none}
+</style>
+</head>
+<body>
+<h1>🔬 BarcodeDetector 診斷</h1>
+
+<div class="box" id="support-box">檢查中…</div>
+
+<label for="file-in" class="btn">📷 拍照 / 選圖測試</label>
+<input type="file" id="file-in" accept="image/*" capture="environment">
+
+<img id="preview">
+<div class="box" id="result-box" style="display:none"></div>
+
+<script>
+const supportBox = document.getElementById('support-box');
+const resultBox  = document.getElementById('result-box');
+
+// ── 1. 檢查支援狀況 ──────────────────────────────
+async function checkSupport() {
+  const lines = [];
+  lines.push('UA: ' + navigator.userAgent.slice(0,80));
+
+  // 方法一：typeof
+  lines.push('typeof BarcodeDetector: ' + typeof BarcodeDetector);
+
+  // 方法二：'BarcodeDetector' in window
+  lines.push("'BarcodeDetector' in window: " + ('BarcodeDetector' in window));
+
+  // 方法三：實際建立
+  try {
+    const d = new BarcodeDetector({ formats: ['qr_code'] });
+    lines.push('new BarcodeDetector(): ✅ 成功');
+    const fmts = await BarcodeDetector.getSupportedFormats();
+    lines.push('支援格式: ' + fmts.join(', '));
+    supportBox.className = 'box ok';
+  } catch(e) {
+    lines.push('new BarcodeDetector(): ❌ ' + e.message);
+    supportBox.className = 'box err';
+  }
+
+  supportBox.textContent = lines.join('\n');
+}
+checkSupport();
+
+// ── 2. 拍照後掃描 ────────────────────────────────
+document.getElementById('file-in').addEventListener('change', async function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  resultBox.style.display = 'block';
+  resultBox.className = 'box';
+  resultBox.textContent = '⏳ 處理中…';
+
+  const url = URL.createObjectURL(file);
+  const img = document.getElementById('preview');
+  img.style.display = 'block';
+  img.src = url;
+
+  await new Promise(r => img.onload = r);
+
+  const lines = [];
+  lines.push('圖片尺寸: ' + img.naturalWidth + '×' + img.naturalHeight);
+
+  // 嘗試 BarcodeDetector 掃圖片
+  try {
+    const d = new BarcodeDetector({ formats: ['qr_code'] });
+    const results = await d.detect(img);
+    if (results.length > 0) {
+      lines.push('✅ BarcodeDetector 掃到: ' + results[0].rawValue);
+      resultBox.className = 'box ok';
+    } else {
+      lines.push('⚠️ BarcodeDetector: 沒掃到（圖片讀到但無 QR Code）');
+      resultBox.className = 'box err';
+    }
+  } catch(e) {
+    lines.push('❌ BarcodeDetector 失敗: ' + e.message);
+  }
+
+  resultBox.textContent = lines.join('\n');
+  URL.revokeObjectURL(url);
+  this.value = '';
+});
+</script>
+</body>
+</html>
