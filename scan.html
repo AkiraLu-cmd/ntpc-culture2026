@@ -34,11 +34,12 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100vh}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 .slbl{font-size:.65rem;color:rgba(255,255,255,.45)}
 
+/* ★ 關鍵：video 不設 max-height，讓 iOS 完整渲染 */
 .cam-wrap{width:100%;background:#000;position:relative;overflow:hidden}
-.cam-wrap video{width:100%;height:auto;max-height:55vw;display:block;object-fit:cover}
+video{width:100%;display:block;object-fit:cover}
 canvas{display:none}
 .overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
-.frame{width:55vw;height:55vw;max-width:220px;max-height:220px;position:relative}
+.frame{width:60vw;height:60vw;max-width:240px;max-height:240px;position:relative}
 .frame::before,.frame::after,.frame span::before,.frame span::after{content:'';position:absolute;width:28px;height:28px;border-color:var(--gold);border-style:solid}
 .frame::before{top:0;left:0;border-width:3px 0 0 3px}
 .frame::after{top:0;right:0;border-width:3px 3px 0 0}
@@ -46,6 +47,7 @@ canvas{display:none}
 .frame span::after{bottom:0;right:0;border-width:0 3px 3px 0}
 .scanline{position:absolute;left:8px;right:8px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:scan 2s ease-in-out infinite}
 @keyframes scan{0%,100%{top:12px;opacity:.25}50%{top:calc(100% - 14px);opacity:1}}
+.fps-badge{position:absolute;top:4px;right:6px;font-family:monospace;font-size:.6rem;color:rgba(255,255,255,.4)}
 
 .panel{width:100%;padding:.85rem 1.1rem 1.5rem}
 .stats{display:flex;gap:.65rem;margin-bottom:.85rem}
@@ -104,9 +106,10 @@ canvas{display:none}
   </div>
 
   <div class="cam-wrap">
-    <video id="video" autoplay playsinline muted webkit-playsinline></video>
+    <video id="video" autoplay playsinline muted webkit-playsinline x5-playsinline></video>
     <canvas id="canvas"></canvas>
     <div class="overlay"><div class="frame"><span></span><div class="scanline"></div></div></div>
+    <div class="fps-badge" id="fps">--</div>
   </div>
 
   <div class="panel">
@@ -165,6 +168,7 @@ const DB = {
 
 let SCRIPT='', testMode=true, scanning=false, cooldown=false;
 let seen=new Set(), stats={ok:0,dup:0,err:0};
+let fpsCount=0, fpsLast=Date.now();
 
 function startScan() {
   SCRIPT=(document.getElementById('inp-script').value||'').trim();
@@ -179,72 +183,116 @@ function startScan() {
 
 async function initCam() {
   const v = document.getElementById('video');
+
+  // 先嘗試後鏡頭，失敗就降級
   const constraints = [
     { video: { facingMode: { exact: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } } },
     { video: { facingMode: 'environment' } },
+    { video: { width: { ideal: 1280 }, height: { ideal: 720 } } },
     { video: true }
   ];
+
   let stream = null;
   for (const c of constraints) {
     try { stream = await navigator.mediaDevices.getUserMedia(c); break; }
     catch(e) { continue; }
   }
+
   if (!stream) {
     showMsg('相機無法啟動，請確認已允許相機權限，或使用下方手動輸入。');
     if (!testMode) setConn('ready');
     return;
   }
+
   v.srcObject = stream;
-  v.addEventListener('loadedmetadata', () => {
+
+  // ★ iOS Chrome 的關鍵：用 oncanplay 而非 loadedmetadata
+  //   oncanplay 確保影格已準備好可以繪製
+  v.oncanplay = () => {
     v.play().then(() => {
       scanning = true;
-      scheduleLoop();
+      // ★ 用 requestAnimationFrame，不用 setTimeout
+      //   但要等 play() resolve 之後才開始，避免 iOS 節流
+      requestAnimationFrame(scanFrame);
       if (!testMode) setConn('ready');
-    }).catch(e => showMsg('影像播放失敗：' + e.message));
-  });
+    }).catch(e => showMsg('播放失敗：' + e.message));
+  };
 }
 
-function scheduleLoop() {
+// ★ 每隔 3 幀才跑一次 jsQR（避免 CPU 過載拖慢 fps）
+let frameSkip = 0;
+function scanFrame() {
   if (!scanning) return;
-  setTimeout(doScan, 150);
-}
+  requestAnimationFrame(scanFrame);
 
-function doScan() {
-  if (!scanning) return;
-  const v=document.getElementById('video'), c=document.getElementById('canvas'), ctx=c.getContext('2d');
-  if (v.readyState === v.HAVE_ENOUGH_DATA && v.videoWidth > 0) {
-    c.width=v.videoWidth; c.height=v.videoHeight;
-    ctx.drawImage(v, 0, 0, c.width, c.height);
-    const img  = ctx.getImageData(0, 0, c.width, c.height);
-    const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'attemptBoth' });
-    if (code && !cooldown) {
-      handle(code.data.trim());
-      cooldown=true; setTimeout(()=>{cooldown=false;}, 3000);
-    }
+  // FPS 統計
+  fpsCount++;
+  const now = Date.now();
+  if (now - fpsLast >= 1000) {
+    document.getElementById('fps').textContent = fpsCount + 'fps';
+    fpsCount = 0; fpsLast = now;
   }
-  scheduleLoop();
+
+  // 每 3 幀辨識一次
+  frameSkip++;
+  if (frameSkip < 3) return;
+  frameSkip = 0;
+
+  const v = document.getElementById('video');
+  const c = document.getElementById('canvas');
+
+  if (v.readyState < v.HAVE_ENOUGH_DATA || v.videoWidth === 0) return;
+
+  const ctx = c.getContext('2d');
+  c.width  = v.videoWidth;
+  c.height = v.videoHeight;
+  ctx.drawImage(v, 0, 0, c.width, c.height);
+
+  const img  = ctx.getImageData(0, 0, c.width, c.height);
+  const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'attemptBoth' });
+
+  if (code && !cooldown) {
+    cooldown = true;
+    setTimeout(() => { cooldown = false; }, 3000);
+    handle(code.data.trim());
+  }
 }
 
 function manualGo() {
-  const v=document.getElementById('m-input').value.trim();
-  if(!v) return;
-  document.getElementById('m-input').value='';
+  const v = document.getElementById('m-input').value.trim();
+  if (!v) return;
+  document.getElementById('m-input').value = '';
   handle(v);
 }
 
 async function handle(raw) {
-  const id=raw.toUpperCase().trim(), info=DB[id], name=info?info.name:'';
-  const t=new Date().toLocaleString('zh-TW',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
-  if (!info) { stats.err++; flash('err',id,'','此編號不在名單中'); addLog(id,'',t,'err'); upStats(); return; }
-  if (seen.has(id)) { stats.dup++; flash('dup',name,id,'⚠ 此編號今天已記錄過'); addLog(id,name,t,'dup'); upStats(); return; }
+  const id   = raw.toUpperCase().trim();
+  const info = DB[id];
+  const name = info ? info.name : '';
+  const t    = new Date().toLocaleString('zh-TW', {
+    timeZone:'Asia/Taipei', year:'numeric', month:'2-digit', day:'2-digit',
+    hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false
+  });
+
+  if (!info) {
+    stats.err++; flash('err',id,'','此編號不在名單中');
+    addLog(id,'',t,'err'); upStats(); return;
+  }
+  if (seen.has(id)) {
+    stats.dup++; flash('dup',name,id,'⚠ 此編號今天已記錄過');
+    addLog(id,name,t,'dup'); upStats(); return;
+  }
   seen.add(id); stats.ok++;
-  flash('ok',name,id,'✓ 已記錄　'+t); addLog(id,name,t,'ok'); upStats();
+  flash('ok',name,id,'✓ 已記錄　'+t);
+  addLog(id,name,t,'ok'); upStats();
   if (!testMode) { setConn('sending'); await send(id,name,t); }
 }
 
 async function send(id,name,time) {
-  try { await fetch(SCRIPT+'?'+new URLSearchParams({id,name,time}).toString(),{method:'GET',mode:'no-cors'}); setConn('ready'); }
-  catch { setConn('error'); }
+  try {
+    await fetch(SCRIPT+'?'+new URLSearchParams({id,name,time}).toString(),{method:'GET',mode:'no-cors'});
+    setConn('ready');
+  } catch { setConn('error'); }
 }
 
 function flash(type,n,id,msg) {
@@ -257,7 +305,7 @@ function flash(type,n,id,msg) {
 }
 
 function addLog(id,name,t,type) {
-  const ul=document.getElementById('log'),li=document.createElement('li');
+  const ul=document.getElementById('log'), li=document.createElement('li');
   const ico=type==='ok'?'<span class="ico-ok">✓</span>':type==='dup'?'<span class="ico-dup">⚠</span>':'<span class="ico-err">✗</span>';
   li.innerHTML=ico+'<span class="log-name">'+(name||id)+'</span><span class="log-num">'+(name?id:'')+'</span><span class="log-t">'+t+'</span>';
   ul.insertBefore(li,ul.firstChild); if(ul.children.length>30) ul.removeChild(ul.lastChild);
@@ -270,7 +318,7 @@ function upStats() {
 }
 
 function setConn(s) {
-  const d=document.getElementById('dot'),l=document.getElementById('conn-lbl');
+  const d=document.getElementById('dot'), l=document.getElementById('conn-lbl');
   const m={test:['off','測試模式（不傳送）'],connecting:['pending','連線中…'],ready:['','已連線'],sending:['pending','傳送中…'],error:['off','傳送失敗']};
   const [c,tx]=m[s]||['',''];
   d.className='sdot'+(c?' '+c:''); l.textContent=tx;
