@@ -17,39 +17,35 @@
 html,body{height:100%;background:var(--navy);color:#fff;font-family:'Noto Sans TC',sans-serif;margin:0}
 body{display:flex;flex-direction:column;align-items:center;min-height:100vh}
 
-/* SETUP */
 #setup{width:100%;max-width:480px;padding:1.5rem 1.2rem;display:flex;flex-direction:column;gap:.9rem}
 #setup h1{font-family:'Space Mono',monospace;font-size:.95rem;color:var(--gold-light);letter-spacing:.5px}
 .field label{font-size:.7rem;color:rgba(255,255,255,.45);display:block;margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.5px}
 .field input{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:.6rem .85rem;font-size:.9rem;color:#fff;font-family:'Noto Sans TC',sans-serif}
 .field input:focus{outline:none;border-color:var(--gold)}
 .field input::placeholder{color:rgba(255,255,255,.25);font-size:.8rem}
-.note{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);border-radius:8px;padding:.75rem 1rem;font-size:.78rem;color:rgba(255,255,255,.6);line-height:1.7}
-.note strong{color:var(--gold-light)}
 .btn-go{width:100%;background:var(--gold);color:var(--navy);border:none;border-radius:10px;padding:.8rem;font-family:'Space Mono',monospace;font-weight:700;font-size:.9rem;cursor:pointer}
 
-/* SCANNER */
 #scanner{display:none;flex-direction:column;align-items:center;width:100%;max-width:480px}
 .topbar{width:100%;display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:rgba(0,0,0,.25)}
 .session-title{font-family:'Space Mono',monospace;font-size:.75rem;font-weight:700;color:var(--gold-light);text-align:center;flex:1}
-.status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite;vertical-align:middle;margin-right:5px}
-.status-dot.off{background:#f87171;animation:none}
-.status-dot.pending{background:#fbbf24;animation:none}
+.sdot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite;vertical-align:middle;margin-right:5px}
+.sdot.off{background:#f87171;animation:none}
+.sdot.pending{background:#fbbf24;animation:none}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.status-text{font-size:.65rem;color:rgba(255,255,255,.45)}
+.slbl{font-size:.65rem;color:rgba(255,255,255,.45)}
 
-.cam-wrap{width:100%;background:#000;position:relative;flex-shrink:0}
-video{width:100%;display:block;max-height:52vh;object-fit:cover}
+.cam-wrap{width:100%;background:#000;position:relative;overflow:hidden}
+.cam-wrap video{width:100%;height:auto;max-height:55vw;display:block;object-fit:cover}
 canvas{display:none}
 .overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
-.frame{width:210px;height:210px;position:relative}
-.frame::before,.frame::after,.frame span::before,.frame span::after{content:'';position:absolute;width:30px;height:30px;border-color:var(--gold);border-style:solid}
+.frame{width:55vw;height:55vw;max-width:220px;max-height:220px;position:relative}
+.frame::before,.frame::after,.frame span::before,.frame span::after{content:'';position:absolute;width:28px;height:28px;border-color:var(--gold);border-style:solid}
 .frame::before{top:0;left:0;border-width:3px 0 0 3px}
 .frame::after{top:0;right:0;border-width:3px 3px 0 0}
 .frame span::before{bottom:0;left:0;border-width:0 0 3px 3px}
 .frame span::after{bottom:0;right:0;border-width:0 3px 3px 0}
-.scanline{position:absolute;left:8px;right:8px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:scan 2.2s ease-in-out infinite}
-@keyframes scan{0%,100%{top:14px;opacity:.25}50%{top:194px;opacity:1}}
+.scanline{position:absolute;left:8px;right:8px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:scan 2s ease-in-out infinite}
+@keyframes scan{0%,100%{top:12px;opacity:.25}50%{top:calc(100% - 14px);opacity:1}}
 
 .panel{width:100%;padding:.85rem 1.1rem 1.5rem}
 .stats{display:flex;gap:.65rem;margin-bottom:.85rem}
@@ -82,8 +78,8 @@ canvas{display:none}
 .log-name{flex:1;color:rgba(255,255,255,.8)}
 .log-num{font-family:'Space Mono',monospace;font-size:.65rem;color:rgba(255,255,255,.35)}
 .log-t{font-family:'Space Mono',monospace;font-size:.62rem;color:rgba(255,255,255,.3);white-space:nowrap}
-.log-ok{color:#4ade80}.log-dup{color:#fbbf24}.log-err{color:#f87171}
-.cam-hint{text-align:center;padding:.8rem;font-size:.75rem;color:rgba(255,255,255,.3);line-height:1.8}
+.ico-ok{color:#4ade80}.ico-dup{color:#fbbf24}.ico-err{color:#f87171}
+.cam-msg{text-align:center;padding:.8rem;font-size:.75rem;color:rgba(255,255,255,.4);line-height:1.8;display:none}
 </style>
 </head>
 <body>
@@ -102,13 +98,13 @@ canvas{display:none}
 
 <div id="scanner">
   <div class="topbar">
-    <div><span class="status-dot" id="dot"></span><span class="status-text" id="conn-lbl">--</span></div>
+    <div><span class="sdot" id="dot"></span><span class="slbl" id="conn-lbl">--</span></div>
     <div class="session-title" id="sess-title">NTPC 2026 出席掃描</div>
     <button onclick="location.reload()" style="background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.4);border-radius:6px;padding:3px 8px;font-size:.62rem;cursor:pointer">重設</button>
   </div>
 
   <div class="cam-wrap">
-    <video id="video" autoplay playsinline muted></video>
+    <video id="video" autoplay playsinline muted webkit-playsinline></video>
     <canvas id="canvas"></canvas>
     <div class="overlay"><div class="frame"><span></span><div class="scanline"></div></div></div>
   </div>
@@ -128,9 +124,9 @@ canvas{display:none}
       <input type="text" id="m-input" placeholder="手動輸入編號，如 NTPCCA-001" onkeydown="if(event.key==='Enter')manualGo()">
       <button class="btn-send" onclick="manualGo()">查詢</button>
     </div>
-    <div class="log-hd"><span>掃描紀錄</span><span id="mode-badge"></span></div>
+    <div class="log-hd"><span>掃描紀錄</span><span id="mode-badge" style="color:rgba(255,200,0,.6)"></span></div>
     <ul class="log-list" id="log"></ul>
-    <div class="cam-hint" id="cam-hint" style="display:none"></div>
+    <div class="cam-msg" id="cam-msg"></div>
   </div>
 </div>
 
@@ -182,77 +178,107 @@ function startScan() {
 }
 
 async function initCam() {
-  try {
-    const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});
-    const v=document.getElementById('video');
-    v.srcObject=s; v.play();
-    scanning=true;
-    requestAnimationFrame(loop);
-    if(!testMode) setConn('ready');
-  } catch(e) {
-    const h=document.getElementById('cam-hint');
-    h.style.display='block';
-    h.textContent='相機無法啟動，請使用下方手動輸入。('+e.message+')';
-    if(!testMode) setConn('ready');
+  const v = document.getElementById('video');
+  const constraints = [
+    { video: { facingMode: { exact: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } } },
+    { video: { facingMode: 'environment' } },
+    { video: true }
+  ];
+  let stream = null;
+  for (const c of constraints) {
+    try { stream = await navigator.mediaDevices.getUserMedia(c); break; }
+    catch(e) { continue; }
   }
+  if (!stream) {
+    showMsg('相機無法啟動，請確認已允許相機權限，或使用下方手動輸入。');
+    if (!testMode) setConn('ready');
+    return;
+  }
+  v.srcObject = stream;
+  v.addEventListener('loadedmetadata', () => {
+    v.play().then(() => {
+      scanning = true;
+      scheduleLoop();
+      if (!testMode) setConn('ready');
+    }).catch(e => showMsg('影像播放失敗：' + e.message));
+  });
 }
 
-function loop() {
-  if(!scanning) return;
-  const v=document.getElementById('video'),c=document.getElementById('canvas'),ctx=c.getContext('2d');
-  if(v.readyState===v.HAVE_ENOUGH_DATA){
-    c.width=v.videoWidth;c.height=v.videoHeight;ctx.drawImage(v,0,0);
-    const img=ctx.getImageData(0,0,c.width,c.height);
-    const code=jsQR(img.data,img.width,img.height,{inversionAttempts:'dontInvert'});
-    if(code&&!cooldown){handle(code.data.trim());cooldown=true;setTimeout(()=>{cooldown=false;},3000);}
-  }
-  requestAnimationFrame(loop);
+function scheduleLoop() {
+  if (!scanning) return;
+  setTimeout(doScan, 150);
 }
 
-function manualGo(){const v=document.getElementById('m-input').value.trim();if(!v)return;document.getElementById('m-input').value='';handle(v);}
+function doScan() {
+  if (!scanning) return;
+  const v=document.getElementById('video'), c=document.getElementById('canvas'), ctx=c.getContext('2d');
+  if (v.readyState === v.HAVE_ENOUGH_DATA && v.videoWidth > 0) {
+    c.width=v.videoWidth; c.height=v.videoHeight;
+    ctx.drawImage(v, 0, 0, c.width, c.height);
+    const img  = ctx.getImageData(0, 0, c.width, c.height);
+    const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'attemptBoth' });
+    if (code && !cooldown) {
+      handle(code.data.trim());
+      cooldown=true; setTimeout(()=>{cooldown=false;}, 3000);
+    }
+  }
+  scheduleLoop();
+}
+
+function manualGo() {
+  const v=document.getElementById('m-input').value.trim();
+  if(!v) return;
+  document.getElementById('m-input').value='';
+  handle(v);
+}
 
 async function handle(raw) {
   const id=raw.toUpperCase().trim(), info=DB[id], name=info?info.name:'';
   const t=new Date().toLocaleString('zh-TW',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
-  if(!info){stats.err++;flash('err',id,'','此編號不在名單中');addLog(id,'',t,'err');upStats();return;}
-  if(seen.has(id)){stats.dup++;flash('dup',name,id,'⚠ 此編號今天已記錄過');addLog(id,name,t,'dup');upStats();return;}
-  seen.add(id);stats.ok++;
-  flash('ok',name,id,'✓ 已記錄　'+t);addLog(id,name,t,'ok');upStats();
-  if(!testMode){setConn('sending');await send(id,name,t);}
+  if (!info) { stats.err++; flash('err',id,'','此編號不在名單中'); addLog(id,'',t,'err'); upStats(); return; }
+  if (seen.has(id)) { stats.dup++; flash('dup',name,id,'⚠ 此編號今天已記錄過'); addLog(id,name,t,'dup'); upStats(); return; }
+  seen.add(id); stats.ok++;
+  flash('ok',name,id,'✓ 已記錄　'+t); addLog(id,name,t,'ok'); upStats();
+  if (!testMode) { setConn('sending'); await send(id,name,t); }
 }
 
-async function send(id,name,time){
-  try{await fetch(SCRIPT+'?'+new URLSearchParams({id,name,time}).toString(),{method:'GET',mode:'no-cors'});setConn('ready');}
-  catch{setConn('error');}
+async function send(id,name,time) {
+  try { await fetch(SCRIPT+'?'+new URLSearchParams({id,name,time}).toString(),{method:'GET',mode:'no-cors'}); setConn('ready'); }
+  catch { setConn('error'); }
 }
 
-function flash(type,n,id,msg){
+function flash(type,n,id,msg) {
   const el=document.getElementById('flash');
   el.className='flash show '+type;
   document.getElementById('f-name').textContent=n||id;
   document.getElementById('f-id').textContent=n?id:'';
   document.getElementById('f-msg').textContent=msg;
-  clearTimeout(el._t);el._t=setTimeout(()=>{el.className='flash';},3500);
+  clearTimeout(el._t); el._t=setTimeout(()=>{el.className='flash';},3500);
 }
 
-function addLog(id,name,t,type){
+function addLog(id,name,t,type) {
   const ul=document.getElementById('log'),li=document.createElement('li');
-  const ico=type==='ok'?'<span class="log-ok">✓</span>':type==='dup'?'<span class="log-dup">⚠</span>':'<span class="log-err">✗</span>';
+  const ico=type==='ok'?'<span class="ico-ok">✓</span>':type==='dup'?'<span class="ico-dup">⚠</span>':'<span class="ico-err">✗</span>';
   li.innerHTML=ico+'<span class="log-name">'+(name||id)+'</span><span class="log-num">'+(name?id:'')+'</span><span class="log-t">'+t+'</span>';
-  ul.insertBefore(li,ul.firstChild);if(ul.children.length>30)ul.removeChild(ul.lastChild);
+  ul.insertBefore(li,ul.firstChild); if(ul.children.length>30) ul.removeChild(ul.lastChild);
 }
 
-function upStats(){
+function upStats() {
   document.getElementById('n-ok').textContent=stats.ok;
   document.getElementById('n-dup').textContent=stats.dup;
   document.getElementById('n-err').textContent=stats.err;
 }
 
-function setConn(s){
+function setConn(s) {
   const d=document.getElementById('dot'),l=document.getElementById('conn-lbl');
   const m={test:['off','測試模式（不傳送）'],connecting:['pending','連線中…'],ready:['','已連線'],sending:['pending','傳送中…'],error:['off','傳送失敗']};
   const [c,tx]=m[s]||['',''];
-  d.className='status-dot'+(c?' '+c:'');l.textContent=tx;
+  d.className='sdot'+(c?' '+c:''); l.textContent=tx;
+}
+
+function showMsg(msg) {
+  const el=document.getElementById('cam-msg');
+  el.style.display='block'; el.textContent=msg;
 }
 </script>
 </body>
