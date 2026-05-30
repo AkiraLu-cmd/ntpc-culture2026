@@ -35,6 +35,7 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100vh}
 
 .cam-wrap{width:100%;background:#000;position:relative;overflow:hidden}
 video{width:100%;display:block;object-fit:cover}
+canvas{display:none}
 .overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .frame{width:70vw;height:70vw;max-width:280px;max-height:280px;position:relative}
 .frame::before,.frame::after,.frame span::before,.frame span::after{content:'';position:absolute;width:28px;height:28px;border-color:var(--gold);border-style:solid}
@@ -44,6 +45,7 @@ video{width:100%;display:block;object-fit:cover}
 .frame span::after{bottom:0;right:0;border-width:0 3px 3px 0}
 .scanline{position:absolute;left:8px;right:8px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:scan 2s ease-in-out infinite}
 @keyframes scan{0%,100%{top:12px;opacity:.25}50%{top:calc(100% - 14px);opacity:1}}
+.engine-badge{position:absolute;bottom:4px;right:6px;font-size:.55rem;font-family:monospace;color:rgba(255,255,255,.3);background:rgba(0,0,0,.4);padding:1px 5px;border-radius:4px}
 
 .panel{width:100%;padding:.85rem 1.1rem 1.5rem}
 .stats{display:flex;gap:.65rem;margin-bottom:.85rem}
@@ -103,7 +105,9 @@ video{width:100%;display:block;object-fit:cover}
 
   <div class="cam-wrap">
     <video id="video" autoplay playsinline muted webkit-playsinline></video>
+    <canvas id="canvas"></canvas>
     <div class="overlay"><div class="frame"><span></span><div class="scanline"></div></div></div>
+    <div class="engine-badge" id="engine-badge">--</div>
   </div>
 
   <div class="panel">
@@ -127,10 +131,7 @@ video{width:100%;display:block;object-fit:cover}
   </div>
 </div>
 
-<script type="module">
-// ★ 改用 ZXing — 對印刷品、低對比、傾斜辨識率遠高於 jsQR
-import { BrowserMultiFormatReader } from 'https://cdn.jsdelivr.net/npm/@zxing/library@0.20.0/+esm';
-
+<script>
 const DB = {
   'NTPCCA-001':{name:'呂家維'},'NTPCCA-002':{name:'黃玉桂'},'NTPCCA-003':{name:'蘇玟如'},
   'NTPCCA-004':{name:'張廷羽'},'NTPCCA-005':{name:'林正邦'},'NTPCCA-007':{name:'呂柏陞'},
@@ -163,10 +164,11 @@ const DB = {
   'NTPCCA-099':{name:'周炳宏'},
 };
 
-let SCRIPT='', testMode=true, cooldown=false;
+let SCRIPT='', testMode=true, scanning=false, cooldown=false;
 let seen=new Set(), stats={ok:0,dup:0,err:0};
+let detector=null, useNative=false;
 
-window.startScan = function() {
+function startScan() {
   SCRIPT=(document.getElementById('inp-script').value||'').trim();
   testMode=!SCRIPT;
   document.getElementById('setup').style.display='none';
@@ -174,47 +176,116 @@ window.startScan = function() {
   setConn(testMode?'test':'connecting');
   document.getElementById('mode-badge').textContent=testMode?'⚠ 測試模式':'';
   document.getElementById('sess-title').textContent=testMode?'NTPC 2026（測試模式）':'NTPC 2026 出席掃描';
-  initScanner();
-};
+  initCam();
+}
 
-window.manualGo = function() {
+async function initCam() {
+  // ★ 優先嘗試 BarcodeDetector（iOS 16+ / Chrome 88+ 內建，跟原生相機同一套引擎）
+  if ('BarcodeDetector' in window) {
+    try {
+      const formats = await BarcodeDetector.getSupportedFormats();
+      if (formats.includes('qr_code')) {
+        detector = new BarcodeDetector({ formats: ['qr_code'] });
+        useNative = true;
+        document.getElementById('engine-badge').textContent = 'BarcodeDetector';
+      }
+    } catch(e) { /* 降級用 jsQR */ }
+  }
+
+  if (!useNative) {
+    document.getElementById('engine-badge').textContent = 'jsQR';
+  }
+
+  const v = document.getElementById('video');
+  const constraints = [
+    { video: { facingMode: { exact: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } } },
+    { video: { facingMode: 'environment' } },
+    { video: true }
+  ];
+  let stream = null;
+  for (const c of constraints) {
+    try { stream = await navigator.mediaDevices.getUserMedia(c); break; }
+    catch(e) { continue; }
+  }
+  if (!stream) { showMsg('相機無法啟動，請確認已允許相機權限。'); return; }
+
+  v.srcObject = stream;
+  v.oncanplay = () => {
+    v.play().then(() => {
+      scanning = true;
+      if (useNative) {
+        nativeLoop();  // BarcodeDetector 用 async loop
+      } else {
+        requestAnimationFrame(jsqrLoop);  // jsQR 用 rAF
+      }
+      if (!testMode) setConn('ready');
+    }).catch(e => showMsg('播放失敗：' + e.message));
+  };
+}
+
+// ★ BarcodeDetector 原生掃描迴圈
+async function nativeLoop() {
+  if (!scanning) return;
+  const v = document.getElementById('video');
+  if (v.readyState >= v.HAVE_ENOUGH_DATA && v.videoWidth > 0) {
+    try {
+      const barcodes = await detector.detect(v);  // 直接送 video element，不需要 canvas
+      if (barcodes.length > 0 && !cooldown) {
+        cooldown = true;
+        setTimeout(() => { cooldown = false; }, 3000);
+        handle(barcodes[0].rawValue.trim());
+      }
+    } catch(e) { /* 偵測失敗不中斷 */ }
+  }
+  requestAnimationFrame(nativeLoop);
+}
+
+// ★ jsQR 備援迴圈（含對比度增強）
+let lastTs = 0;
+function jsqrLoop(ts) {
+  if (!scanning) return;
+  requestAnimationFrame(jsqrLoop);
+  if (ts - lastTs < 100) return;
+  lastTs = ts;
+
+  const v = document.getElementById('video');
+  const c = document.getElementById('canvas');
+  const ctx = c.getContext('2d', { willReadFrequently: true });
+  if (v.readyState < v.HAVE_ENOUGH_DATA || v.videoWidth === 0) return;
+
+  const W = 400;
+  c.width  = W;
+  c.height = Math.round(v.videoHeight * W / v.videoWidth);
+  ctx.drawImage(v, 0, 0, c.width, c.height);
+
+  const img = ctx.getImageData(0, 0, c.width, c.height);
+  let code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'attemptBoth' });
+  if (!code) {
+    const b = boostContrast(img);
+    code = jsQR(b.data, b.width, b.height, { inversionAttempts: 'attemptBoth' });
+  }
+  if (code && !cooldown) {
+    cooldown = true;
+    setTimeout(() => { cooldown = false; }, 3000);
+    handle(code.data.trim());
+  }
+}
+
+function boostContrast(imageData) {
+  const d = new Uint8ClampedArray(imageData.data);
+  for (let i = 0; i < d.length; i += 4) {
+    d[i]   = Math.min(255, Math.max(0, (d[i]   - 128) * 2.5 + 128));
+    d[i+1] = Math.min(255, Math.max(0, (d[i+1] - 128) * 2.5 + 128));
+    d[i+2] = Math.min(255, Math.max(0, (d[i+2] - 128) * 2.5 + 128));
+  }
+  return new ImageData(d, imageData.width, imageData.height);
+}
+
+function manualGo() {
   const v=document.getElementById('m-input').value.trim();
   if(!v) return;
   document.getElementById('m-input').value='';
   handle(v);
-};
-
-async function initScanner() {
-  const video = document.getElementById('video');
-  const codeReader = new BrowserMultiFormatReader();
-
-  try {
-    // ZXing 直接接管 video element，自動處理相機和辨識
-    const devices = await BrowserMultiFormatReader.listVideoInputDevices();
-
-    // 優先選後鏡頭
-    let deviceId = undefined;
-    const back = devices.find(d =>
-      /back|rear|environment/i.test(d.label) || devices.length === 1
-    );
-    if (back) deviceId = back.deviceId;
-    else if (devices.length > 0) deviceId = devices[devices.length - 1].deviceId;
-
-    if (!testMode) setConn('ready');
-
-    // ★ ZXing 的 decodeFromVideoDevice 會持續掃描，每次掃到就呼叫 callback
-    codeReader.decodeFromVideoDevice(deviceId, video, (result, err) => {
-      if (result && !cooldown) {
-        cooldown = true;
-        setTimeout(() => { cooldown = false; }, 3000);
-        handle(result.getText());
-      }
-      // err 在沒掃到時是正常的，不需要處理
-    });
-
-  } catch(e) {
-    showMsg('相機無法啟動：' + e.message);
-  }
 }
 
 async function handle(raw) {
@@ -225,7 +296,6 @@ async function handle(raw) {
     timeZone:'Asia/Taipei', year:'numeric', month:'2-digit', day:'2-digit',
     hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false
   });
-
   if (!info) {
     stats.err++; flash('err',id,'','此編號不在名單中');
     addLog(id,'',t,'err'); upStats(); return;
