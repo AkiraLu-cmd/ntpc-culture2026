@@ -10,7 +10,6 @@
     --navy: #0f2347;
     --navy2: #1a3a6b;
     --gold: #c9a84c;
-    --gold2: #e8c870;
     --cream: #f5f0e8;
     --offwhite: #faf8f4;
     --text: #1a2a4a;
@@ -20,493 +19,94 @@
     --border: rgba(15,35,71,0.15);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Noto Sans TC', sans-serif;
-    background: var(--offwhite);
-    color: var(--text);
-    min-height: 100vh;
-  }
+  body { font-family: 'Noto Sans TC', sans-serif; background: var(--offwhite); color: var(--text); min-height: 100vh; }
 
-  /* Header */
-  .header {
-    background: var(--navy);
-    padding: 20px 24px 18px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .header-badge {
-    background: var(--gold);
-    color: var(--navy);
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 20px;
-    letter-spacing: 0.08em;
-  }
-  .header-title {
-    color: white;
-    font-size: 16px;
-    font-weight: 700;
-  }
-  .header-sub {
-    color: rgba(255,255,255,0.5);
-    font-size: 12px;
-    margin-left: auto;
-  }
+  .header { background: var(--navy); padding: 20px 24px 18px; display: flex; align-items: center; gap: 12px; }
+  .header-badge { background: var(--gold); color: var(--navy); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.08em; }
+  .header-title { color: white; font-size: 16px; font-weight: 700; }
+  .header-sub { color: rgba(255,255,255,0.5); font-size: 12px; margin-left: auto; }
 
-  /* Hero */
-  .hero {
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
-    padding: 36px 24px 30px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: -40px; right: -40px;
-    width: 180px; height: 180px;
-    border-radius: 50%;
-    background: rgba(201,168,76,0.08);
-  }
-  .hero-label {
-    color: var(--gold);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
+  .hero { background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%); padding: 36px 24px 30px; text-align: center; }
+  .hero-label { color: var(--gold); font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
   .gold-line { display: inline-block; width: 20px; height: 1.5px; background: var(--gold); margin: 0 6px; vertical-align: middle; }
-  .hero-title {
-    color: white;
-    font-size: 26px;
-    font-weight: 900;
-    line-height: 1.25;
-    margin-bottom: 6px;
-  }
-  .hero-subtitle {
-    color: rgba(255,255,255,0.6);
-    font-size: 13px;
-  }
+  .hero-title { color: white; font-size: 26px; font-weight: 900; line-height: 1.25; margin-bottom: 6px; }
+  .hero-subtitle { color: rgba(255,255,255,0.6); font-size: 13px; }
 
-  /* Form container */
-  .container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 24px 20px 60px;
-  }
+  .container { max-width: 600px; margin: 0 auto; padding: 24px 20px 60px; }
 
-  /* Form card */
-  .form-card {
-    background: white;
-    border-radius: 16px;
-    padding: 28px 24px;
-    border: 0.5px solid var(--border);
-    margin-bottom: 16px;
-  }
-  .form-card-title {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--gold);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 18px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .form-card-title::before {
-    content: '';
-    width: 3px;
-    height: 14px;
-    background: var(--gold);
-    border-radius: 2px;
-    display: inline-block;
-  }
+  .form-card { background: white; border-radius: 16px; padding: 28px 24px; border: 0.5px solid var(--border); margin-bottom: 16px; }
+  .form-card-title { font-size: 13px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+  .form-card-title::before { content: ''; width: 3px; height: 14px; background: var(--gold); border-radius: 2px; display: inline-block; }
 
-  /* Field */
   .field { margin-bottom: 20px; }
   .field:last-child { margin-bottom: 0; }
-  .field label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--navy);
-    margin-bottom: 7px;
-  }
-  .field label .req {
-    color: var(--red);
-    margin-left: 3px;
-  }
-  .field label .hint {
-    font-weight: 400;
-    color: var(--muted);
-    font-size: 11px;
-    margin-left: 6px;
-  }
+  .field label { display: block; font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 7px; }
+  .field label .req { color: var(--red); margin-left: 3px; }
+  .field label .hint { font-weight: 400; color: var(--muted); font-size: 11px; margin-left: 6px; }
 
   select, input[type="text"], input[type="password"] {
-    width: 100%;
-    padding: 11px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-family: 'Noto Sans TC', sans-serif;
-    font-size: 14px;
-    color: var(--text);
-    background: var(--offwhite);
-    transition: border-color .2s, background .2s;
-    appearance: none;
+    width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 8px;
+    font-family: 'Noto Sans TC', sans-serif; font-size: 14px; color: var(--text);
+    background: var(--offwhite); transition: border-color .2s, background .2s; appearance: none;
   }
-  select:focus, input:focus {
-    outline: none;
-    border-color: var(--navy);
-    background: white;
-  }
+  select:focus, input:focus { outline: none; border-color: var(--navy); background: white; }
   select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7a99' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
 
-  /* Phone verify row */
-  .phone-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .phone-prefix {
-    background: var(--cream);
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 11px 14px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--muted);
-    white-space: nowrap;
-  }
+  .phone-row { display: flex; align-items: center; gap: 8px; }
+  .phone-prefix { background: var(--cream); border: 1.5px solid var(--border); border-radius: 8px; padding: 11px 14px; font-size: 14px; font-weight: 600; color: var(--muted); white-space: nowrap; }
   .phone-row input { flex: 1; }
-  #phoneStatus {
-    font-size: 12px;
-    margin-top: 5px;
-    min-height: 16px;
-  }
+  #phoneStatus { font-size: 12px; margin-top: 5px; min-height: 16px; }
   .status-ok { color: var(--green); font-weight: 600; }
   .status-err { color: var(--red); }
 
-  /* Upload field */
-  .upload-area {
-    border: 2px dashed var(--border);
-    border-radius: 10px;
-    padding: 22px 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color .2s, background .2s;
-    background: var(--offwhite);
-    position: relative;
-  }
-  .upload-area:hover { border-color: var(--navy); background: #f0ecf8; }
-  .upload-area.has-file { border-color: var(--green); background: #f0faf5; }
-  .upload-area input[type="file"] {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
-  }
-  .upload-icon { font-size: 28px; margin-bottom: 6px; }
-  .upload-text { font-size: 13px; color: var(--muted); }
-  .upload-text strong { color: var(--navy); display: block; font-size: 14px; margin-bottom: 2px; }
-  .upload-filename {
-    margin-top: 8px;
-    font-size: 12px;
-    color: var(--green);
-    font-weight: 600;
-    display: none;
-  }
-  .upload-area.has-file .upload-filename { display: block; }
-  .upload-area.has-file .upload-default { display: none; }
-  .preview-thumb {
-    max-width: 100%;
-    max-height: 120px;
-    border-radius: 6px;
-    margin-top: 8px;
-    display: none;
-    object-fit: cover;
-  }
-  .upload-area.has-file .preview-thumb { display: inline-block; }
-
-  /* Yes/No */
   .radio-group { display: flex; gap: 10px; }
-  .radio-btn {
-    flex: 1;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    padding: 18px 10px;
-    text-align: center;
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all .18s;
-    background: var(--offwhite);
-    color: var(--muted);
-    user-select: none;
-    min-height: 64px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    -webkit-tap-highlight-color: transparent;
-  }
+  .radio-btn { flex: 1; border: 2px solid var(--border); border-radius: 12px; padding: 18px 10px; text-align: center; font-size: 18px; font-weight: 700; cursor: pointer; transition: all .18s; background: var(--offwhite); color: var(--muted); user-select: none; min-height: 64px; display: flex; align-items: center; justify-content: center; gap: 6px; -webkit-tap-highlight-color: transparent; }
   .radio-btn.selected-yes { border-color: var(--green); background: #f0faf5; color: var(--green); }
   .radio-btn.selected-no { border-color: var(--navy); background: #eef2fa; color: var(--navy); }
 
-  /* Code section */
-  #codeSection {
-    margin-top: 14px;
-    padding: 14px 16px;
-    background: #fff8ec;
-    border: 1.5px solid #e8d090;
-    border-radius: 10px;
-    display: none;
-  }
-  #codeSection label {
-    font-size: 13px;
-    color: #8a6510;
-    font-weight: 600;
-    display: block;
-    margin-bottom: 8px;
-  }
-  #codeSection input {
-    background: white;
-    border-color: #e8d090;
-  }
-  #codeStatus {
-    font-size: 12px;
-    margin-top: 5px;
-    min-height: 16px;
-  }
+  #codeSection { margin-top: 14px; padding: 14px 16px; background: #fff8ec; border: 1.5px solid #e8d090; border-radius: 10px; display: none; }
+  #codeSection label { font-size: 13px; color: #8a6510; font-weight: 600; display: block; margin-bottom: 8px; }
+  #codeSection input { background: white; border-color: #e8d090; }
+  #codeStatus { font-size: 12px; margin-top: 5px; min-height: 16px; }
 
-  /* Submit */
-  .submit-btn {
-    width: 100%;
-    background: var(--navy);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 16px;
-    font-family: 'Noto Sans TC', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background .18s, transform .1s;
-    letter-spacing: 0.04em;
-    margin-top: 8px;
-  }
+  .submit-btn { width: 100%; background: var(--navy); color: white; border: none; border-radius: 10px; padding: 16px; font-family: 'Noto Sans TC', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; transition: background .18s, transform .1s; letter-spacing: 0.04em; margin-top: 8px; }
   .submit-btn:hover { background: var(--navy2); }
   .submit-btn:active { transform: scale(0.98); }
   .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
 
-  .required-note {
-    font-size: 12px;
-    color: var(--muted);
-    text-align: center;
-    margin-top: 10px;
-  }
+  .required-note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 10px; }
   .required-note span { color: var(--red); }
 
-  /* Error flash */
-  .field.error select, .field.error input, .field.error .upload-area, .field.error .radio-group {
-    border-color: var(--red) !important;
-    animation: shake .3s ease;
-  }
-  @keyframes shake {
-    0%,100%{transform:translateX(0)}
-    25%{transform:translateX(-4px)}
-    75%{transform:translateX(4px)}
-  }
+  .field.error select, .field.error input, .field.error .radio-group { border-color: var(--red) !important; animation: shake .3s ease; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
 
   /* Success */
-  #successScreen {
-    display: none;
-    text-align: center;
-    padding: 30px 20px 60px;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  .success-circle {
-    width: 72px; height: 72px;
-    background: #e6f7ef;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 18px;
-    font-size: 32px;
-  }
-  .success-title {
-    font-size: 22px;
-    font-weight: 900;
-    color: var(--navy);
-    margin-bottom: 6px;
-  }
-  .success-sub {
-    font-size: 14px;
-    color: var(--muted);
-    margin-bottom: 28px;
-  }
-  .announcement-card {
-    background: white;
-    border-radius: 14px;
-    padding: 22px 20px;
-    border: 0.5px solid var(--border);
-    text-align: left;
-  }
-  .ann-badge {
-    display: inline-block;
-    background: #fff3cd;
-    color: #8a6510;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 20px;
-    letter-spacing: 0.06em;
-    margin-bottom: 10px;
-  }
-  .ann-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--navy);
-    margin-bottom: 14px;
-    line-height: 1.5;
-  }
-  .song-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 14px;
-    padding-bottom: 14px;
-    border-bottom: 0.5px solid var(--border);
-  }
+  #successScreen { display: none; text-align: center; padding: 30px 20px 60px; max-width: 600px; margin: 0 auto; }
+  .success-circle { width: 72px; height: 72px; background: #e6f7ef; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-size: 32px; }
+  .success-title { font-size: 22px; font-weight: 900; color: var(--navy); margin-bottom: 6px; }
+  .success-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+
+  .announcement-card { background: white; border-radius: 14px; padding: 22px 20px; border: 0.5px solid var(--border); text-align: left; margin-bottom: 14px; }
+  .ann-badge { display: inline-block; background: #fff3cd; color: #8a6510; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .ann-title { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 14px; line-height: 1.5; }
+  .song-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 0.5px solid var(--border); }
   .song-item:last-of-type { border-bottom: none; margin-bottom: 0; }
-  .song-num {
-    background: var(--navy);
-    color: white;
-    font-size: 12px;
-    font-weight: 700;
-    width: 24px; height: 24px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
+  .song-num { background: var(--navy); color: white; font-size: 12px; font-weight: 700; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
   .song-info { flex: 1; }
   .song-name { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
   .song-desc { font-size: 12px; color: var(--muted); margin-bottom: 5px; }
-  .song-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: var(--navy);
-    color: white;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 5px 12px;
-    border-radius: 20px;
-    text-decoration: none;
-    transition: background .15s;
-  }
-  .song-link:hover { background: var(--navy2); }
-  .upload-remind-card {
-    background: white;
-    border-radius: 14px;
-    padding: 22px 20px;
-    border: 2px solid var(--gold);
-    text-align: left;
-    margin-top: 14px;
-  }
-  .upload-remind-title {
-    font-size: 17px;
-    font-weight: 900;
-    color: var(--navy);
-    margin-bottom: 12px;
-  }
-  .upload-remind-body {
-    font-size: 14px;
-    color: var(--text);
-    line-height: 1.7;
-    margin-bottom: 16px;
-  }
-  .upload-item {
-    display: block;
-    font-weight: 600;
-    color: var(--navy);
-    margin-top: 4px;
-  }
-  .upload-drive-btn {
-    display: block;
-    background: var(--navy);
-    color: white;
-    text-align: center;
-    padding: 14px;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 700;
-    text-decoration: none;
-    margin-bottom: 12px;
-    transition: background .15s;
-  }
-  .upload-drive-btn:hover { background: var(--navy2); }
-  .upload-steps {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin: 14px 0;
-  }
-  .upload-step {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    background: var(--offwhite);
-    border-radius: 8px;
-    padding: 12px 14px;
-    font-size: 14px;
-    line-height: 1.7;
-  }
-  .step-num {
-    background: var(--navy);
-    color: white;
-    font-size: 13px;
-    font-weight: 700;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-  .step-example {
-    font-size: 12px;
-    color: var(--muted);
-    font-weight: 400;
-  }
-  .upload-remind-note {
-    font-size: 12px;
-    color: var(--muted);
-    text-align: center;
-    line-height: 1.6;
-  }
+  .song-link { display: inline-flex; align-items: center; gap: 4px; background: var(--navy); color: white; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 20px; text-decoration: none; }
+  .ann-footer { background: var(--cream); border-radius: 8px; padding: 12px 14px; font-size: 13px; color: var(--text); margin-top: 14px; font-weight: 500; }
 
-  .ann-footer {
-    background: var(--cream);
-    border-radius: 8px;
-    padding: 12px 14px;
-    font-size: 13px;
-    color: var(--text);
-    margin-top: 14px;
-    font-weight: 500;
-  }
+  .upload-remind-card { background: white; border-radius: 14px; padding: 22px 20px; border: 2px solid var(--gold); text-align: left; }
+  .upload-remind-title { font-size: 17px; font-weight: 900; color: var(--navy); margin-bottom: 8px; }
+  .upload-remind-body { font-size: 14px; color: var(--text); line-height: 1.7; margin-bottom: 14px; }
+  .upload-steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .upload-step { display: flex; align-items: flex-start; gap: 12px; background: var(--offwhite); border-radius: 8px; padding: 12px 14px; font-size: 14px; line-height: 1.7; }
+  .step-num { background: var(--navy); color: white; font-size: 13px; font-weight: 700; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .step-example { font-size: 12px; color: var(--muted); }
+  .upload-drive-btn { display: block; background: var(--navy); color: white; text-align: center; padding: 14px; border-radius: 10px; font-size: 16px; font-weight: 700; text-decoration: none; margin-bottom: 12px; }
+  .upload-remind-note { font-size: 12px; color: var(--red); text-align: center; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -518,24 +118,19 @@
 </div>
 
 <div class="hero">
-  <div class="hero-label">
-    <span class="gold-line"></span>潮盛新莊<span class="gold-line"></span>
-  </div>
+  <div class="hero-label"><span class="gold-line"></span>潮盛新莊<span class="gold-line"></span></div>
   <div class="hero-title">活動作業繳交</div>
   <div class="hero-subtitle">2026.06.06 廟街走讀 × 文化推廣</div>
 </div>
 
 <div class="container" id="formContainer">
 
-  <!-- 身份驗證 -->
   <div class="form-card">
     <div class="form-card-title">學員身份驗證</div>
-
     <div class="field" id="field-name">
       <label>學員姓名 <span class="req">*</span></label>
       <select id="nameSelect">
         <option value="">請選擇你的姓名</option>
-        <option value="測試|894">【測試】測試</option>
         <option value="測試|894">【測試】測試</option>
         <option value="呂家維|327">NTPCCA-001 呂家維</option>
         <option value="黃玉桂|667">NTPCCA-002 黃玉桂</option>
@@ -628,7 +223,6 @@
         <option value="周炳宏|994">NTPCCA-099 周炳宏</option>
       </select>
     </div>
-
     <div class="field" id="field-phone">
       <label>手機後三碼驗證 <span class="req">*</span><span class="hint">請輸入報名時填寫的手機末三碼</span></label>
       <div class="phone-row">
@@ -639,21 +233,17 @@
     </div>
   </div>
 
-  <!-- 截圖說明 -->
   <div class="form-card">
     <div class="form-card-title">截圖上傳說明</div>
     <div style="background:var(--cream);border-radius:10px;padding:14px 16px;font-size:14px;line-height:1.8;color:var(--text);">
-      📌 截圖將在<strong>送出表單後</strong>另行上傳至 Google Drive。<br>
-      請準備好以下兩張截圖：<br>
+      📌 截圖將在<strong>送出表單後</strong>另行上傳至 Google Drive。<br>請準備好以下兩張截圖：<br>
       <span style="display:block;margin-top:6px;font-weight:600;color:var(--navy);">1️⃣ 集章活動限時動態截圖</span>
       <span style="display:block;font-weight:600;color:var(--navy);">2️⃣ 攤位遊戲參與限時動態截圖</span>
     </div>
   </div>
 
-  <!-- 加碼任務 -->
   <div class="form-card">
     <div class="form-card-title">加碼任務</div>
-
     <div class="field" id="field-friend">
       <label>是否帶計畫以外的朋友一起參加活動？ <span class="req">*</span></label>
       <div class="radio-group">
@@ -661,7 +251,6 @@
         <div class="radio-btn" id="btn-no" onclick="selectFriend('no')">❌ 否</div>
       </div>
       <input type="hidden" id="friendVal" value="">
-
       <div id="codeSection">
         <label>🔑 請跟行政組索取代碼並輸入 <span class="req">*</span></label>
         <input type="password" id="codeInput" maxlength="6" placeholder="請輸入代碼" autocomplete="off">
@@ -670,12 +259,11 @@
     </div>
   </div>
 
-  <button class="submit-btn" onclick="submitForm()">送出作業 🎉</button>
+  <button class="submit-btn" id="submitBtn" onclick="submitForm()">送出作業 🎉</button>
   <p class="required-note">所有欄位均為必填<span>（*）</span></p>
 
 </div>
 
-<!-- Success -->
 <div id="successScreen">
   <div class="success-circle">🎊</div>
   <div class="success-title">繳交成功！</div>
@@ -683,191 +271,154 @@
 
   <div class="announcement-card">
     <div class="ann-badge">🎵 活動公告</div>
-    <div class="ann-title">2026潮盛新莊這次與歌手合作創作的歌曲2首已上架，歡迎多多點閱並幫忙宣傳！</div>
-
+    <div class="ann-title">2026潮盛新莊與歌手合作創作的歌曲2首已上架，歡迎多多點閱並幫忙宣傳！</div>
     <div class="song-item">
       <div class="song-num">1</div>
       <div class="song-info">
         <div class="song-name">《好戲》</div>
         <div class="song-desc">李英宏 DJDIDILONG × 新西園掌中劇團 合作創作</div>
-        <a class="song-link" href="https://youtu.be/ghV_drwz7j4?si=5s_YIH3VJ-CNZwxW" target="_blank" rel="noopener">
-          ▶ YouTube 收聽
-        </a>
+        <a class="song-link" href="https://youtu.be/ghV_drwz7j4?si=5s_YIH3VJ-CNZwxW" target="_blank" rel="noopener">▶ YouTube 收聽</a>
       </div>
     </div>
-
     <div class="song-item">
       <div class="song-num">2</div>
       <div class="song-info">
         <div class="song-name">《三步贊》</div>
         <div class="song-desc">HowZ × 頭前庄官將首 合作創作</div>
-        <a class="song-link" href="https://youtu.be/YY-WlPndSEQ?si=98r-i6oKh7AJIdsY" target="_blank" rel="noopener">
-          ▶ YouTube 收聽
-        </a>
+        <a class="song-link" href="https://youtu.be/YY-WlPndSEQ?si=98r-i6oKh7AJIdsY" target="_blank" rel="noopener">▶ YouTube 收聽</a>
       </div>
     </div>
-
-    <div class="ann-footer">
-      🌙 晚上有現場演出，歡迎持續參與活動唷！
-    </div>
+    <div class="ann-footer">🌙 晚上有現場演出，歡迎持續參與活動唷！</div>
   </div>
 
-  <div class="upload-remind-card">
+  <div class="upload-remind-card" style="margin-top:14px;">
     <div class="upload-remind-title">📸 還有最後一步！上傳截圖</div>
-    <div class="upload-remind-body">
-      請點下方按鈕進入 Google Drive 資料夾，並依照以下步驟完成截圖上傳：
-    </div>
+    <div class="upload-remind-body">請點下方按鈕進入 Google Drive，依照步驟完成截圖上傳：</div>
     <div class="upload-steps">
-      <div class="upload-step"><span class="step-num">1</span><span>點擊「新增資料夾」，以你的<strong>學員編號</strong>命名<br><span class="step-example">例：NTPCCA-001</span></span></div>
-      <div class="upload-step"><span class="step-num">2</span><span>進入剛建立的資料夾，上傳以下兩張截圖：<br><strong>① 集章活動限時動態截圖</strong><br><strong>② 攤位遊戲參與限時動態截圖</strong></span></div>
+      <div class="upload-step">
+        <span class="step-num">1</span>
+        <span>點擊「＋新增」→「新增資料夾」，以你的<strong>學員編號</strong>命名<br><span class="step-example">例：NTPCCA-001</span></span>
+      </div>
+      <div class="upload-step">
+        <span class="step-num">2</span>
+        <span>進入剛建立的資料夾，上傳以下兩張截圖：<br><strong>① 集章活動限時動態截圖</strong><br><strong>② 攤位遊戲參與限時動態截圖</strong></span>
+      </div>
     </div>
-    <a class="upload-drive-btn" href="https://drive.google.com/drive/folders/1Kd_vRlnskCaYhj_DqMEGCREv6Fkw4wTB" target="_blank" rel="noopener">
-      📂 開啟截圖上傳資料夾
-    </a>
+    <a class="upload-drive-btn" href="https://drive.google.com/drive/folders/1Kd_vRlnskCaYhj_DqMEGCREv6Fkw4wTB" target="_blank" rel="noopener">📂 開啟截圖上傳資料夾</a>
     <div class="upload-remind-note">⚠️ 上傳截圖後才算完成作業繳交，請務必完成！</div>
   </div>
-
 </div>
 
 <script>
-  const CORRECT_CODE = '0606';
-  let friendChoice = '';
-  let phoneVerified = false;
+const CORRECT_CODE = '0606';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYFLw5K2Cno9rB8s4e3btTG_bynCBnY3jjigSk6j5e78uvernr5q-ONKfIzy81oGR-/exec';
 
-  // Phone verify on change
-  document.getElementById('phoneInput').addEventListener('input', function() {
-    const name = document.getElementById('nameSelect').value;
-    if (!name) { setPhoneStatus('', ''); return; }
-    const expected = name.split('|')[1];
-    const entered = this.value.trim();
-    if (entered.length < 3) { setPhoneStatus('', ''); return; }
-    if (entered === expected) {
-      setPhoneStatus('ok', '✓ 驗證通過');
-      phoneVerified = true;
-    } else {
-      setPhoneStatus('err', '✗ 手機末三碼不符，請確認');
-      phoneVerified = false;
-    }
-  });
-  document.getElementById('nameSelect').addEventListener('change', function() {
-    document.getElementById('phoneInput').value = '';
-    setPhoneStatus('', '');
+let friendChoice = '';
+let phoneVerified = false;
+
+// 手機末三碼驗證
+document.getElementById('phoneInput').addEventListener('input', function() {
+  const nameVal = document.getElementById('nameSelect').value;
+  if (!nameVal) { setPhoneStatus('', ''); return; }
+  const expected = nameVal.split('|')[1];
+  const entered = this.value.trim();
+  if (entered.length < 3) { setPhoneStatus('', ''); return; }
+  if (entered === expected) {
+    setPhoneStatus('ok', '✓ 驗證通過');
+    phoneVerified = true;
+  } else {
+    setPhoneStatus('err', '✗ 手機末三碼不符，請確認');
     phoneVerified = false;
-  });
-  function setPhoneStatus(type, msg) {
-    const el = document.getElementById('phoneStatus');
-    el.textContent = msg;
-    el.className = type === 'ok' ? 'status-ok' : type === 'err' ? 'status-err' : '';
+  }
+});
+document.getElementById('nameSelect').addEventListener('change', function() {
+  document.getElementById('phoneInput').value = '';
+  setPhoneStatus('', '');
+  phoneVerified = false;
+});
+function setPhoneStatus(type, msg) {
+  const el = document.getElementById('phoneStatus');
+  el.textContent = msg;
+  el.className = type === 'ok' ? 'status-ok' : type === 'err' ? 'status-err' : '';
+}
+
+// 是/否
+function selectFriend(val) {
+  friendChoice = val;
+  document.getElementById('friendVal').value = val;
+  document.getElementById('btn-yes').className = 'radio-btn' + (val === 'yes' ? ' selected-yes' : '');
+  document.getElementById('btn-no').className = 'radio-btn' + (val === 'no' ? ' selected-no' : '');
+  document.getElementById('codeSection').style.display = val === 'yes' ? 'block' : 'none';
+  if (val !== 'yes') {
+    document.getElementById('codeInput').value = '';
+    document.getElementById('codeStatus').textContent = '';
+  }
+}
+
+// 代碼驗證
+document.getElementById('codeInput').addEventListener('input', function() {
+  const s = document.getElementById('codeStatus');
+  if (!this.value.trim()) { s.textContent = ''; return; }
+  if (this.value.trim() === CORRECT_CODE) {
+    s.textContent = '✓ 代碼正確！'; s.className = 'status-ok';
+  } else {
+    s.textContent = '✗ 代碼不正確，請向行政組確認'; s.className = 'status-err';
+  }
+});
+
+// 送出
+function submitForm() {
+  let valid = true;
+
+  const nameEl = document.getElementById('field-name');
+  const nameVal = document.getElementById('nameSelect').value;
+  if (!nameVal) { nameEl.classList.add('error'); valid = false; setTimeout(() => nameEl.classList.remove('error'), 800); }
+
+  const phoneEl = document.getElementById('field-phone');
+  if (!phoneVerified) {
+    phoneEl.classList.add('error'); valid = false;
+    setTimeout(() => phoneEl.classList.remove('error'), 800);
+    if (!document.getElementById('phoneInput').value) setPhoneStatus('err', '請先輸入手機末三碼');
   }
 
+  const friendEl = document.getElementById('field-friend');
+  if (!friendChoice) { friendEl.classList.add('error'); valid = false; setTimeout(() => friendEl.classList.remove('error'), 800); }
 
-  // Friend yes/no
-  function selectFriend(val) {
-    friendChoice = val;
-    document.getElementById('friendVal').value = val;
-    document.getElementById('btn-yes').className = 'radio-btn' + (val==='yes'?' selected-yes':'');
-    document.getElementById('btn-no').className = 'radio-btn' + (val==='no'?' selected-no':'');
-    const cs = document.getElementById('codeSection');
-    cs.style.display = val === 'yes' ? 'block' : 'none';
-    if (val !== 'yes') {
-      document.getElementById('codeInput').value = '';
-      document.getElementById('codeStatus').textContent = '';
+  if (friendChoice === 'yes') {
+    const code = document.getElementById('codeInput').value.trim();
+    if (code !== CORRECT_CODE) {
+      document.getElementById('codeInput').style.borderColor = 'var(--red)';
+      document.getElementById('codeStatus').textContent = '✗ 請輸入正確代碼才能送出';
+      document.getElementById('codeStatus').className = 'status-err';
+      valid = false;
+      setTimeout(() => { document.getElementById('codeInput').style.borderColor = ''; }, 800);
     }
   }
 
-  // Code verify on input
-  document.getElementById('codeInput').addEventListener('input', function() {
-    const v = this.value.trim();
-    const s = document.getElementById('codeStatus');
-    if (!v) { s.textContent = ''; return; }
-    if (v === CORRECT_CODE) {
-      s.textContent = '✓ 代碼正確！';
-      s.className = 'status-ok';
-    } else {
-      s.textContent = '✗ 代碼不正確，請向行政組確認';
-      s.className = 'status-err';
-    }
-  });
+  if (!valid) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
 
-  // ===== 請在部署 Apps Script 後填入你的 Web App URL =====
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYFLw5K2Cno9rB8s4e3btTG_bynCBnY3jjigSk6j5e78uvernr5q-ONKfIzy81oGR-/exec';
+  // 送出資料（no-cors，不等回應）
+  const selectedOption = document.getElementById('nameSelect').options[document.getElementById('nameSelect').selectedIndex];
+  const payload = {
+    name: selectedOption.text,
+    phone: document.getElementById('phoneInput').value.trim(),
+    friend: friendChoice,
+    code: friendChoice === 'yes' ? document.getElementById('codeInput').value.trim() : ''
+  };
 
-  // Submit
-  async function submitForm() {
-    let valid = true;
+  // 用 no-cors 送出，iOS Safari 不會擋純文字 POST
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
 
-    // Name
-    const nameEl = document.getElementById('field-name');
-    const nameVal = document.getElementById('nameSelect').value;
-    if (!nameVal) { nameEl.classList.add('error'); valid = false; setTimeout(()=>nameEl.classList.remove('error'),800); }
-
-    // Phone
-    const phoneEl = document.getElementById('field-phone');
-    if (!phoneVerified) {
-      phoneEl.classList.add('error'); valid = false;
-      setTimeout(()=>phoneEl.classList.remove('error'),800);
-      if (!document.getElementById('phoneInput').value) setPhoneStatus('err', '請先輸入手機末三碼');
-    }
-
-    // Friend
-    const friendEl = document.getElementById('field-friend');
-    if (!friendChoice) { friendEl.classList.add('error'); valid = false; setTimeout(()=>friendEl.classList.remove('error'),800); }
-
-    // Code (if friend = yes)
-    if (friendChoice === 'yes') {
-      const code = document.getElementById('codeInput').value.trim();
-      if (code !== CORRECT_CODE) {
-        document.getElementById('codeInput').style.borderColor = 'var(--red)';
-        document.getElementById('codeStatus').textContent = '✗ 請輸入正確代碼才能送出';
-        document.getElementById('codeStatus').className = 'status-err';
-        valid = false;
-        setTimeout(()=>{ document.getElementById('codeInput').style.borderColor = ''; }, 800);
-      }
-    }
-
-    if (!valid) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
-    // 檢查 URL 是否已設定
-    if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
-      alert('⚠️ 請先在 HTML 中填入 Apps Script Web App URL');
-      return;
-    }
-
-    // 顯示送出中
-    const btn = document.querySelector('.submit-btn');
-    btn.disabled = true;
-    btn.textContent = '⏳ 上傳中，請稍候…';
-
-    try {
-      const selectedOption = document.getElementById('nameSelect').options[document.getElementById('nameSelect').selectedIndex];
-      const payload = {
-        name: selectedOption.text,
-        phone: document.getElementById('phoneInput').value.trim(),
-        friend: friendChoice,
-        code: friendChoice === 'yes' ? document.getElementById('codeInput').value.trim() : ''
-      };
-
-      const resp = await fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const result = await resp.json();
-
-      if (result.status === 'ok') {
-        document.getElementById('formContainer').style.display = 'none';
-        document.getElementById('successScreen').style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        throw new Error(result.message || '伺服器回應異常');
-      }
-    } catch (err) {
-      btn.disabled = false;
-      btn.textContent = '送出作業 🎉';
-      alert('❌ 送出失敗，請再試一次。\n錯誤：' + err.message);
-    }
-  }
+  // 直接顯示成功畫面，不等回應
+  document.getElementById('formContainer').style.display = 'none';
+  document.getElementById('successScreen').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 </script>
+</body>
+</html>
