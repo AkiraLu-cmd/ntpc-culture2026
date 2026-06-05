@@ -760,23 +760,6 @@
     el.className = type === 'ok' ? 'status-ok' : type === 'err' ? 'status-err' : '';
   }
 
-  // Upload preview
-  function setupUpload(inputId, areaId, previewId, filenameId) {
-    document.getElementById(inputId).addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      const area = document.getElementById(areaId);
-      if (!file) { area.classList.remove('has-file'); return; }
-      area.classList.add('has-file');
-      document.getElementById(filenameId).textContent = '✓ ' + file.name;
-      const reader = new FileReader();
-      reader.onload = function(ev) {
-        document.getElementById(previewId).src = ev.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-  setupUpload('upload1','uploadArea1','preview1','filename1');
-  setupUpload('upload2','uploadArea2','preview2','filename2');
 
   // Friend yes/no
   function selectFriend(val) {
@@ -808,30 +791,6 @@
 
   // ===== 請在部署 Apps Script 後填入你的 Web App URL =====
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYFLw5K2Cno9rB8s4e3btTG_bynCBnY3jjigSk6j5e78uvernr5q-ONKfIzy81oGR-/exec';
-
-  // 圖片壓縮：用 canvas 縮小到最大 800px、品質 0.7，控制在 300KB 以內
-  function compressImage(file) {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = function(ev) {
-        const img = new Image();
-        img.onload = function() {
-          const MAX = 800;
-          let w = img.width, h = img.height;
-          if (w > MAX || h > MAX) {
-            if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
-            else { w = Math.round(w * MAX / h); h = MAX; }
-          }
-          const canvas = document.createElement('canvas');
-          canvas.width = w; canvas.height = h;
-          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-          resolve(canvas.toDataURL('image/jpeg', 0.7));
-        };
-        img.src = ev.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-  }
 
   // Submit
   async function submitForm() {
