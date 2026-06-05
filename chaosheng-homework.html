@@ -239,17 +239,23 @@
   .radio-group { display: flex; gap: 10px; }
   .radio-btn {
     flex: 1;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 11px 10px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 10px;
     text-align: center;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: 700;
     cursor: pointer;
     transition: all .18s;
     background: var(--offwhite);
     color: var(--muted);
     user-select: none;
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    -webkit-tap-highlight-color: transparent;
   }
   .radio-btn.selected-yes { border-color: var(--green); background: #f0faf5; color: var(--green); }
   .radio-btn.selected-no { border-color: var(--navy); background: #eef2fa; color: var(--navy); }
