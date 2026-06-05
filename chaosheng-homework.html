@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>潮盛新莊｜作業繳交</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f2347;
+    --navy2: #1a3a6b;
+    --gold: #c9a84c;
+    --gold2: #e8c870;
+    --cream: #f5f0e8;
+    --offwhite: #faf8f4;
+    --text: #1a2a4a;
+    --muted: #6b7a99;
+    --red: #e05252;
+    --green: #2e9e6b;
+    --border: rgba(15,35,71,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--offwhite);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    background: var(--navy);
+    padding: 20px 24px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .header-badge {
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.08em;
+  }
+  .header-title {
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .header-sub {
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    margin-left: auto;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+    padding: 36px 24px 30px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.08);
+  }
+  .hero-label {
+    color: var(--gold);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .gold-line { display: inline-block; width: 20px; height: 1.5px; background: var(--gold); margin: 0 6px; vertical-align: middle; }
+  .hero-title {
+    color: white;
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
+  .hero-subtitle {
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+  }
+
+  /* Form container */
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+
+  /* Form card */
+  .form-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 24px;
+    border: 0.5px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .form-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .form-card-title::before {
+    content: '';
+    width: 3px;
+    height: 14px;
+    background: var(--gold);
+    border-radius: 2px;
+    display: inline-block;
+  }
+
+  /* Field */
+  .field { margin-bottom: 20px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 7px;
+  }
+  .field label .req {
+    color: var(--red);
+    margin-left: 3px;
+  }
+  .field label .hint {
+    font-weight: 400;
+    color: var(--muted);
+    font-size: 11px;
+    margin-left: 6px;
+  }
+
+  select, input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--offwhite);
+    transition: border-color .2s, background .2s;
+    appearance: none;
+  }
+  select:focus, input:focus {
+    outline: none;
+    border-color: var(--navy);
+    background: white;
+  }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7a99' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+
+  /* Phone verify row */
+  .phone-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .phone-prefix {
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .phone-row input { flex: 1; }
+  #phoneStatus {
+    font-size: 12px;
+    margin-top: 5px;
+    min-height: 16px;
+  }
+  .status-ok { color: var(--green); font-weight: 600; }
+  .status-err { color: var(--red); }
+
+  /* Upload field */
+  .upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 22px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+    background: var(--offwhite);
+    position: relative;
+  }
+  .upload-area:hover { border-color: var(--navy); background: #f0ecf8; }
+  .upload-area.has-file { border-color: var(--green); background: #f0faf5; }
+  .upload-area input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+  .upload-icon { font-size: 28px; margin-bottom: 6px; }
+  .upload-text { font-size: 13px; color: var(--muted); }
+  .upload-text strong { color: var(--navy); display: block; font-size: 14px; margin-bottom: 2px; }
+  .upload-filename {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--green);
+    font-weight: 600;
+    display: none;
+  }
+  .upload-area.has-file .upload-filename { display: block; }
+  .upload-area.has-file .upload-default { display: none; }
+  .preview-thumb {
+    max-width: 100%;
+    max-height: 120px;
+    border-radius: 6px;
+    margin-top: 8px;
+    display: none;
+    object-fit: cover;
+  }
+  .upload-area.has-file .preview-thumb { display: inline-block; }
+
+  /* Yes/No */
+  .radio-group { display: flex; gap: 10px; }
+  .radio-btn {
+    flex: 1;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 10px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .18s;
+    background: var(--offwhite);
+    color: var(--muted);
+    user-select: none;
+  }
+  .radio-btn.selected-yes { border-color: var(--green); background: #f0faf5; color: var(--green); }
+  .radio-btn.selected-no { border-color: var(--navy); background: #eef2fa; color: var(--navy); }
+
+  /* Code section */
+  #codeSection {
+    margin-top: 14px;
+    padding: 14px 16px;
+    background: #fff8ec;
+    border: 1.5px solid #e8d090;
+    border-radius: 10px;
+    display: none;
+  }
+  #codeSection label {
+    font-size: 13px;
+    color: #8a6510;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+  }
+  #codeSection input {
+    background: white;
+    border-color: #e8d090;
+  }
+  #codeStatus {
+    font-size: 12px;
+    margin-top: 5px;
+    min-height: 16px;
+  }
+
+  /* Submit */
+  .submit-btn {
+    width: 100%;
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 16px;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .18s, transform .1s;
+    letter-spacing: 0.04em;
+    margin-top: 8px;
+  }
+  .submit-btn:hover { background: var(--navy2); }
+  .submit-btn:active { transform: scale(0.98); }
+  .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+  .required-note {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 10px;
+  }
+  .required-note span { color: var(--red); }
+
+  /* Error flash */
+  .field.error select, .field.error input, .field.error .upload-area, .field.error .radio-group {
+    border-color: var(--red) !important;
+    animation: shake .3s ease;
+  }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-4px)}
+    75%{transform:translateX(4px)}
+  }
+
+  /* Success */
+  #successScreen {
+    display: none;
+    text-align: center;
+    padding: 30px 20px 60px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .success-circle {
+    width: 72px; height: 72px;
+    background: #e6f7ef;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 18px;
+    font-size: 32px;
+  }
+  .success-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .success-sub {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  .announcement-card {
+    background: white;
+    border-radius: 14px;
+    padding: 22px 20px;
+    border: 0.5px solid var(--border);
+    text-align: left;
+  }
+  .ann-badge {
+    display: inline-block;
+    background: #fff3cd;
+    color: #8a6510;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+  .ann-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+  .song-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .song-item:last-of-type { border-bottom: none; margin-bottom: 0; }
+  .song-num {
+    background: var(--navy);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .song-info { flex: 1; }
+  .song-name { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+  .song-desc { font-size: 12px; color: var(--muted); margin-bottom: 5px; }
+  .song-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--navy);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: background .15s;
+  }
+  .song-link:hover { background: var(--navy2); }
+  .ann-footer {
+    background: var(--cream);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--text);
+    margin-top: 14px;
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-badge">2026</span>
+  <span class="header-title">新北文化大使</span>
+  <span class="header-sub">作業繳交系統</span>
+</div>
+
+<div class="hero">
+  <div class="hero-label">
+    <span class="gold-line"></span>潮盛新莊<span class="gold-line"></span>
+  </div>
+  <div class="hero-title">活動作業繳交</div>
+  <div class="hero-subtitle">2026.06.06 廟街走讀 × 文化推廣</div>
+</div>
+
+<div class="container" id="formContainer">
+
+  <!-- 身份驗證 -->
+  <div class="form-card">
+    <div class="form-card-title">學員身份驗證</div>
+
+    <div class="field" id="field-name">
+      <label>學員姓名 <span class="req">*</span></label>
+      <select id="nameSelect">
+        <option value="">請選擇你的姓名</option>
+        <option value="呂家維|327">NTPCCA-001 呂家維</option>
+        <option value="黃玉桂|667">NTPCCA-002 黃玉桂</option>
+        <option value="蘇玟如|092">NTPCCA-003 蘇玟如</option>
+        <option value="張廷羽|512">NTPCCA-004 張廷羽</option>
+        <option value="林正邦|750">NTPCCA-005 林正邦</option>
+        <option value="呂柏陞|396">NTPCCA-007 呂柏陞</option>
+        <option value="葉亞竺|601">NTPCCA-010 葉亞竺</option>
+        <option value="林彥群|268">NTPCCA-011 林彥群</option>
+        <option value="邱子倫|045">NTPCCA-012 邱子倫</option>
+        <option value="周昕嬡|897">NTPCCA-013 周昕嬡</option>
+        <option value="張瑞庭|518">NTPCCA-015 張瑞庭</option>
+        <option value="張巧諭|036">NTPCCA-016 張巧諭</option>
+        <option value="黃奕榛|156">NTPCCA-018 黃奕榛</option>
+        <option value="謝蕙安|375">NTPCCA-019 謝蕙安</option>
+        <option value="蔡湘寗|685">NTPCCA-021 蔡湘寗</option>
+        <option value="蘇安予|303">NTPCCA-022 蘇安予</option>
+        <option value="林雨欣|932">NTPCCA-023 林雨欣</option>
+        <option value="吳冠潁|971">NTPCCA-024 吳冠潁</option>
+        <option value="林育德|006">NTPCCA-025 林育德</option>
+        <option value="褚俊儒|905">NTPCCA-026 褚俊儒</option>
+        <option value="張芝穎|269">NTPCCA-027 張芝穎</option>
+        <option value="陳宥蓉|855">NTPCCA-028 陳宥蓉</option>
+        <option value="李宇宥|000">NTPCCA-029 李宇宥</option>
+        <option value="鍾欣庭|290">NTPCCA-030 鍾欣庭</option>
+        <option value="李品潔|502">NTPCCA-031 李品潔</option>
+        <option value="蔡昀珊|531">NTPCCA-032 蔡昀珊</option>
+        <option value="陳立儒|693">NTPCCA-033 陳立儒</option>
+        <option value="邱筠媜|605">NTPCCA-034 邱筠媜</option>
+        <option value="陳怡婷|682">NTPCCA-035 陳怡婷</option>
+        <option value="陳品嫻|702">NTPCCA-036 陳品嫻</option>
+        <option value="李宜庭|650">NTPCCA-037 李宜庭</option>
+        <option value="陳聖媛|531">NTPCCA-038 陳聖媛</option>
+        <option value="周筱涵|539">NTPCCA-039 周筱涵</option>
+        <option value="梁家珍|826">NTPCCA-041 梁家珍</option>
+        <option value="廖徽瑜|983">NTPCCA-042 廖徽瑜</option>
+        <option value="廖品媛|775">NTPCCA-043 廖品媛</option>
+        <option value="李姿羽|357">NTPCCA-044 李姿羽</option>
+        <option value="楊堤米|625">NTPCCA-045 楊堤米</option>
+        <option value="郭心怡|104">NTPCCA-046 郭心怡</option>
+        <option value="李宇豪|881">NTPCCA-047 李宇豪</option>
+        <option value="林巧詒|262">NTPCCA-048 林巧詒</option>
+        <option value="林彤恩|607">NTPCCA-049 林彤恩</option>
+        <option value="袁睿|123">NTPCCA-050 袁睿</option>
+        <option value="廖湘宜|342">NTPCCA-051 廖湘宜</option>
+        <option value="鄧行甫|068">NTPCCA-052 鄧行甫</option>
+        <option value="洪叔妤|858">NTPCCA-053 洪叔妤</option>
+        <option value="楊庭瑄|129">NTPCCA-054 楊庭瑄</option>
+        <option value="袁宇彤|041">NTPCCA-055 袁宇彤</option>
+        <option value="廖怡瑄|038">NTPCCA-056 廖怡瑄</option>
+        <option value="李欣芸|222">NTPCCA-057 李欣芸</option>
+        <option value="陳殷琪|218">NTPCCA-058 陳殷琪</option>
+        <option value="王妘莛|016">NTPCCA-059 王妘莛</option>
+        <option value="葉詠妍|319">NTPCCA-060 葉詠妍</option>
+        <option value="陳醇容|056">NTPCCA-061 陳醇容</option>
+        <option value="彭梓綺|908">NTPCCA-062 彭梓綺</option>
+        <option value="蔡心柔|822">NTPCCA-063 蔡心柔</option>
+        <option value="高佳愉|480">NTPCCA-064 高佳愉</option>
+        <option value="周以喬|144">NTPCCA-065 周以喬</option>
+        <option value="王沛璇|028">NTPCCA-066 王沛璇</option>
+        <option value="林思涵|980">NTPCCA-067 林思涵</option>
+        <option value="黃宇婕|532">NTPCCA-068 黃宇婕</option>
+        <option value="李盈璇|120">NTPCCA-069 李盈璇</option>
+        <option value="李宥辰|537">NTPCCA-071 李宥辰</option>
+        <option value="游舒涵|728">NTPCCA-072 游舒涵</option>
+        <option value="李宇宣|857">NTPCCA-074 李宇宣</option>
+        <option value="林詩嫻|735">NTPCCA-075 林詩嫻</option>
+        <option value="張嘉芳|719">NTPCCA-076 張嘉芳</option>
+        <option value="闕佑芯|705">NTPCCA-078 闕佑芯</option>
+        <option value="鍾岩祐|797">NTPCCA-079 鍾岩祐</option>
+        <option value="李秉峰|321">NTPCCA-080 李秉峰</option>
+        <option value="林宸睿|532">NTPCCA-081 林宸睿</option>
+        <option value="翁允甜|198">NTPCCA-082 翁允甜</option>
+        <option value="劉冠廷|680">NTPCCA-083 劉冠廷</option>
+        <option value="鐘昱晴|536">NTPCCA-084 鐘昱晴</option>
+        <option value="吳心田|151">NTPCCA-085 吳心田</option>
+        <option value="李志衡|619">NTPCCA-086 李志衡</option>
+        <option value="高萍袖|818">NTPCCA-087 高萍袖</option>
+        <option value="孫譽恩|526">NTPCCA-088 孫譽恩</option>
+        <option value="陳乃嘉|188">NTPCCA-089 陳乃嘉</option>
+        <option value="程鈺芳|303">NTPCCA-090 程鈺芳</option>
+        <option value="孫瑋成|378">NTPCCA-091 孫瑋成</option>
+        <option value="姚守恩|557">NTPCCA-092 姚守恩</option>
+        <option value="洪苡甯|911">NTPCCA-093 洪苡甯</option>
+        <option value="黃晨堯|036">NTPCCA-094 黃晨堯</option>
+        <option value="林子芸|282">NTPCCA-095 林子芸</option>
+        <option value="蔡欣芸|051">NTPCCA-096 蔡欣芸</option>
+        <option value="高珮綺|382">NTPCCA-097 高珮綺</option>
+        <option value="杜育葳|883">NTPCCA-098 杜育葳</option>
+        <option value="周炳宏|994">NTPCCA-099 周炳宏</option>
+      </select>
+    </div>
+
+    <div class="field" id="field-phone">
+      <label>手機後三碼驗證 <span class="req">*</span><span class="hint">請輸入報名時填寫的手機末三碼</span></label>
+      <div class="phone-row">
+        <span class="phone-prefix">後三碼</span>
+        <input type="text" id="phoneInput" maxlength="3" placeholder="例：327" inputmode="numeric">
+      </div>
+      <div id="phoneStatus"></div>
+    </div>
+  </div>
+
+  <!-- 截圖上傳 -->
+  <div class="form-card">
+    <div class="form-card-title">截圖上傳</div>
+
+    <div class="field" id="field-upload1">
+      <label>集章活動限時動態截圖 <span class="req">*</span></label>
+      <div class="upload-area" id="uploadArea1">
+        <input type="file" id="upload1" accept="image/*">
+        <div class="upload-default">
+          <div class="upload-icon">📸</div>
+          <div class="upload-text"><strong>點擊上傳截圖</strong>支援 JPG、PNG、HEIC</div>
+        </div>
+        <img class="preview-thumb" id="preview1" src="" alt="">
+        <div class="upload-filename" id="filename1"></div>
+      </div>
+    </div>
+
+    <div class="field" id="field-upload2">
+      <label>攤位遊戲參與限時動態截圖 <span class="req">*</span></label>
+      <div class="upload-area" id="uploadArea2">
+        <input type="file" id="upload2" accept="image/*">
+        <div class="upload-default">
+          <div class="upload-icon">🎮</div>
+          <div class="upload-text"><strong>點擊上傳截圖</strong>支援 JPG、PNG、HEIC</div>
+        </div>
+        <img class="preview-thumb" id="preview2" src="" alt="">
+        <div class="upload-filename" id="filename2"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 加碼任務 -->
+  <div class="form-card">
+    <div class="form-card-title">加碼任務</div>
+
+    <div class="field" id="field-friend">
+      <label>是否帶計畫以外的朋友一起參加活動？ <span class="req">*</span></label>
+      <div class="radio-group">
+        <div class="radio-btn" id="btn-yes" onclick="selectFriend('yes')">✅ 是</div>
+        <div class="radio-btn" id="btn-no" onclick="selectFriend('no')">❌ 否</div>
+      </div>
+      <input type="hidden" id="friendVal" value="">
+
+      <div id="codeSection">
+        <label>🔑 請跟行政組索取代碼並輸入 <span class="req">*</span></label>
+        <input type="password" id="codeInput" maxlength="6" placeholder="請輸入代碼" autocomplete="off">
+        <div id="codeStatus"></div>
+      </div>
+    </div>
+  </div>
+
+  <button class="submit-btn" onclick="submitForm()">送出作業 🎉</button>
+  <p class="required-note">所有欄位均為必填<span>（*）</span></p>
+
+</div>
+
+<!-- Success -->
+<div id="successScreen">
+  <div class="success-circle">🎊</div>
+  <div class="success-title">繳交成功！</div>
+  <div class="success-sub">感謝你的參與，辛苦了！</div>
+
+  <div class="announcement-card">
+    <div class="ann-badge">🎵 活動公告</div>
+    <div class="ann-title">2026潮盛新莊這次與歌手合作創作的歌曲2首已上架，歡迎多多點閱並幫忙宣傳！</div>
+
+    <div class="song-item">
+      <div class="song-num">1</div>
+      <div class="song-info">
+        <div class="song-name">《好戲》</div>
+        <div class="song-desc">李英宏 DJDIDILONG × 新西園掌中劇團 合作創作</div>
+        <a class="song-link" href="https://youtu.be/ghV_drwz7j4?si=5s_YIH3VJ-CNZwxW" target="_blank" rel="noopener">
+          ▶ YouTube 收聽
+        </a>
+      </div>
+    </div>
+
+    <div class="song-item">
+      <div class="song-num">2</div>
+      <div class="song-info">
+        <div class="song-name">《三步贊》</div>
+        <div class="song-desc">HowZ × 頭前庄官將首 合作創作</div>
+        <a class="song-link" href="https://youtu.be/YY-WlPndSEQ?si=98r-i6oKh7AJIdsY" target="_blank" rel="noopener">
+          ▶ YouTube 收聽
+        </a>
+      </div>
+    </div>
+
+    <div class="ann-footer">
+      🌙 晚上有現場演出，歡迎持續參與活動唷！
+    </div>
+  </div>
+</div>
+
+<script>
+  const CORRECT_CODE = '0606';
+  let friendChoice = '';
+  let phoneVerified = false;
+
+  // Phone verify on change
+  document.getElementById('phoneInput').addEventListener('input', function() {
+    const name = document.getElementById('nameSelect').value;
+    if (!name) { setPhoneStatus('', ''); return; }
+    const expected = name.split('|')[1];
+    const entered = this.value.trim();
+    if (entered.length < 3) { setPhoneStatus('', ''); return; }
+    if (entered === expected) {
+      setPhoneStatus('ok', '✓ 驗證通過');
+      phoneVerified = true;
+    } else {
+      setPhoneStatus('err', '✗ 手機末三碼不符，請確認');
+      phoneVerified = false;
+    }
+  });
+  document.getElementById('nameSelect').addEventListener('change', function() {
+    document.getElementById('phoneInput').value = '';
+    setPhoneStatus('', '');
+    phoneVerified = false;
+  });
+  function setPhoneStatus(type, msg) {
+    const el = document.getElementById('phoneStatus');
+    el.textContent = msg;
+    el.className = type === 'ok' ? 'status-ok' : type === 'err' ? 'status-err' : '';
+  }
+
+  // Upload preview
+  function setupUpload(inputId, areaId, previewId, filenameId) {
+    document.getElementById(inputId).addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const area = document.getElementById(areaId);
+      if (!file) { area.classList.remove('has-file'); return; }
+      area.classList.add('has-file');
+      document.getElementById(filenameId).textContent = '✓ ' + file.name;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        document.getElementById(previewId).src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  setupUpload('upload1','uploadArea1','preview1','filename1');
+  setupUpload('upload2','uploadArea2','preview2','filename2');
+
+  // Friend yes/no
+  function selectFriend(val) {
+    friendChoice = val;
+    document.getElementById('friendVal').value = val;
+    document.getElementById('btn-yes').className = 'radio-btn' + (val==='yes'?' selected-yes':'');
+    document.getElementById('btn-no').className = 'radio-btn' + (val==='no'?' selected-no':'');
+    const cs = document.getElementById('codeSection');
+    cs.style.display = val === 'yes' ? 'block' : 'none';
+    if (val !== 'yes') {
+      document.getElementById('codeInput').value = '';
+      document.getElementById('codeStatus').textContent = '';
+    }
+  }
+
+  // Code verify on input
+  document.getElementById('codeInput').addEventListener('input', function() {
+    const v = this.value.trim();
+    const s = document.getElementById('codeStatus');
+    if (!v) { s.textContent = ''; return; }
+    if (v === CORRECT_CODE) {
+      s.textContent = '✓ 代碼正確！';
+      s.className = 'status-ok';
+    } else {
+      s.textContent = '✗ 代碼不正確，請向行政組確認';
+      s.className = 'status-err';
+    }
+  });
+
+  // ===== 請在部署 Apps Script 後填入你的 Web App URL =====
+  const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
+  // 圖片轉 base64
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Submit
+  async function submitForm() {
+    let valid = true;
+
+    // Name
+    const nameEl = document.getElementById('field-name');
+    const nameVal = document.getElementById('nameSelect').value;
+    if (!nameVal) { nameEl.classList.add('error'); valid = false; setTimeout(()=>nameEl.classList.remove('error'),800); }
+
+    // Phone
+    const phoneEl = document.getElementById('field-phone');
+    if (!phoneVerified) {
+      phoneEl.classList.add('error'); valid = false;
+      setTimeout(()=>phoneEl.classList.remove('error'),800);
+      if (!document.getElementById('phoneInput').value) setPhoneStatus('err', '請先輸入手機末三碼');
+    }
+
+    // Upload 1
+    const up1el = document.getElementById('field-upload1');
+    const file1 = document.getElementById('upload1').files[0];
+    if (!file1) { up1el.classList.add('error'); valid = false; setTimeout(()=>up1el.classList.remove('error'),800); }
+
+    // Upload 2
+    const up2el = document.getElementById('field-upload2');
+    const file2 = document.getElementById('upload2').files[0];
+    if (!file2) { up2el.classList.add('error'); valid = false; setTimeout(()=>up2el.classList.remove('error'),800); }
+
+    // Friend
+    const friendEl = document.getElementById('field-friend');
+    if (!friendChoice) { friendEl.classList.add('error'); valid = false; setTimeout(()=>friendEl.classList.remove('error'),800); }
+
+    // Code (if friend = yes)
+    if (friendChoice === 'yes') {
+      const code = document.getElementById('codeInput').value.trim();
+      if (code !== CORRECT_CODE) {
+        document.getElementById('codeInput').style.borderColor = 'var(--red)';
+        document.getElementById('codeStatus').textContent = '✗ 請輸入正確代碼才能送出';
+        document.getElementById('codeStatus').className = 'status-err';
+        valid = false;
+        setTimeout(()=>{ document.getElementById('codeInput').style.borderColor = ''; }, 800);
+      }
+    }
+
+    if (!valid) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // 檢查 URL 是否已設定
+    if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+      alert('⚠️ 請先在 HTML 中填入 Apps Script Web App URL（APPS_SCRIPT_URL）');
+      return;
+    }
+
+    // 顯示送出中
+    const btn = document.querySelector('.submit-btn');
+    btn.disabled = true;
+    btn.textContent = '⏳ 上傳中，請稍候…';
+
+    try {
+      // 轉換圖片
+      const [img1b64, img2b64] = await Promise.all([
+        fileToBase64(file1),
+        fileToBase64(file2)
+      ]);
+
+      const selectedOption = document.getElementById('nameSelect').options[document.getElementById('nameSelect').selectedIndex];
+      const payload = {
+        name: selectedOption.text,  // e.g. "NTPCCA-001 呂家維"
+        nameRaw: selectedOption.text,
+        phone: document.getElementById('phoneInput').value.trim(),
+        img1: img1b64,
+        img2: img2b64,
+        friend: friendChoice,
+        code: friendChoice === 'yes' ? document.getElementById('codeInput').value.trim() : ''
+      };
+
+      const resp = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+      const result = await resp.json();
+
+      if (result.status === 'ok') {
+        document.getElementById('formContainer').style.display = 'none';
+        document.getElementById('successScreen').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        throw new Error(result.message || '伺服器回應異常');
+      }
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = '送出作業 🎉';
+      alert('❌ 送出失敗，請再試一次。\n錯誤：' + err.message);
+    }
+  }
+</script>
+</body>
+</html>
