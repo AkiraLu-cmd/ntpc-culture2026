@@ -456,6 +456,41 @@
     transition: background .15s;
   }
   .upload-drive-btn:hover { background: var(--navy2); }
+  .upload-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 14px 0;
+  }
+  .upload-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--offwhite);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .step-num {
+    background: var(--navy);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-example {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 400;
+  }
   .upload-remind-note {
     font-size: 12px;
     color: var(--muted);
@@ -678,15 +713,18 @@
   </div>
 
   <div class="upload-remind-card">
-    <div class="upload-remind-title">📸 還有最後一步！</div>
-    <div class="upload-remind-body">請點下方連結，進入截圖上傳資料夾，上傳以下兩張截圖：<br><br>
-      <span class="upload-item">1️⃣ 集章活動限時動態截圖</span>
-      <span class="upload-item">2️⃣ 攤位遊戲參與限時動態截圖</span>
+    <div class="upload-remind-title">📸 還有最後一步！上傳截圖</div>
+    <div class="upload-remind-body">
+      請點下方按鈕進入 Google Drive 資料夾，並依照以下步驟完成截圖上傳：
+    </div>
+    <div class="upload-steps">
+      <div class="upload-step"><span class="step-num">1</span><span>點擊「新增資料夾」，以你的<strong>學員編號</strong>命名<br><span class="step-example">例：NTPCCA-001</span></span></div>
+      <div class="upload-step"><span class="step-num">2</span><span>進入剛建立的資料夾，上傳以下兩張截圖：<br><strong>① 集章活動限時動態截圖</strong><br><strong>② 攤位遊戲參與限時動態截圖</strong></span></div>
     </div>
     <a class="upload-drive-btn" href="https://drive.google.com/drive/folders/1Kd_vRlnskCaYhj_DqMEGCREv6Fkw4wTB" target="_blank" rel="noopener">
       📂 開啟截圖上傳資料夾
     </a>
-    <div class="upload-remind-note">請在資料夾內新增一個以「你的姓名」命名的資料夾，再把兩張截圖放進去。</div>
+    <div class="upload-remind-note">⚠️ 上傳截圖後才算完成作業繳交，請務必完成！</div>
   </div>
 
 </div>
