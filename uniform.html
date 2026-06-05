@@ -323,7 +323,11 @@ function showUniformInfo() {
     return;
   }
 
-  // 新生：先查詢試算表是否已領取
+  // 新生：先查詢試算表是否已領取（URL 未設定時直接顯示表單）
+  if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+    renderPickupForm(content);
+    return;
+  }
   content.innerHTML = `<div style="text-align:center;padding:20px;color:var(--muted);font-size:14px;">⏳ 查詢中...</div>`;
   document.getElementById('submitBtn').style.display = 'none';
 
