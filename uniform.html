@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新北文化大使｜制服領取</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f2347; --navy2: #1a3a6b; --gold: #c9a84c;
+    --cream: #f5f0e8; --offwhite: #faf8f4; --text: #1a2a4a;
+    --muted: #6b7a99; --red: #e05252; --green: #2e9e6b;
+    --border: rgba(15,35,71,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans TC', sans-serif; background: var(--offwhite); color: var(--text); min-height: 100vh; }
+
+  .header { background: var(--navy); padding: 20px 24px 18px; display: flex; align-items: center; gap: 12px; }
+  .header-badge { background: var(--gold); color: var(--navy); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.08em; }
+  .header-title { color: white; font-size: 16px; font-weight: 700; }
+  .header-sub { color: rgba(255,255,255,0.5); font-size: 12px; margin-left: auto; }
+
+  .hero { background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%); padding: 32px 24px 28px; text-align: center; }
+  .hero-label { color: var(--gold); font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
+  .gold-line { display: inline-block; width: 20px; height: 1.5px; background: var(--gold); margin: 0 6px; vertical-align: middle; }
+  .hero-title { color: white; font-size: 24px; font-weight: 900; margin-bottom: 6px; }
+  .hero-subtitle { color: rgba(255,255,255,0.6); font-size: 13px; }
+
+  .container { max-width: 560px; margin: 0 auto; padding: 24px 20px 60px; }
+
+  .form-card { background: white; border-radius: 16px; padding: 26px 22px; border: 0.5px solid var(--border); margin-bottom: 16px; }
+  .form-card-title { font-size: 12px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .form-card-title::before { content: ''; width: 3px; height: 13px; background: var(--gold); border-radius: 2px; }
+
+  .field { margin-bottom: 18px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label { display: block; font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+  .field label .req { color: var(--red); margin-left: 3px; }
+  .field label .hint { font-weight: 400; color: var(--muted); font-size: 11px; margin-left: 6px; }
+
+  select, input[type="text"] {
+    width: 100%; padding: 11px 14px; border: 1.5px solid var(--border);
+    border-radius: 8px; font-family: 'Noto Sans TC', sans-serif; font-size: 14px;
+    color: var(--text); background: var(--offwhite); transition: border-color .2s; appearance: none;
+  }
+  select:focus, input:focus { outline: none; border-color: var(--navy); background: white; }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7a99' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+
+  .phone-row { display: flex; align-items: center; gap: 8px; }
+  .phone-prefix { background: var(--cream); border: 1.5px solid var(--border); border-radius: 8px; padding: 11px 14px; font-size: 14px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+  .phone-row input { flex: 1; }
+  #phoneStatus { font-size: 12px; margin-top: 5px; min-height: 16px; }
+  .status-ok { color: var(--green); font-weight: 600; }
+  .status-err { color: var(--red); }
+
+  /* 制服資訊卡 */
+  #uniformCard { display: none; }
+  .uniform-info { background: var(--cream); border-radius: 12px; padding: 18px 20px; margin-top: 4px; }
+  .uniform-size-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .uniform-label { font-size: 13px; color: var(--muted); }
+  .uniform-size { font-size: 28px; font-weight: 900; color: var(--navy); }
+
+  .already-badge { background: #fff3cd; border: 1.5px solid #f0d060; border-radius: 10px; padding: 14px 16px; font-size: 14px; color: #8a6510; font-weight: 600; line-height: 1.6; }
+  .already-icon { font-size: 20px; margin-right: 6px; }
+
+  /* Checkbox */
+  .checkbox-area { margin-top: 16px; }
+  .checkbox-label { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 14px 16px; border: 2px solid var(--border); border-radius: 10px; background: var(--offwhite); transition: all .2s; }
+  .checkbox-label:hover { border-color: var(--navy); background: white; }
+  .checkbox-label.checked { border-color: var(--green); background: #f0faf5; }
+  .checkbox-label input { display: none; }
+  .custom-check { width: 22px; height: 22px; border: 2px solid var(--border); border-radius: 5px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all .2s; }
+  .checkbox-label.checked .custom-check { background: var(--green); border-color: var(--green); }
+  .check-inner { color: white; font-size: 14px; display: none; }
+  .checkbox-label.checked .check-inner { display: block; }
+  .check-text { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.5; }
+
+  .submit-btn { width: 100%; background: var(--navy); color: white; border: none; border-radius: 10px; padding: 16px; font-family: 'Noto Sans TC', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; transition: background .18s, transform .1s; letter-spacing: 0.04em; margin-top: 8px; }
+  .submit-btn:hover { background: var(--navy2); }
+  .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+  .field.error select, .field.error input { border-color: var(--red) !important; animation: shake .3s ease; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+
+  /* Success */
+  #successScreen { display: none; text-align: center; padding: 40px 20px 60px; max-width: 560px; margin: 0 auto; }
+  .success-circle { width: 80px; height: 80px; background: #e6f7ef; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 36px; }
+  .success-title { font-size: 24px; font-weight: 900; color: var(--navy); margin-bottom: 8px; }
+  .success-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; line-height: 1.6; }
+  .success-card { background: white; border-radius: 14px; padding: 20px; border: 0.5px solid var(--border); text-align: left; }
+  .success-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 0.5px solid var(--border); }
+  .success-row:last-child { border-bottom: none; }
+  .success-row-label { font-size: 13px; color: var(--muted); }
+  .success-row-value { font-size: 14px; font-weight: 700; color: var(--navy); }
+  .success-size-big { font-size: 22px; font-weight: 900; color: var(--navy); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-badge">2026</span>
+  <span class="header-title">新北文化大使</span>
+  <span class="header-sub">制服領取系統</span>
+</div>
+
+<div class="hero">
+  <div class="hero-label"><span class="gold-line"></span>制服領取<span class="gold-line"></span></div>
+  <div class="hero-title">請確認身份後領取制服</div>
+  <div class="hero-subtitle">請選擇姓名並輸入手機末三碼完成驗證</div>
+</div>
+
+<div class="container" id="formContainer">
+
+  <div class="form-card">
+    <div class="form-card-title">學員身份驗證</div>
+
+    <div class="field" id="field-name">
+      <label>學員姓名 <span class="req">*</span></label>
+      <select id="nameSelect" onchange="onNameChange()">
+        <option value="">請選擇你的姓名</option>
+        <option value="測試|894|M|new">【測試】測試</option>
+        <option value="呂家維|327|3L|received">NTPCCA-001 呂家維</option>
+        <option value="黃玉桂|667|M|old">NTPCCA-002 黃玉桂</option>
+        <option value="蘇玟如|092|M|received">NTPCCA-003 蘇玟如</option>
+        <option value="張廷羽|512|M|old">NTPCCA-004 張廷羽</option>
+        <option value="林正邦|750|2L|old">NTPCCA-005 林正邦</option>
+        <option value="呂柏陞|396|XL|received">NTPCCA-007 呂柏陞</option>
+        <option value="葉亞竺|601|S|received">NTPCCA-010 葉亞竺</option>
+        <option value="林彥群|268|XL|new">NTPCCA-011 林彥群</option>
+        <option value="邱子倫|045|XL|new">NTPCCA-012 邱子倫</option>
+        <option value="周昕嬡|897|M|received">NTPCCA-013 周昕嬡</option>
+        <option value="張瑞庭|518|L|old">NTPCCA-015 張瑞庭</option>
+        <option value="張巧諭|036|L|new">NTPCCA-016 張巧諭</option>
+        <option value="黃奕榛|156|L|old">NTPCCA-018 黃奕榛</option>
+        <option value="謝蕙安|375|M|old">NTPCCA-019 謝蕙安</option>
+        <option value="蔡湘寗|685|XL|old">NTPCCA-021 蔡湘寗</option>
+        <option value="蘇安予|303|M|old">NTPCCA-022 蘇安予</option>
+        <option value="林雨欣|932|M|received">NTPCCA-023 林雨欣</option>
+        <option value="吳冠潁|971|XL|new">NTPCCA-024 吳冠潁</option>
+        <option value="林育德|006|XL|new">NTPCCA-025 林育德</option>
+        <option value="褚俊儒|905|XL|received">NTPCCA-026 褚俊儒</option>
+        <option value="張芝穎|269|M|new">NTPCCA-027 張芝穎</option>
+        <option value="陳宥蓉|855|M|received">NTPCCA-028 陳宥蓉</option>
+        <option value="李宇宥|000|XL|new">NTPCCA-029 李宇宥</option>
+        <option value="鍾欣庭|290|S|received">NTPCCA-030 鍾欣庭</option>
+        <option value="李品潔|502|S|new">NTPCCA-031 李品潔</option>
+        <option value="蔡昀珊|531|L|new">NTPCCA-032 蔡昀珊</option>
+        <option value="陳立儒|693|XL|new">NTPCCA-033 陳立儒</option>
+        <option value="邱筠媜|605|M|received">NTPCCA-034 邱筠媜</option>
+        <option value="陳怡婷|682|M|new">NTPCCA-035 陳怡婷</option>
+        <option value="陳品嫻|702|S|new">NTPCCA-036 陳品嫻</option>
+        <option value="李宜庭|650|S|received">NTPCCA-037 李宜庭</option>
+        <option value="陳聖媛|531|L|new">NTPCCA-038 陳聖媛</option>
+        <option value="周筱涵|539|L|new">NTPCCA-039 周筱涵</option>
+        <option value="梁家珍|826|L|new">NTPCCA-041 梁家珍</option>
+        <option value="廖徽瑜|983|L|new">NTPCCA-042 廖徽瑜</option>
+        <option value="廖品媛|775|L|received">NTPCCA-043 廖品媛</option>
+        <option value="李姿羽|357|M|received">NTPCCA-044 李姿羽</option>
+        <option value="楊堤米|625|L|new">NTPCCA-045 楊堤米</option>
+        <option value="郭心怡|104|M|new">NTPCCA-046 郭心怡</option>
+        <option value="李宇豪|881|L|new">NTPCCA-047 李宇豪</option>
+        <option value="林巧詒|262|M|new">NTPCCA-048 林巧詒</option>
+        <option value="林彤恩|607|2L|new">NTPCCA-049 林彤恩</option>
+        <option value="袁睿|123|XL|received">NTPCCA-050 袁睿</option>
+        <option value="廖湘宜|342|M|new">NTPCCA-051 廖湘宜</option>
+        <option value="鄧行甫|068|XL|new">NTPCCA-052 鄧行甫</option>
+        <option value="洪叔妤|858|M|new">NTPCCA-053 洪叔妤</option>
+        <option value="楊庭瑄|129|M|new">NTPCCA-054 楊庭瑄</option>
+        <option value="袁宇彤|041|M|received">NTPCCA-055 袁宇彤</option>
+        <option value="廖怡瑄|038|M|new">NTPCCA-056 廖怡瑄</option>
+        <option value="李欣芸|222|M|old">NTPCCA-057 李欣芸</option>
+        <option value="陳殷琪|218|M|new">NTPCCA-058 陳殷琪</option>
+        <option value="王妘莛|016|L|received">NTPCCA-059 王妘莛</option>
+        <option value="葉詠妍|319|M|received">NTPCCA-060 葉詠妍</option>
+        <option value="陳醇容|056|M|new">NTPCCA-061 陳醇容</option>
+        <option value="彭梓綺|908|XL|new">NTPCCA-062 彭梓綺</option>
+        <option value="蔡心柔|822|L|received">NTPCCA-063 蔡心柔</option>
+        <option value="高佳愉|480|S|received">NTPCCA-064 高佳愉</option>
+        <option value="周以喬|144|M|received">NTPCCA-065 周以喬</option>
+        <option value="王沛璇|028|L|received">NTPCCA-066 王沛璇</option>
+        <option value="林思涵|980|L|new">NTPCCA-067 林思涵</option>
+        <option value="黃宇婕|532|M|new">NTPCCA-068 黃宇婕</option>
+        <option value="李盈璇|120|S|received">NTPCCA-069 李盈璇</option>
+        <option value="李宥辰|537|M|new">NTPCCA-071 李宥辰</option>
+        <option value="游舒涵|728|S|old">NTPCCA-072 游舒涵</option>
+        <option value="李宇宣|857|M|new">NTPCCA-074 李宇宣</option>
+        <option value="林詩嫻|735|M|new">NTPCCA-075 林詩嫻</option>
+        <option value="張嘉芳|719|3L|received">NTPCCA-076 張嘉芳</option>
+        <option value="闕佑芯|705|L|new">NTPCCA-078 闕佑芯</option>
+        <option value="鍾岩祐|797|L|old">NTPCCA-079 鍾岩祐</option>
+        <option value="李秉峰|321|M|received">NTPCCA-080 李秉峰</option>
+        <option value="林宸睿|532|M|new">NTPCCA-081 林宸睿</option>
+        <option value="翁允甜|198|M|new">NTPCCA-082 翁允甜</option>
+        <option value="劉冠廷|680|M|new">NTPCCA-083 劉冠廷</option>
+        <option value="鐘昱晴|536|M|new">NTPCCA-084 鐘昱晴</option>
+        <option value="吳心田|151|L|new">NTPCCA-085 吳心田</option>
+        <option value="李志衡|619|M|new">NTPCCA-086 李志衡</option>
+        <option value="高萍袖|818|2L|new">NTPCCA-087 高萍袖</option>
+        <option value="孫譽恩|526|XL|new">NTPCCA-088 孫譽恩</option>
+        <option value="陳乃嘉|188|XL|new">NTPCCA-089 陳乃嘉</option>
+        <option value="程鈺芳|303|M|old">NTPCCA-090 程鈺芳</option>
+        <option value="孫瑋成|378|M|new">NTPCCA-091 孫瑋成</option>
+        <option value="姚守恩|557|M|new">NTPCCA-092 姚守恩</option>
+        <option value="洪苡甯|911|XL|old">NTPCCA-093 洪苡甯</option>
+        <option value="黃晨堯|036|L|received">NTPCCA-094 黃晨堯</option>
+        <option value="林子芸|282|M|old">NTPCCA-095 林子芸</option>
+        <option value="蔡欣芸|051|L|new">NTPCCA-096 蔡欣芸</option>
+        <option value="高珮綺|382|2L|received">NTPCCA-097 高珮綺</option>
+        <option value="杜育葳|883|L|new">NTPCCA-098 杜育葳</option>
+        <option value="周炳宏|994|L|new">NTPCCA-099 周炳宏</option>
+      </select>
+    </div>
+
+    <div class="field" id="field-phone">
+      <label>手機後三碼驗證 <span class="req">*</span><span class="hint">請輸入報名時填寫的手機末三碼</span></label>
+      <div class="phone-row">
+        <span class="phone-prefix">後三碼</span>
+        <input type="text" id="phoneInput" maxlength="3" placeholder="例：327" inputmode="numeric" oninput="onPhoneInput()">
+      </div>
+      <div id="phoneStatus"></div>
+    </div>
+  </div>
+
+  <!-- 制服資訊（驗證後顯示）-->
+  <div class="form-card" id="uniformCard">
+    <div class="form-card-title">制服資訊</div>
+    <div id="uniformContent"></div>
+  </div>
+
+  <button class="submit-btn" id="submitBtn" onclick="submitForm()" style="display:none">確認已領取制服 ✅</button>
+
+</div>
+
+<div id="successScreen">
+  <div class="success-circle">✅</div>
+  <div class="success-title">領取完成！</div>
+  <div class="success-sub">已記錄你的制服領取資訊<br>如有疑問請聯絡行政組</div>
+  <div class="success-card" id="successDetail"></div>
+</div>
+
+<script>
+const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
+let phoneVerified = false;
+let currentName = '';
+let currentSize = '';
+let currentType = '';
+
+function onNameChange() {
+  document.getElementById('phoneInput').value = '';
+  setPhoneStatus('', '');
+  phoneVerified = false;
+  document.getElementById('uniformCard').style.display = 'none';
+  document.getElementById('submitBtn').style.display = 'none';
+}
+
+function onPhoneInput() {
+  const val = document.getElementById('nameSelect').value;
+  if (!val) { setPhoneStatus('', ''); return; }
+  const parts = val.split('|');
+  const expected = parts[1];
+  const entered = document.getElementById('phoneInput').value.trim();
+  if (entered.length < 3) { setPhoneStatus('', ''); return; }
+
+  if (entered === expected) {
+    phoneVerified = true;
+    currentName = parts[0];
+    currentSize = parts[2];
+    currentType = parts[3]; // 'old' or 'new'
+    setPhoneStatus('ok', '✓ 驗證通過');
+    showUniformInfo();
+  } else {
+    phoneVerified = false;
+    setPhoneStatus('err', '✗ 手機末三碼不符，請確認');
+    document.getElementById('uniformCard').style.display = 'none';
+    document.getElementById('submitBtn').style.display = 'none';
+  }
+}
+
+function setPhoneStatus(type, msg) {
+  const el = document.getElementById('phoneStatus');
+  el.textContent = msg;
+  el.className = type === 'ok' ? 'status-ok' : type === 'err' ? 'status-err' : '';
+}
+
+function showUniformInfo() {
+  const card = document.getElementById('uniformCard');
+  const content = document.getElementById('uniformContent');
+  card.style.display = 'block';
+
+  if (currentType === 'old') {
+    content.innerHTML = `
+      <div class="already-badge">
+        <span class="already-icon">👕</span>
+        此學員為舊生，<strong>已有制服</strong>。<br>
+        如因遺失或需要更換，請自費購買，費用 <strong>200 元</strong>。
+      </div>`;
+    document.getElementById('submitBtn').style.display = 'none';
+  } else if (currentType === 'received') {
+    content.innerHTML = `
+      <div class="already-badge" style="background:#e6f7ef;border-color:#a0d8b8;color:#1a6640;">
+        <span class="already-icon">✅</span>
+        此學員已於 <strong>5/23 課程</strong>領取制服，無需重複領取。<br>
+        如有疑問請聯絡行政組。
+      </div>`;
+    document.getElementById('submitBtn').style.display = 'none';
+  } else {
+    content.innerHTML = `
+      <div class="uniform-info">
+        <div class="uniform-size-row">
+          <span class="uniform-label">你的制服尺寸</span>
+          <span class="uniform-size">${currentSize}</span>
+        </div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;">
+          請向行政組領取對應尺寸的制服，<br>領取後請勾選下方確認。
+        </div>
+      </div>
+      <div class="checkbox-area">
+        <label class="checkbox-label" id="checkLabel" onclick="toggleCheck()">
+          <input type="checkbox" id="confirmCheck">
+          <div class="custom-check"><span class="check-inner">✓</span></div>
+          <span class="check-text">我已領取尺寸 <strong>${currentSize}</strong> 的制服</span>
+        </label>
+      </div>`;
+    document.getElementById('submitBtn').style.display = 'block';
+  }
+}
+
+function toggleCheck() {
+  const label = document.getElementById('checkLabel');
+  const checked = label.classList.toggle('checked');
+  document.getElementById('submitBtn').disabled = !checked;
+}
+
+function submitForm() {
+  if (!phoneVerified) return;
+  if (currentType !== 'old') {
+    const label = document.getElementById('checkLabel');
+    if (!label.classList.contains('checked')) {
+      label.style.borderColor = 'var(--red)';
+      setTimeout(() => { label.style.borderColor = ''; }, 1000);
+      return;
+    }
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ 記錄中…';
+
+  const selectedOption = document.getElementById('nameSelect').options[document.getElementById('nameSelect').selectedIndex];
+  const ntpccaId = selectedOption.text.split(' ')[0];
+
+  const payload = {
+    id: ntpccaId,
+    name: currentName,
+    size: currentSize,
+    type: currentType
+  };
+
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
+
+  const now = new Date();
+  const timeStr = now.toLocaleString('zh-TW', { timeZone: 'Asia/Taipei', hour12: false });
+
+  document.getElementById('formContainer').style.display = 'none';
+  document.getElementById('successScreen').style.display = 'block';
+  document.getElementById('successDetail').innerHTML = `
+    <div class="success-row"><span class="success-row-label">學員編號</span><span class="success-row-value">${ntpccaId}</span></div>
+    <div class="success-row"><span class="success-row-label">姓名</span><span class="success-row-value">${currentName}</span></div>
+    <div class="success-row"><span class="success-row-label">制服尺寸</span><span class="success-row-value success-size-big">${currentSize}</span></div>
+    <div class="success-row"><span class="success-row-label">領取時間</span><span class="success-row-value">${timeStr}</span></div>`;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
