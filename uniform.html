@@ -118,7 +118,7 @@
       <label>學員姓名 <span class="req">*</span></label>
       <select id="nameSelect" onchange="onNameChange()">
         <option value="">請選擇你的姓名</option>
-        <option value="測試|894|M|new">【測試】測試</option>
+        <option value="測試|894|-|test">【測試】測試</option>
         <option value="呂家維|327|3L|received">NTPCCA-001 呂家維</option>
         <option value="黃玉桂|667|M|old">NTPCCA-002 黃玉桂</option>
         <option value="蘇玟如|092|M|received">NTPCCA-003 蘇玟如</option>
@@ -239,7 +239,7 @@
 </div>
 
 <script>
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvw1IyE5gEnF8Yheiw5WN_k11P-rbsal7rzexs8wlykr5StMeqvbIEmO0rtDA0Ipii/exec';
+const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
 
 let phoneVerified = false;
 let currentName = '';
@@ -288,6 +288,18 @@ function showUniformInfo() {
   const content = document.getElementById('uniformContent');
   card.style.display = 'block';
 
+  // 測試帳號
+  if (currentType === 'test') {
+    content.innerHTML = `
+      <div class="already-badge" style="background:#f0f0f0;border-color:#ccc;color:#666;">
+        <span class="already-icon">🔧</span>
+        這是<strong>測試帳號</strong>，不顯示實際資料。
+      </div>`;
+    document.getElementById('submitBtn').style.display = 'none';
+    return;
+  }
+
+  // 舊生
   if (currentType === 'old') {
     content.innerHTML = `
       <div class="already-badge">
@@ -296,7 +308,11 @@ function showUniformInfo() {
         如因遺失或需要更換，請自費購買，費用 <strong>200 元</strong>。
       </div>`;
     document.getElementById('submitBtn').style.display = 'none';
-  } else if (currentType === 'received') {
+    return;
+  }
+
+  // 5/23 已領取
+  if (currentType === 'received') {
     content.innerHTML = `
       <div class="already-badge" style="background:#e6f7ef;border-color:#a0d8b8;color:#1a6640;">
         <span class="already-icon">✅</span>
@@ -304,26 +320,69 @@ function showUniformInfo() {
         如有疑問請聯絡行政組。
       </div>`;
     document.getElementById('submitBtn').style.display = 'none';
-  } else {
-    content.innerHTML = `
-      <div class="uniform-info">
-        <div class="uniform-size-row">
-          <span class="uniform-label">你的制服尺寸</span>
-          <span class="uniform-size">${currentSize}</span>
-        </div>
-        <div style="font-size:13px;color:var(--muted);line-height:1.6;">
-          請向行政組領取對應尺寸的制服，<br>領取後請勾選下方確認。
-        </div>
-      </div>
-      <div class="checkbox-area">
-        <label class="checkbox-label" id="checkLabel" onclick="toggleCheck()">
-          <input type="checkbox" id="confirmCheck">
-          <div class="custom-check"><span class="check-inner">✓</span></div>
-          <span class="check-text">我已領取尺寸 <strong>${currentSize}</strong> 的制服</span>
-        </label>
-      </div>`;
-    document.getElementById('submitBtn').style.display = 'block';
+    return;
   }
+
+  // 新生：先查詢試算表是否已領取
+  content.innerHTML = `<div style="text-align:center;padding:20px;color:var(--muted);font-size:14px;">⏳ 查詢中...</div>`;
+  document.getElementById('submitBtn').style.display = 'none';
+
+  const selectedOption = document.getElementById('nameSelect').options[document.getElementById('nameSelect').selectedIndex];
+  const ntpccaId = selectedOption.text.split(' ')[0];
+
+  // JSONP 查詢
+  const callbackName = 'uniformCheck_' + Date.now();
+  window[callbackName] = function(data) {
+    // 清除 script tag
+    const s = document.getElementById('jsonp_script');
+    if (s) s.remove();
+    delete window[callbackName];
+
+    if (data.received) {
+      content.innerHTML = `
+        <div class="already-badge" style="background:#e6f7ef;border-color:#a0d8b8;color:#1a6640;">
+          <span class="already-icon">✅</span>
+          此學員已完成制服領取。<br>
+          <span style="font-size:12px;margin-top:4px;display:block;">領取時間：${data.time}</span>
+          如有疑問請聯絡行政組。
+        </div>`;
+      document.getElementById('submitBtn').style.display = 'none';
+    } else {
+      renderPickupForm(content);
+    }
+  };
+
+  const script = document.createElement('script');
+  script.id = 'jsonp_script';
+  script.src = APPS_SCRIPT_URL + '?action=check&id=' + encodeURIComponent(ntpccaId) + '&callback=' + callbackName;
+  script.onerror = function() {
+    // 查詢失敗時直接顯示領取表單（不擋學員）
+    renderPickupForm(content);
+    delete window[callbackName];
+  };
+  document.body.appendChild(script);
+}
+
+function renderPickupForm(content) {
+  content.innerHTML = `
+    <div class="uniform-info">
+      <div class="uniform-size-row">
+        <span class="uniform-label">你的制服尺寸</span>
+        <span class="uniform-size">${currentSize}</span>
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.6;">
+        請向行政組領取對應尺寸的制服，<br>領取後請勾選下方確認。
+      </div>
+    </div>
+    <div class="checkbox-area">
+      <label class="checkbox-label" id="checkLabel" onclick="toggleCheck()">
+        <input type="checkbox" id="confirmCheck">
+        <div class="custom-check"><span class="check-inner">✓</span></div>
+        <span class="check-text">我已領取尺寸 <strong>${currentSize}</strong> 的制服</span>
+      </label>
+    </div>`;
+  document.getElementById('submitBtn').style.display = 'block';
+  document.getElementById('submitBtn').disabled = true;
 }
 
 function toggleCheck() {
