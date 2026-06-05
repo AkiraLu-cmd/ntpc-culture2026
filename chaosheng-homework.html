@@ -416,6 +416,53 @@
     transition: background .15s;
   }
   .song-link:hover { background: var(--navy2); }
+  .upload-remind-card {
+    background: white;
+    border-radius: 14px;
+    padding: 22px 20px;
+    border: 2px solid var(--gold);
+    text-align: left;
+    margin-top: 14px;
+  }
+  .upload-remind-title {
+    font-size: 17px;
+    font-weight: 900;
+    color: var(--navy);
+    margin-bottom: 12px;
+  }
+  .upload-remind-body {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+  .upload-item {
+    display: block;
+    font-weight: 600;
+    color: var(--navy);
+    margin-top: 4px;
+  }
+  .upload-drive-btn {
+    display: block;
+    background: var(--navy);
+    color: white;
+    text-align: center;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    margin-bottom: 12px;
+    transition: background .15s;
+  }
+  .upload-drive-btn:hover { background: var(--navy2); }
+  .upload-remind-note {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.6;
+  }
+
   .ann-footer {
     background: var(--cream);
     border-radius: 8px;
@@ -557,34 +604,14 @@
     </div>
   </div>
 
-  <!-- 截圖上傳 -->
+  <!-- 截圖說明 -->
   <div class="form-card">
-    <div class="form-card-title">截圖上傳</div>
-
-    <div class="field" id="field-upload1">
-      <label>集章活動限時動態截圖 <span class="req">*</span></label>
-      <div class="upload-area" id="uploadArea1">
-        <input type="file" id="upload1" accept="image/*">
-        <div class="upload-default">
-          <div class="upload-icon">📸</div>
-          <div class="upload-text"><strong>點擊上傳截圖</strong>支援 JPG、PNG、HEIC</div>
-        </div>
-        <img class="preview-thumb" id="preview1" src="" alt="">
-        <div class="upload-filename" id="filename1"></div>
-      </div>
-    </div>
-
-    <div class="field" id="field-upload2">
-      <label>攤位遊戲參與限時動態截圖 <span class="req">*</span></label>
-      <div class="upload-area" id="uploadArea2">
-        <input type="file" id="upload2" accept="image/*">
-        <div class="upload-default">
-          <div class="upload-icon">🎮</div>
-          <div class="upload-text"><strong>點擊上傳截圖</strong>支援 JPG、PNG、HEIC</div>
-        </div>
-        <img class="preview-thumb" id="preview2" src="" alt="">
-        <div class="upload-filename" id="filename2"></div>
-      </div>
+    <div class="form-card-title">截圖上傳說明</div>
+    <div style="background:var(--cream);border-radius:10px;padding:14px 16px;font-size:14px;line-height:1.8;color:var(--text);">
+      📌 截圖將在<strong>送出表單後</strong>另行上傳至 Google Drive。<br>
+      請準備好以下兩張截圖：<br>
+      <span style="display:block;margin-top:6px;font-weight:600;color:var(--navy);">1️⃣ 集章活動限時動態截圖</span>
+      <span style="display:block;font-weight:600;color:var(--navy);">2️⃣ 攤位遊戲參與限時動態截圖</span>
     </div>
   </div>
 
@@ -649,6 +676,19 @@
       🌙 晚上有現場演出，歡迎持續參與活動唷！
     </div>
   </div>
+
+  <div class="upload-remind-card">
+    <div class="upload-remind-title">📸 還有最後一步！</div>
+    <div class="upload-remind-body">請點下方連結，進入截圖上傳資料夾，上傳以下兩張截圖：<br><br>
+      <span class="upload-item">1️⃣ 集章活動限時動態截圖</span>
+      <span class="upload-item">2️⃣ 攤位遊戲參與限時動態截圖</span>
+    </div>
+    <a class="upload-drive-btn" href="https://drive.google.com/drive/folders/1Kd_vRlnskCaYhj_DqMEGCREv6Fkw4wTB" target="_blank" rel="noopener">
+      📂 開啟截圖上傳資料夾
+    </a>
+    <div class="upload-remind-note">請在資料夾內新增一個以「你的姓名」命名的資料夾，再把兩張截圖放進去。</div>
+  </div>
+
 </div>
 
 <script>
@@ -729,7 +769,7 @@
   });
 
   // ===== 請在部署 Apps Script 後填入你的 Web App URL =====
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwhr7twEq4jiJu780-izNThMF-E_lMmeuO0rtiR1m2qaaxVhMvVn95isXWj0Xr7U_C4/exec';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYFLw5K2Cno9rB8s4e3btTG_bynCBnY3jjigSk6j5e78uvernr5q-ONKfIzy81oGR-/exec';
 
   // 圖片壓縮：用 canvas 縮小到最大 800px、品質 0.7，控制在 300KB 以內
   function compressImage(file) {
@@ -772,16 +812,6 @@
       if (!document.getElementById('phoneInput').value) setPhoneStatus('err', '請先輸入手機末三碼');
     }
 
-    // Upload 1
-    const up1el = document.getElementById('field-upload1');
-    const file1 = document.getElementById('upload1').files[0];
-    if (!file1) { up1el.classList.add('error'); valid = false; setTimeout(()=>up1el.classList.remove('error'),800); }
-
-    // Upload 2
-    const up2el = document.getElementById('field-upload2');
-    const file2 = document.getElementById('upload2').files[0];
-    if (!file2) { up2el.classList.add('error'); valid = false; setTimeout(()=>up2el.classList.remove('error'),800); }
-
     // Friend
     const friendEl = document.getElementById('field-friend');
     if (!friendChoice) { friendEl.classList.add('error'); valid = false; setTimeout(()=>friendEl.classList.remove('error'),800); }
@@ -815,18 +845,10 @@
     btn.textContent = '⏳ 上傳中，請稍候…';
 
     try {
-      // 壓縮圖片
-      const [img1b64, img2b64] = await Promise.all([
-        compressImage(file1),
-        compressImage(file2)
-      ]);
-
       const selectedOption = document.getElementById('nameSelect').options[document.getElementById('nameSelect').selectedIndex];
       const payload = {
         name: selectedOption.text,
         phone: document.getElementById('phoneInput').value.trim(),
-        img1: img1b64,
-        img2: img2b64,
         friend: friendChoice,
         code: friendChoice === 'yes' ? document.getElementById('codeInput').value.trim() : ''
       };
