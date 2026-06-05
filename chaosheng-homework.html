@@ -729,14 +729,28 @@
   });
 
   // ===== 請在部署 Apps Script 後填入你的 Web App URL =====
-  const APPS_SCRIPT_URL = 'https://script.google.com/a/macros/wceo.org/s/AKfycby9pjfOSQUeLUf68h7SWc36aY4LehtHO1l9rVzwd0-X495W4F3cNaMFwtDv52Bn8uZi/exec';
+  const APPS_SCRIPT_URL = 'https://script.google.com/a/macros/wceo.org/s/AKfycbyMvewskwMj4LQbquTc8GDnObhWKLqjFPw9sWD2JcDnBQG8MpnzFJ_-D9trUkradJQJ/exec';
 
-  // 圖片轉 base64
-  function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
+  // 圖片壓縮：用 canvas 縮小到最大 800px、品質 0.7，控制在 300KB 以內
+  function compressImage(file) {
+    return new Promise((resolve) => {
       const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
+      reader.onload = function(ev) {
+        const img = new Image();
+        img.onload = function() {
+          const MAX = 800;
+          let w = img.width, h = img.height;
+          if (w > MAX || h > MAX) {
+            if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+            else { w = Math.round(w * MAX / h); h = MAX; }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', 0.7));
+        };
+        img.src = ev.target.result;
+      };
       reader.readAsDataURL(file);
     });
   }
@@ -791,7 +805,7 @@
 
     // 檢查 URL 是否已設定
     if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
-      alert('⚠️ 請先在 HTML 中填入 Apps Script Web App URL（APPS_SCRIPT_URL）');
+      alert('⚠️ 請先在 HTML 中填入 Apps Script Web App URL');
       return;
     }
 
@@ -801,16 +815,15 @@
     btn.textContent = '⏳ 上傳中，請稍候…';
 
     try {
-      // 轉換圖片
+      // 壓縮圖片
       const [img1b64, img2b64] = await Promise.all([
-        fileToBase64(file1),
-        fileToBase64(file2)
+        compressImage(file1),
+        compressImage(file2)
       ]);
 
       const selectedOption = document.getElementById('nameSelect').options[document.getElementById('nameSelect').selectedIndex];
       const payload = {
-        name: selectedOption.text,  // e.g. "NTPCCA-001 呂家維"
-        nameRaw: selectedOption.text,
+        name: selectedOption.text,
         phone: document.getElementById('phoneInput').value.trim(),
         img1: img1b64,
         img2: img2b64,
@@ -818,19 +831,20 @@
         code: friendChoice === 'yes' ? document.getElementById('codeInput').value.trim() : ''
       };
 
-      // 使用 no-cors 避免 iOS Safari CORS 問題
-      // 送出後不等回應，直接顯示成功畫面
-      fetch(APPS_SCRIPT_URL, {
+      const resp = await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
-      }).catch(() => {}); // 忽略 CORS 錯誤，資料仍會送達
+      });
+      const result = await resp.json();
 
-      // 直接顯示成功畫面
-      document.getElementById('formContainer').style.display = 'none';
-      document.getElementById('successScreen').style.display = 'block';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (result.status === 'ok') {
+        document.getElementById('formContainer').style.display = 'none';
+        document.getElementById('successScreen').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        throw new Error(result.message || '伺服器回應異常');
+      }
     } catch (err) {
       btn.disabled = false;
       btn.textContent = '送出作業 🎉';
@@ -838,5 +852,3 @@
     }
   }
 </script>
-</body>
-</html>
