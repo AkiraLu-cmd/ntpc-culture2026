@@ -254,7 +254,7 @@
             <div class="option-item"><input type="radio" name="q6" value="4分 滿意" onchange="validateSurvey()"><span class="option-tile">4分 滿意</span></div>
             <div class="option-item"><input type="radio" name="q6" value="3分 普通" onchange="validateSurvey()"><span class="option-tile">3分 普通</span></div>
             <div class="option-item"><input type="radio" name="q6" value="2分 不滿意" onchange="validateSurvey()"><span class="option-tile">2分 不滿意</span></div>
-            <div class="option-item"><input type="radio" name="q6" value="1分 非常不滿意" onchange="validateSurvey()"><span class="option-tile">1分 非常不慢意</span></div>
+            <div class="option-item"><input type="radio" name="q6" value="1分 非常不滿意" onchange="validateSurvey()"><span class="option-tile">1分 非常不滿意</span></div>
         </div>
     </div>
 
@@ -286,7 +286,7 @@
             <div class="option-item"><input type="radio" name="q9" value="5分 非常滿意" onchange="validateSurvey()"><span class="option-tile">5分 非常滿意</span></div>
             <div class="option-item"><input type="radio" name="q9" value="4分 滿意" onchange="validateSurvey()"><span class="option-tile">4分 滿意</span></div>
             <div class="option-item"><input type="radio" name="q9" value="3分 普通" onchange="validateSurvey()"><span class="option-tile">3分 普通</span></div>
-            <div class="option-item"><input type="radio" name="q9" value="2分 不滿意" onchange="validateSurvey()"><span class="option-tile">2分 不慢意</span></div>
+            <div class="option-item"><input type="radio" name="q9" value="2分 不滿意" onchange="validateSurvey()"><span class="option-tile">2分 不滿意</span></div>
             <div class="option-item"><input type="radio" name="q9" value="1分 非常不滿意" onchange="validateSurvey()"><span class="option-tile">1分 非常不滿意</span></div>
         </div>
     </div>
@@ -351,15 +351,34 @@ const spotsData = [
     { id: 12, name: "日日用打鐵店", audio: "sound-11.mp3", info: "日日用打鐵店是新莊碩果僅存的百年打鐵舖，歷經新莊港口開墾對農具、鐵器的大量需求。至今店內依然傳出規律、高亢的鏗鏘鑄鐵鍛造聲，是活生生的文化工藝地標。" }
 ];
 
-let prizePool = [
-    { name: "咖啡渣手工皂", count: 14 },
-    { name: "牡蠣殼再生擴香石", count: 32 },
-    { name: "玻璃杯墊", count: 23 },
-    { name: "旅行組", count: 8 },
-    { name: "鼓藝節造型悠遊卡", count: 10 },
-    { name: "立牌", count: 15 },
-    { name: "氣泡水", count: 120 }
-];
+// 初始庫存（總數）
+const initialStock = {
+    "咖啡渣手工皂": 14,
+    "牡蠣殼再生擴香石": 32,
+    "玻璃杯墊": 23,
+    "旅行組": 8,
+    "鼓藝節造型悠遊卡": 0,
+    "立牌": 0,
+    "氣泡水": 120
+};
+
+let prizePool = Object.keys(initialStock).map(name => ({ name, count: initialStock[name] }));
+
+const GAS_URL_INDEX = 'https://script.google.com/macros/s/AKfycbxepMcWtTxp7TEhhBoil0WW3Xfk_LUHnQ1bn06g16nCc1XtweX4M6xC-rY6k7NT7HQF/exec';
+
+async function syncPrizeStock() {
+    try {
+        const res = await fetch(GAS_URL_INDEX + '?action=getAll', { mode: 'cors' });
+        const records = await res.json();
+        prizePool.forEach(p => { p.count = initialStock[p.name] || 0; });
+        records.forEach(r => {
+            const item = prizePool.find(p => p.name === r.prize);
+            if (item && item.count > 0) item.count--;
+        });
+    } catch(e) {
+        console.warn('庫存同步失敗，使用本地初始值:', e);
+    }
+}
 
 let targetScore = 8; let activeSpots = []; let finalCorrectCount = 0; let finalPrizeName = "無獎品"; let hasDrawn = false;
 const audioListDiv = document.getElementById('audio-list');
@@ -488,10 +507,11 @@ function setChallengeFailed(btnElement) {
     btnElement.onclick = function() { location.reload(); };
 }
 
-function startDraw() {
+async function startDraw() {
     if (hasDrawn) return; hasDrawn = true;
     document.getElementById('gacha-start-btn').disabled = true;
     const ball = document.getElementById('gacha-ball'); ball.classList.add('shake');
+    await syncPrizeStock();
 
     setTimeout(() => {
         ball.classList.remove('shake');
@@ -565,8 +585,12 @@ function saveSurveyData() {
         q11: cleanComment('survey-q11')
     };
 
-    let currentData = JSON.parse(localStorage.getItem('xinzhuang_survey_reports')) || [];
-    currentData.push(surveyRecord); localStorage.setItem('xinzhuang_survey_reports', JSON.stringify(currentData));
+    fetch(GAS_URL_INDEX, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(surveyRecord)
+    }).catch(err => console.warn('送出失敗:', err));
 
     document.getElementById('survey-section-card').style.display = 'none';
     goToVerification();
