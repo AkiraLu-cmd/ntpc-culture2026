@@ -326,6 +326,10 @@
             style="flex:1; min-width:140px; max-width:200px; background:white; border:2px solid #E09F3E; border-radius:14px; padding:20px 12px; font-size:17px; font-weight:bold; cursor:pointer; color:#333;">
             🍰 泰式小蛋糕<br>香蕉
         </button>
+        <button id="survey-btn-pineapple" onclick="choosePrize('老順香金牌鳳梨酥')"
+            style="flex:1; min-width:140px; max-width:200px; background:white; border:2px solid #E09F3E; border-radius:14px; padding:20px 12px; font-size:17px; font-weight:bold; cursor:pointer; color:#333;">
+            🍍 老順香<br>金牌鳳梨酥
+        </button>
     </div>
     <p style="font-size:13px; color:#888;">選擇後請將畫面出示給工作人員核對</p>
 </div>
@@ -398,7 +402,8 @@ const initialStock = {
     "立牌": 0,
     "泰式小蛋糕 原味": 30,
     "泰式小蛋糕 斑蘭": 30,
-    "泰式小蛋糕 香蕉": 30
+    "泰式小蛋糕 香蕉": 30,
+    "老順香金牌鳳梨酥": 100
 };
 
 let prizePool = Object.keys(initialStock).map(name => ({ name, count: initialStock[name] }));
@@ -629,11 +634,11 @@ function saveSurveyData() {
 
 function choosePrize(prizeName) {
     finalPrizeName = prizeName;
-    ['survey-btn-original','survey-btn-pandan','survey-btn-banana'].forEach(id => {
+    ['survey-btn-original','survey-btn-pandan','survey-btn-banana','survey-btn-pineapple'].forEach(id => {
         const btn = document.getElementById(id);
         if (btn) { btn.style.background = 'white'; btn.style.borderColor = '#E09F3E'; }
     });
-    const idMap = { '泰式小蛋糕 原味': 'survey-btn-original', '泰式小蛋糕 斑蘭': 'survey-btn-pandan', '泰式小蛋糕 香蕉': 'survey-btn-banana' };
+    const idMap = { '泰式小蛋糕 原味': 'survey-btn-original', '泰式小蛋糕 斑蘭': 'survey-btn-pandan', '泰式小蛋糕 香蕉': 'survey-btn-banana', '老順香金牌鳳梨酥': 'survey-btn-pineapple' };
     const chosenBtn = document.getElementById(idMap[prizeName]);
     if (chosenBtn) { chosenBtn.style.background = '#FFF0CC'; chosenBtn.style.borderColor = '#9E2A2B'; }
     setTimeout(() => {
