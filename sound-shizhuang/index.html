@@ -367,16 +367,21 @@ let prizePool = Object.keys(initialStock).map(name => ({ name, count: initialSto
 const GAS_URL_INDEX = 'https://script.google.com/macros/s/AKfycbxepMcWtTxp7TEhhBoil0WW3Xfk_LUHnQ1bn06g16nCc1XtweX4M6xC-rY6k7NT7HQF/exec';
 
 async function syncPrizeStock() {
+    // 每次抽獎前，一定先把 prizePool 重設為 initialStock 初始值
+    prizePool.forEach(p => { p.count = initialStock[p.name] ?? 0; });
     try {
         const res = await fetch(GAS_URL_INDEX + '?action=getAll', { mode: 'cors' });
+        if (!res.ok) throw new Error('GAS 回應錯誤: ' + res.status);
         const records = await res.json();
-        prizePool.forEach(p => { p.count = initialStock[p.name] || 0; });
+        // 根據 Sheets 紀錄扣除已發出數量
         records.forEach(r => {
             const item = prizePool.find(p => p.name === r.prize);
             if (item && item.count > 0) item.count--;
         });
+        console.log('庫存同步成功，筆數:', records.length);
     } catch(e) {
-        console.warn('庫存同步失敗，使用本地初始值:', e);
+        // fetch 失敗時，prizePool 已在上方重設為 initialStock，不會殘留舊值
+        console.warn('庫存同步失敗，使用 initialStock 本地初始值:', e);
     }
 }
 
