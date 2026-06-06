@@ -139,7 +139,7 @@
     <h1>新莊聲音地圖大挑戰</h1>
     <div class="instructions-board">
         <div class="board-title">📋 現行關卡機制與進度說明</div>
-        <p style="font-size:15px; color:#444; line-height:1.6;">請先透過下方 <b>Google 互動地圖</b> 縮放觀察新莊區域。聽完聲音後直接在正下方的選單完成答案配對。體驗版需<b>完美全對</b>；達人挑戰版<b>8 題全對</b>可兌換泰式小點心或氣泡水（擇一）！填寫完活動回饋表單後即可開啟現場領獎核銷！</p>
+        <p style="font-size:15px; color:#444; line-height:1.6;">請先透過下方 <b>Google 互動地圖</b> 縮放觀察新莊區域。聽完聲音後直接在正下方的選單完成答案配對。體驗版需<b>完美全對</b>；答對 3 題以上可兌換泰式小蛋糕一份（口味擇一）！填寫完活動回饋表單後即可開啟現場領獎核銷！</p>
         <div class="board-badge-row">
             <div class="board-badge" id="current-mode-text">機制：讀取中...</div>
             <div class="board-badge active" id="score-text">已填寫進度：0 題</div>
@@ -177,8 +177,9 @@
             <p style="font-weight:900; font-size:17px; color:#9E2A2B; margin-bottom:8px;">🎁 限量獎品已兌換完畢</p>
             <p style="font-size:15px; color:#555; line-height:1.7;">全部答對可兌換以下獎品（<b>擇一</b>），請向現場工作人員告知您的選擇：</p>
             <div style="display:flex; gap:12px; margin-top:12px; flex-wrap:wrap;">
-                <div style="flex:1; min-width:120px; background:white; border:2px solid #E09F3E; border-radius:10px; padding:12px; text-align:center; font-weight:bold; font-size:15px;">🍱 泰式小點心</div>
-                <div style="flex:1; min-width:120px; background:white; border:2px solid #E09F3E; border-radius:10px; padding:12px; text-align:center; font-weight:bold; font-size:15px;">💧 SPARKEAU 氣泡水</div>
+                <div style="flex:1; min-width:120px; background:white; border:2px solid #E09F3E; border-radius:10px; padding:12px; text-align:center; font-weight:bold; font-size:15px;">🍰 泰式小蛋糕 原味</div>
+                <div style="flex:1; min-width:120px; background:white; border:2px solid #E09F3E; border-radius:10px; padding:12px; text-align:center; font-weight:bold; font-size:15px;">🍰 泰式小蛋糕 斑蘭</div>
+                <div style="flex:1; min-width:120px; background:white; border:2px solid #E09F3E; border-radius:10px; padding:12px; text-align:center; font-weight:bold; font-size:15px;">🍰 泰式小蛋糕 香蕉</div>
             </div>
         </div>
 
@@ -313,13 +314,17 @@
     <h3 style="color:var(--primary-color);">🎁 4. 選擇您的獎品</h3>
     <p style="font-size:15px; color:#555; margin-bottom:20px; line-height:1.7;">感謝您完成回饋表單！請選擇您想領取的獎品：</p>
     <div style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-bottom:20px;">
-        <button id="survey-btn-snack" onclick="choosePrize('泰式小點心')"
+        <button id="survey-btn-original" onclick="choosePrize('泰式小蛋糕 原味')"
             style="flex:1; min-width:140px; max-width:200px; background:white; border:2px solid #E09F3E; border-radius:14px; padding:20px 12px; font-size:17px; font-weight:bold; cursor:pointer; color:#333;">
-            🍱 泰式小點心
+            🍰 泰式小蛋糕<br>原味
         </button>
-        <button id="survey-btn-water" onclick="choosePrize('SPARKEAU 氣泡水')"
+        <button id="survey-btn-pandan" onclick="choosePrize('泰式小蛋糕 斑蘭')"
             style="flex:1; min-width:140px; max-width:200px; background:white; border:2px solid #E09F3E; border-radius:14px; padding:20px 12px; font-size:17px; font-weight:bold; cursor:pointer; color:#333;">
-            💧 SPARKEAU 氣泡水
+            🍰 泰式小蛋糕<br>斑蘭
+        </button>
+        <button id="survey-btn-banana" onclick="choosePrize('泰式小蛋糕 香蕉')"
+            style="flex:1; min-width:140px; max-width:200px; background:white; border:2px solid #E09F3E; border-radius:14px; padding:20px 12px; font-size:17px; font-weight:bold; cursor:pointer; color:#333;">
+            🍰 泰式小蛋糕<br>香蕉
         </button>
     </div>
     <p style="font-size:13px; color:#888;">選擇後請將畫面出示給工作人員核對</p>
@@ -391,7 +396,9 @@ const initialStock = {
     "旅行組": 8,
     "鼓藝節造型悠遊卡": 0,
     "立牌": 0,
-    "氣泡水": 120
+    "泰式小蛋糕 原味": 30,
+    "泰式小蛋糕 斑蘭": 30,
+    "泰式小蛋糕 香蕉": 30
 };
 
 let prizePool = Object.keys(initialStock).map(name => ({ name, count: initialStock[name] }));
@@ -532,7 +539,7 @@ async function startDraw() {
 
     setTimeout(() => {
         ball.classList.remove('shake');
-        let availablePrizes = prizePool.filter(p => p.count > 0 && p.name !== "氣泡水");
+        let availablePrizes = prizePool.filter(p => p.count > 0);
         
         if (availablePrizes.length === 0) { 
             finalPrizeName = "獎品已全數抽完"; 
@@ -622,12 +629,12 @@ function saveSurveyData() {
 
 function choosePrize(prizeName) {
     finalPrizeName = prizeName;
-    ['survey-btn-snack','survey-btn-water'].forEach(id => {
+    ['survey-btn-original','survey-btn-pandan','survey-btn-banana'].forEach(id => {
         const btn = document.getElementById(id);
         if (btn) { btn.style.background = 'white'; btn.style.borderColor = '#E09F3E'; }
     });
-    const chosenId = prizeName.includes('小點心') ? 'survey-btn-snack' : 'survey-btn-water';
-    const chosenBtn = document.getElementById(chosenId);
+    const idMap = { '泰式小蛋糕 原味': 'survey-btn-original', '泰式小蛋糕 斑蘭': 'survey-btn-pandan', '泰式小蛋糕 香蕉': 'survey-btn-banana' };
+    const chosenBtn = document.getElementById(idMap[prizeName]);
     if (chosenBtn) { chosenBtn.style.background = '#FFF0CC'; chosenBtn.style.borderColor = '#9E2A2B'; }
     setTimeout(() => {
         document.getElementById('survey-prize-choice').style.display = 'none';
