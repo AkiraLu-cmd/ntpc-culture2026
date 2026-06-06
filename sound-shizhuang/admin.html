@@ -168,8 +168,8 @@ const initialStock = {
     "牡蠣殼再生擴香石": 32, 
     "玻璃杯墊": 23, 
     "旅行組": 8, 
-    "鼓藝節造型悠遊卡": 10, 
-    "立牌": 15,
+    "鼓藝節造型悠遊卡": 0, 
+    "立牌": 0,
     "SPARKEAU 思帕可氣泡水一瓶": 120,
     "泰式小點心": 150  // 預留體驗版過關基礎發放量
 };
@@ -186,21 +186,8 @@ function verifyAdminPin() {
     }
 }
 
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxepMcWtTxp7TEhhBoil0WW3Xfk_LUHnQ1bn06g16nCc1XtweX4M6xC-rY6k7NT7HQF/exec';
-
-async function fetchRecords() {
-    try {
-        const res = await fetch(GAS_URL + '?action=getAll');
-        const data = await res.json();
-        return data;
-    } catch(e) {
-        console.warn('讀取失敗:', e);
-        return [];
-    }
-}
-
-async function loadDashboardData() {
-    let records = await fetchRecords();
+function loadDashboardData() {
+    let records = JSON.parse(localStorage.getItem('xinzhuang_survey_reports')) || [];
     
     document.getElementById('totalCount').innerText = records.length;
     let mode8 = records.filter(r => r.mode === '達人版').length;
@@ -323,8 +310,8 @@ async function loadDashboardData() {
     document.getElementById('q11Comments').innerHTML = q11Html || '<div style="color:#A0AEC0;font-size:13px;padding:10px;text-align:center;">暫無改善建議回饋</div>';
 }
 
-async function downloadCSVReport() {
-    let records = await fetchRecords();
+function downloadCSVReport() {
+    let records = JSON.parse(localStorage.getItem('xinzhuang_survey_reports')) || [];
     if(records.length === 0) { alert("目前尚未有任何填寫紀錄喔！"); return; }
     let csvContent = "\uFEFF";
     csvContent += "填寫時間,遊玩機制,答對題數,獲得獎品,Q1_年齡,Q2_性別,Q3_居住區域,Q4_得悉管道,Q5_推薦親友意願,Q6_內容動線體驗,Q7_文化知識著墨,Q8_大使引導解說態度,Q9_週邊贈品滿意度,Q10_深刻驚艷之處(簡答),Q11_改善建議(簡答)\n";
