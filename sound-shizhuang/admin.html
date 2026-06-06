@@ -47,12 +47,12 @@
         .stat-card::after { content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: var(--primary-color); }
         .stat-card.blue::after { background: #2A6F97; }
         .stat-card.orange::after { background: var(--secondary-color); }
-        .stat-card.green::after { background: var(--success-color); }
+        .stat-card.green::after { background: #2E7D32; }
         
         .stat-icon { width: 56px; height: 56px; border-radius: 14px; background: #FFF5F5; display: flex; justify-content: center; align-items: center; font-size: 24px; color: var(--primary-color); }
         .stat-card.blue .stat-icon { background: #EBF8FF; color: #2A6F97; }
         .stat-card.orange .stat-icon { background: #FFFDF5; color: var(--secondary-color); }
-        .stat-card.green .stat-icon { background: #E8F5E9; color: var(--success-color); }
+        .stat-card.green .stat-icon { background: #E8F5E9; color: #2E7D32; }
         
         .stat-info .num { font-size: 32px; font-weight: 900; color: #1A202C; line-height: 1.1; }
         .stat-info .label { font-size: 13px; color: #718096; font-weight: 600; margin-top: 4px; }
@@ -153,7 +153,7 @@
     </div>
 
     <div class="footer-logo-zone">
-        <img src="ntpc-logo.png" alt="新北文化大使 Logo">
+        <img src="NTPC Logo-03.png" alt="新北文化大使 Logo">
         <div class="footer-text-meta">
             活動名稱：「大使出任務，解鎖新莊聲」文化探索體驗活動<br>
             計畫名稱：新北市政府文化局 115 年新北市青年推廣文化計畫
@@ -162,16 +162,14 @@
 </div>
 
 <script>
-// 🌟 已精準同步前台更新之 7 項完整獎品池初始庫存
+// 🌟 獎品內容更新：已成功移除「立牌」與「造型悠遊卡」
 const initialStock = { 
     "咖啡渣手工皂": 14, 
     "牡蠣殼再生擴香石": 32, 
     "玻璃杯墊": 23, 
     "旅行組": 8, 
-    "鼓藝節造型悠遊卡": 0, 
-    "立牌": 0,
     "SPARKEAU 思帕可氣泡水一瓶": 120,
-    "泰式小點心": 150  // 預留體驗版過關基礎發放量
+    "泰式小點心": 150 
 };
 
 function verifyAdminPin() {
@@ -201,14 +199,12 @@ function loadDashboardData() {
     }).length;
     document.getElementById('fullScoreCount').innerText = fullScore;
 
-    // 建立目前即時庫存與發放統計資料
     let currentStock = { ...initialStock };
     let prizeIssuedCount = {};
     Object.keys(initialStock).forEach(k => prizeIssuedCount[k] = 0);
     
     records.forEach(r => {
         let prizeKey = r.prize;
-        // 精準模糊比對（容錯部分前台回傳的純字串「泰式小點心」或「氣泡水」等）
         if (prizeKey === "氣泡水") prizeKey = "SPARKEAU 思帕可氣泡水一瓶";
         
         if (currentStock[prizeKey] !== undefined) {
@@ -224,7 +220,6 @@ function loadDashboardData() {
         let remain = total - issued < 0 ? 0 : total - issued;
         let percent = Math.floor((remain / total) * 100);
         
-        // 智能警示低水位門檻（氣泡水與小點心基數大，設為剩餘 15 瓶以下告警；其餘小於 4 個告警）
         let dangerThreshold = (pName.includes("氣泡水") || pName.includes("點心")) ? 15 : 4;
         let isDanger = remain <= dangerThreshold ? "stock-danger" : "";
         let fillStyle = remain <= dangerThreshold ? "background-color: var(--danger-color)" : "background-color: #48BB78";
@@ -243,13 +238,19 @@ function loadDashboardData() {
     });
     document.getElementById('prizeStockZone').innerHTML = prizeHtml;
 
-    // 🌟 修正 bug：使用 parseFloat 搭配正則表達式，完美過濾「5分 非常滿意」或「10分」裡面的文字，確保量化數據計算正確
+    // 🌟 核心修復：使用具有高度包容力的正則表達式抽離純數字，解決原本中文字元導致 NaN 造成畫面空白的 bug
     let totalFun = 0, totalRecommend = 0, totalGuide = 0, totalPrizeS = 0;
     records.forEach(r => {
-        totalFun += parseFloat(r.q6?.replace(/[^0-9.]/g, '')) || 5;
-        totalRecommend += parseFloat(r.q5?.replace(/[^0-9.]/g, '')) || 10;
-        totalGuide += parseFloat(r.q8?.replace(/[^0-9.]/g, '')) || 5;
-        totalPrizeS += parseFloat(r.q9?.replace(/[^0-9.]/g, '')) || 5;
+        // 將諸如 "5分 非常滿意" 轉為 5，"10分 (強力推薦)" 轉為 10
+        let valQ6 = r.q6 ? parseFloat(r.q6.replace(/[^0-9.]/g, '')) : NaN;
+        let valQ5 = r.q5 ? parseFloat(r.q5.replace(/[^0-9.]/g, '')) : NaN;
+        let valQ8 = r.q8 ? parseFloat(r.q8.replace(/[^0-9.]/g, '')) : NaN;
+        let valQ9 = r.q9 ? parseFloat(r.q9.replace(/[^0-9.]/g, '')) : NaN;
+
+        totalFun += isNaN(valQ6) ? 5 : valQ6;
+        totalRecommend += isNaN(valQ5) ? 10 : valQ5;
+        totalGuide += isNaN(valQ8) ? 5 : valQ8;
+        totalPrizeS += isNaN(valQ9) ? 5 : valQ9;
     });
     let avgFun = records.length ? (totalFun / records.length).toFixed(1) : 0;
     let avgRec = records.length ? (totalRecommend / records.length).toFixed(1) : 0;
