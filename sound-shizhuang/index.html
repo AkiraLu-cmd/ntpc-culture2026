@@ -153,7 +153,7 @@
     <div class="section-card" id="main-game-card">
         <h3>🎵 2. 聆聽聲音並於正下方直接選答</h3>
         <div class="audio-list" id="audio-list"></div>
-        <button class="submit-btn" id="submit-game-btn" onclick="submitGame()" style="display:none;">📤 寫好了！送出答案並看解析報告</button>
+        <button class="submit-btn" id="submit-game-btn" onclick="submitGame()" disabled style="background:#aaa; margin-top:18px;">📝 請完成所有 5 題後送出答案</button>
     </div>
 </div>
 
@@ -306,6 +306,34 @@
     <button class="submit-btn" id="submit-survey-btn" onclick="saveSurveyData()" style="background:#777;" disabled>🔒 請完成上述所有的星號必填題</button>
 </div>
 
+<!-- 獎品選擇區（達標者，問卷送出後顯示） -->
+<div class="section-card" id="survey-prize-choice" style="display:none; max-width:950px; margin:20px auto; text-align:center;">
+    <h3 style="color:var(--primary-color);">🎁 4. 選擇您的獎品</h3>
+    <p style="font-size:15px; color:#555; margin-bottom:20px; line-height:1.7;">感謝您完成回饋表單！請選擇您想領取的獎品：</p>
+    <div style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-bottom:20px;">
+        <button id="survey-btn-snack" onclick="choosePrize('泰式小點心')"
+            style="flex:1; min-width:140px; max-width:200px; background:white; border:2px solid #E09F3E; border-radius:14px; padding:20px 12px; font-size:17px; font-weight:bold; cursor:pointer; color:#333;">
+            🍱 泰式小點心
+        </button>
+        <button id="survey-btn-water" onclick="choosePrize('SPARKEAU 氣泡水')"
+            style="flex:1; min-width:140px; max-width:200px; background:white; border:2px solid #E09F3E; border-radius:14px; padding:20px 12px; font-size:17px; font-weight:bold; cursor:pointer; color:#333;">
+            💧 SPARKEAU 氣泡水
+        </button>
+    </div>
+    <p style="font-size:13px; color:#888;">選擇後請將畫面出示給工作人員核對</p>
+</div>
+
+<!-- 感謝區（未達標者，問卷送出後顯示） -->
+<div class="section-card" id="thank-you-section" style="display:none; max-width:950px; margin:20px auto; text-align:center;">
+    <h3 style="color:var(--primary-color);">🙏 感謝您的參與！</h3>
+    <p style="font-size:16px; color:#555; margin:16px 0; line-height:1.8;">
+        感謝您完成本次「新莊聲音地圖大挑戰」及活動回饋表單！<br>
+        您的寶貴意見已成功記錄，歡迎繼續探索新莊的文化故事。<br><br>
+        期待未來在更多新北文化活動中再次相見！
+    </p>
+    <p style="font-size:14px; color:#999;">新北市青年推廣文化計畫 執行團隊</p>
+</div>
+
 <div class="staff-panel" id="final-staff-panel" style="display:none;">
     <div class="stamp-overlay" id="verification-stamp">已兌獎</div>
     <div class="staff-header">🔒 現場工作人員領獎核銷明細單</div>
@@ -383,7 +411,7 @@ async function syncPrizeStock() {
     }
 }
 
-let targetScore = 8; let activeSpots = []; let finalCorrectCount = 0; let finalPrizeName = "無獎品"; let hasDrawn = false;
+let activeSpots = []; let finalCorrectCount = 0; let finalPrizeName = "無獎品"; let hasDrawn = false;
 const audioListDiv = document.getElementById('audio-list');
 
 const TARGET_SCORE = 5;
@@ -400,25 +428,7 @@ function initGame() {
 
 window.addEventListener('DOMContentLoaded', initGame);
 
-function selectMode(count) {
-    // selectMode 已停用，由 initGame 取代
-    const shuffled = [...spotsData].sort(() => Math.random() - 0.5);
-    activeSpots = shuffled.slice(0, targetScore);
-    
-    // 🌟 這裡固定了隨機出題的 displayOrder 順序
-    const displayOrder = [...activeSpots].sort(() => Math.random() - 0.5);
-
-    if(count === 3) {
-        document.getElementById('current-mode-text').innerText = "機制：體驗版 (選 3 題)";
-        document.getElementById('score-text').innerText = "已填寫進度：0 / 3 題"; 
-        finalPrizeName = "泰式小點心"; // 修正為泰式小點心
-    } else {
-        document.getElementById('current-mode-text').innerText = "機制：達人挑戰版 (全 8 題)";
-        document.getElementById('score-text').innerText = "已填寫進度：0 / 8 題"; 
-        finalPrizeName = "無獎品"; 
-    }
-    renderGame(displayOrder);
-}
+// selectMode 已移除（由 initGame 取代）
 
 function renderGame(displayOrder) {
     audioListDiv.innerHTML = ""; 
@@ -443,8 +453,17 @@ function renderGame(displayOrder) {
 function updateProgress() {
     const allSelects = document.querySelectorAll('.qa-block select');
     let filledCount = 0; allSelects.forEach(select => { if(select.value !== "") filledCount++; });
-    document.getElementById('score-text').innerText = `已填寫進度：${filledCount} / ${targetScore} 題`;
-    if(filledCount === targetScore) document.getElementById('submit-game-btn').style.display = 'block';
+    document.getElementById('score-text').innerText = `已填寫進度：${filledCount} / ${TARGET_SCORE} 題`;
+    const submitBtn = document.getElementById('submit-game-btn');
+    if(filledCount === TARGET_SCORE) {
+        submitBtn.disabled = false;
+        submitBtn.style.background = 'var(--primary-color)';
+        submitBtn.innerText = '📤 寫好了！送出答案並看解析報告';
+    } else {
+        submitBtn.disabled = true;
+        submitBtn.style.background = '#aaa';
+        submitBtn.innerText = '📝 請完成所有 ' + TARGET_SCORE + ' 題後送出答案（已填 ' + filledCount + ' 題）';
+    }
 }
 
 function submitGame() {
@@ -481,8 +500,8 @@ function submitGame() {
     const modalActionBtn = document.getElementById('modal-action-btn');
 
     if (finalCorrectCount >= PASS_SCORE) {
-        document.getElementById('win-status-title').innerText = `🎉 答對 ${finalCorrectCount} 題！恭喜達標！`;
-        modalActionBtn.innerText = "看完解析，前往填寫活動回饋表單";
+        document.getElementById('win-status-title').innerText = '🎉 答對 ' + finalCorrectCount + ' 題！恭喜達標，可以兌換獎品！';
+        modalActionBtn.innerText = "繼續填寫活動回饋表單，開啟領獎流程 ➡️";
         modalActionBtn.disabled = false;
         modalActionBtn.style.background = "var(--secondary-color)";
         modalActionBtn.onclick = openSurveyZone;
@@ -493,17 +512,14 @@ function submitGame() {
 }
 
 function setChallengeFailed(btnElement) {
-    const msg = targetScore === 8 && finalCorrectCount >= 4
-        ? "💪 答對 " + finalCorrectCount + " 題！差一點就全對了，歡迎再挑戰！"
-        : "💪 再接再厲！";
-    document.getElementById('win-status-title').innerText = msg;
+    document.getElementById('win-status-title').innerText = "💪 答對 " + finalCorrectCount + " 題，繼續填寫回饋表單！";
     document.getElementById('gacha-area').style.display = 'none';
     document.getElementById('prize-choice-notice').style.display = 'none';
     finalPrizeName = "無獎品";
-    btnElement.innerText = "❌ 未達門檻，點擊此處重新挑戰";
+    btnElement.innerText = "看完解析，前往填寫活動回饋表單 ➡️";
     btnElement.disabled = false;
-    btnElement.style.background = "var(--danger-color)";
-    btnElement.onclick = function() { location.reload(); };
+    btnElement.style.background = "#555";
+    btnElement.onclick = openSurveyZone;
 }
 
 async function startDraw() {
@@ -591,13 +607,14 @@ function saveSurveyData() {
         body: JSON.stringify(surveyRecord)
     }).catch(err => console.warn('送出失敗:', err));
 
+    document.getElementById('submit-survey-btn').style.display = 'none';
+    document.getElementById('survey-section-card').style.display = 'none';
     if (finalCorrectCount >= PASS_SCORE) {
-        document.getElementById('submit-survey-btn').style.display = 'none';
         document.getElementById('survey-prize-choice').style.display = 'block';
         document.getElementById('survey-prize-choice').scrollIntoView({ behavior: 'smooth' });
     } else {
-        document.getElementById('survey-section-card').style.display = 'none';
-        goToVerification();
+        document.getElementById('thank-you-section').style.display = 'block';
+        document.getElementById('thank-you-section').scrollIntoView({ behavior: 'smooth' });
     }
 }
 
@@ -611,7 +628,7 @@ function choosePrize(prizeName) {
     const chosenBtn = document.getElementById(chosenId);
     if (chosenBtn) { chosenBtn.style.background = '#FFF0CC'; chosenBtn.style.borderColor = '#9E2A2B'; }
     setTimeout(() => {
-        document.getElementById('survey-section-card').style.display = 'none';
+        document.getElementById('survey-prize-choice').style.display = 'none';
         goToVerification();
     }, 600);
 }
