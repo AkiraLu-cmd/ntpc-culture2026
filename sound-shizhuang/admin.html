@@ -75,6 +75,15 @@
         .stock-danger { animation: pulseDanger 1.5s infinite; background: #FFF5F5; border-color: #FED7D7; }
         .stock-danger .prize-qty { color: var(--danger-color); }
         @keyframes pulseDanger { 0%, 100% { opacity: 1; } 50% { background: #FFEBEB; } }
+        .adj-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; border-top: 1px dashed #E2E8F0; padding-top: 10px; }
+        .adj-label { font-size: 12px; color: #718096; font-weight: 600; flex: 1; }
+        .adj-btn { border: none; border-radius: 8px; padding: 5px 14px; font-size: 18px; font-weight: 900; cursor: pointer; line-height: 1; transition: 0.15s; }
+        .adj-btn.minus { background: #FED7D7; color: #C53030; }
+        .adj-btn.minus:hover { background: #FC8181; color: white; }
+        .adj-btn.plus  { background: #C6F6D5; color: #276749; }
+        .adj-btn.plus:hover  { background: #68D391; color: white; }
+        .adj-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+        .adj-note { font-size: 11px; color: #A0AEC0; margin-left: auto; }
 
         .comment-list { max-height: 320px; overflow-y: auto; padding-right: 6px; display: flex; flex-direction: column; gap: 10px; }
         .comment-item { background: #EDF2F7; padding: 14px; border-radius: 16px 16px 16px 4px; font-size: 13.5px; color: #2D3748; line-height: 1.5; border: 1px solid #E2E8F0; position: relative; }
@@ -186,8 +195,16 @@ function verifyAdminPin() {
     }
 }
 
-function loadDashboardData() {
-    let records = JSON.parse(localStorage.getItem('xinzhuang_survey_reports')) || [];
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxepMcWtTxp7TEhhBoil0WW3Xfk_LUHnQ1bn06g16nCc1XtweX4M6xC-rY6k7NT7HQF/exec';
+
+async function loadDashboardData() {
+    let records = [];
+    try {
+        const res = await fetch(GAS_URL + '?action=getAll', { mode: 'cors' });
+        records = await res.json();
+    } catch(e) {
+        console.warn('讀取 Sheets 失敗:', e);
+    }
     
     document.getElementById('totalCount').innerText = records.length;
     let mode8 = records.filter(r => r.mode === '達人版').length;
@@ -230,13 +247,19 @@ function loadDashboardData() {
         let fillStyle = remain <= dangerThreshold ? "background-color: var(--danger-color)" : "background-color: #48BB78";
 
         prizeHtml += `
-            <div class="prize-row ${isDanger}">
+            <div class="prize-row ${isDanger}" id="prize-row-${pName.replace(/\s/g,'_')}">
                 <div class="prize-meta">
                     <span class="prize-name"><b>🎁 ${pName}</b></span>
-                    <span class="prize-qty">剩餘 <b>${remain}</b> / 初始 ${total} <span style="font-weight:normal;opacity:0.7;">(已發 ${issued})</span></span>
+                    <span class="prize-qty">剩餘 <b id="remain-${pName.replace(/\s/g,'_')}">${remain}</b> / 初始 ${total} <span style="font-weight:normal;opacity:0.7;">(已發 ${issued})</span></span>
                 </div>
                 <div class="progress-bar-bg">
-                    <div class="progress-bar-fill" style="width: ${percent}%; ${fillStyle}"></div>
+                    <div class="progress-bar-fill" id="bar-${pName.replace(/\s/g,'_')}" style="width: ${percent}%; ${fillStyle}"></div>
+                </div>
+                <div class="adj-row">
+                    <span class="adj-label">🛠️ 現場手動調整庫存</span>
+                    <button class="adj-btn plus"  onclick="adjustStock('${pName}', 1)"  title="手動補回 +1">＋</button>
+                    <button class="adj-btn minus" onclick="adjustStock('${pName}', -1)" title="手動扣除 −1" ${remain <= 0 ? 'disabled' : ''}>－</button>
+                    <span class="adj-note">（現場手發未紀錄時使用）</span>
                 </div>
             </div>
         `;
@@ -310,8 +333,41 @@ function loadDashboardData() {
     document.getElementById('q11Comments').innerHTML = q11Html || '<div style="color:#A0AEC0;font-size:13px;padding:10px;text-align:center;">暫無改善建議回饋</div>';
 }
 
-function downloadCSVReport() {
-    let records = JSON.parse(localStorage.getItem('xinzhuang_survey_reports')) || [];
+async function adjustStock(prizeName, delta) {
+    const confirmed = confirm(delta === -1
+        ? `確認【現場手動扣除】一個「${prizeName}」？\n（用於現場發出但未透過系統紀錄的情況）`
+        : `確認【手動補回】一個「${prizeName}」？\n（用於撤銷錯誤扣除）`
+    );
+    if (!confirmed) return;
+
+    const record = {
+        timestamp: new Date().toLocaleString(),
+        mode: '手動調整',
+        score: '-',
+        prize: delta === -1 ? prizeName : '【補回】' + prizeName,
+        q1:'', q2:'', q3:'', q4:'', q5:'', q6:'', q7:'', q8:'', q9:'', q10: delta === -1 ? '現場手動扣除' : '手動補回庫存', q11:''
+    };
+
+    try {
+        await fetch(GAS_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(record)
+        });
+        // 等一秒讓 Sheets 寫入，再刷新
+        setTimeout(() => loadDashboardData(), 1200);
+    } catch(e) {
+        alert('寫入失敗，請確認網路連線');
+    }
+}
+
+async function downloadCSVReport() {
+    let records = [];
+    try {
+        const res = await fetch(GAS_URL + '?action=getAll', { mode: 'cors' });
+        records = await res.json();
+    } catch(e) { alert('讀取失敗，請確認網路連線'); return; }
     if(records.length === 0) { alert("目前尚未有任何填寫紀錄喔！"); return; }
     let csvContent = "\uFEFF";
     csvContent += "填寫時間,遊玩機制,答對題數,獲得獎品,Q1_年齡,Q2_性別,Q3_居住區域,Q4_得悉管道,Q5_推薦親友意願,Q6_內容動線體驗,Q7_文化知識著墨,Q8_大使引導解說態度,Q9_週邊贈品滿意度,Q10_深刻驚艷之處(簡答),Q11_改善建議(簡答)\n";
