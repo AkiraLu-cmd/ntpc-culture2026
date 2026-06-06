@@ -254,7 +254,7 @@
             <div class="option-item"><input type="radio" name="q6" value="4分 滿意" onchange="validateSurvey()"><span class="option-tile">4分 滿意</span></div>
             <div class="option-item"><input type="radio" name="q6" value="3分 普通" onchange="validateSurvey()"><span class="option-tile">3分 普通</span></div>
             <div class="option-item"><input type="radio" name="q6" value="2分 不滿意" onchange="validateSurvey()"><span class="option-tile">2分 不滿意</span></div>
-            <div class="option-item"><input type="radio" name="q6" value="1分 非常不滿意" onchange="validateSurvey()"><span class="option-tile">1分 非常不慢意</span></div>
+            <div class="option-item"><input type="radio" name="q6" value="1分 非常不滿意" onchange="validateSurvey()"><span class="option-tile">1分 非常不滿意</span></div>
         </div>
     </div>
 
@@ -286,7 +286,7 @@
             <div class="option-item"><input type="radio" name="q9" value="5分 非常滿意" onchange="validateSurvey()"><span class="option-tile">5分 非常滿意</span></div>
             <div class="option-item"><input type="radio" name="q9" value="4分 滿意" onchange="validateSurvey()"><span class="option-tile">4分 滿意</span></div>
             <div class="option-item"><input type="radio" name="q9" value="3分 普通" onchange="validateSurvey()"><span class="option-tile">3分 普通</span></div>
-            <div class="option-item"><input type="radio" name="q9" value="2分 不滿意" onchange="validateSurvey()"><span class="option-tile">2分 不慢意</span></div>
+            <div class="option-item"><input type="radio" name="q9" value="2分 不滿意" onchange="validateSurvey()"><span class="option-tile">2分 不滿意</span></div>
             <div class="option-item"><input type="radio" name="q9" value="1分 非常不滿意" onchange="validateSurvey()"><span class="option-tile">1分 非常不滿意</span></div>
         </div>
     </div>
@@ -370,11 +370,9 @@ const GAS_URL_INDEX = 'https://script.google.com/macros/s/AKfycbxepMcWtTxp7TEhhB
 // 從 Sheets 讀取已發出紀錄，重新計算剩餘庫存
 async function syncPrizeStock() {
     try {
-        const res = await fetch(GAS_URL_INDEX + '?action=getAll');
+        const res = await fetch(GAS_URL_INDEX + '?action=getAll', { mode: 'cors' });
         const records = await res.json();
-        // 重設為初始值
         prizePool.forEach(p => { p.count = initialStock[p.name] || 0; });
-        // 扣除已發出
         records.forEach(r => {
             const item = prizePool.find(p => p.name === r.prize);
             if (item && item.count > 0) item.count--;
@@ -515,7 +513,6 @@ async function startDraw() {
     if (hasDrawn) return; hasDrawn = true;
     document.getElementById('gacha-start-btn').disabled = true;
     const ball = document.getElementById('gacha-ball'); ball.classList.add('shake');
-    // 抽獎前先同步最新庫存
     await syncPrizeStock();
 
     setTimeout(() => {
