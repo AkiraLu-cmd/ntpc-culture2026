@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>學員互評與自評系統｜新北文化大使</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0a1628;
+      --navy-mid: #162040;
+      --gold: #e8b84b;
+      --gold-light: #f5d47a;
+      --gold-pale: #fdf3d8;
+      --cream: #fdfaf3;
+      --text: #1a1a2e;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --radius: 16px;
+      --shadow: 0 4px 24px rgba(10,22,40,0.10);
+      --r1: #ef4444; --r2: #f59e0b; --r3: #3b82f6; --r4: #10b981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Sans TC', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    .site-header {
+      background: var(--navy); padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px; position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+    .site-header .logo { color: var(--gold); font-family: 'Space Mono', monospace; font-size: 0.85rem; letter-spacing: 0.05em; text-decoration: none; }
+    .site-header .badge { background: var(--gold); color: var(--navy); font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+
+    .progress-bar { height: 4px; background: var(--border); }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); transition: width 0.5s ease; }
+
+    .main { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+    .step { display: none; animation: fadeIn 0.35s ease; }
+    .step.active { display: block; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+    .step-tag { display: inline-block; background: var(--navy); color: var(--gold); font-family: 'Space Mono', monospace; font-size: 0.7rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; letter-spacing: 0.08em; margin-bottom: 1rem; }
+    .step h1 { font-size: clamp(1.4rem, 4vw, 1.9rem); font-weight: 900; color: var(--navy); line-height: 1.2; margin-bottom: 0.5rem; }
+    .step-desc { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 2rem; }
+
+    .card { background: #fff; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.25rem; box-shadow: var(--shadow); }
+    .card:focus-within { border-color: var(--gold); }
+    .card-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+
+    input[type="text"], select, textarea {
+      width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 10px;
+      font-family: 'Noto Sans TC', sans-serif; font-size: 0.95rem; color: var(--text);
+      background: #fff; outline: none; -webkit-appearance: none; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(232,184,75,0.15); }
+    select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; cursor: pointer; }
+    textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+
+    /* Identity badge */
+    .identity-banner {
+      background: var(--navy); color: #fff; border-radius: 14px;
+      padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .identity-banner .id-avatar {
+      width: 52px; height: 52px; background: var(--gold); color: var(--navy);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 1.2rem; flex-shrink: 0;
+    }
+    .identity-banner .id-name { font-weight: 700; font-size: 1.1rem; }
+    .identity-banner .id-sub { font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 0.2rem; }
+    .role-badge {
+      margin-left: auto; padding: 5px 12px; border-radius: 20px;
+      font-size: 0.78rem; font-weight: 700; white-space: nowrap; flex-shrink: 0;
+    }
+    .role-admin     { background: #7c3aed; color: #fff; }
+    .role-leader    { background: #1d4ed8; color: #fff; }
+    .role-sub-leader { background: #0369a1; color: #fff; }
+    .role-mid-leader { background: #0891b2; color: #fff; }
+    .role-member    { background: #059669; color: #fff; }
+
+    /* Mode selection */
+    .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    @media(max-width:480px) { .mode-grid { grid-template-columns: 1fr; } }
+    .mode-btn {
+      background: #fff; border: 2px solid var(--border); border-radius: 14px;
+      padding: 1.5rem 1.25rem; cursor: pointer; text-align: center; transition: all 0.2s;
+    }
+    .mode-btn:hover { border-color: var(--gold-light); background: var(--gold-pale); }
+    .mode-btn.selected { border-color: var(--gold); background: var(--gold-pale); }
+    .mode-btn .mode-emoji { font-size: 2rem; margin-bottom: 0.5rem; }
+    .mode-btn .mode-title { font-weight: 700; font-size: 1rem; color: var(--navy); }
+    .mode-btn .mode-desc { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem; line-height: 1.4; }
+
+    /* Project grid */
+    .project-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    @media(max-width:500px) { .project-grid { grid-template-columns: 1fr; } }
+    .project-btn {
+      background: #fff; border: 2px solid var(--border); border-radius: 12px;
+      padding: 1rem; cursor: pointer; text-align: left; transition: all 0.2s; position: relative; overflow: hidden;
+    }
+    .project-btn::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:var(--gold); transform:scaleY(0); transition:transform 0.2s; }
+    .project-btn:hover { border-color: var(--gold-light); background: var(--gold-pale); }
+    .project-btn.selected { border-color: var(--gold); background: var(--gold-pale); }
+    .project-btn.selected::before { transform: scaleY(1); }
+    .project-btn .proj-emoji { font-size: 1.4rem; margin-bottom: 0.4rem; display: block; }
+    .project-btn .proj-name { font-weight: 700; font-size: 0.88rem; color: var(--navy); line-height: 1.3; }
+    .project-btn .proj-date { font-size: 0.73rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+    /* Peer list */
+    .peer-card {
+      display: flex; align-items: center; gap: 1rem;
+      background: #fff; border: 2px solid var(--border); border-radius: 12px;
+      padding: 1rem 1.25rem; cursor: pointer; transition: all 0.2s; margin-bottom: 0.75rem;
+    }
+    .peer-card:hover { border-color: var(--gold-light); }
+    .peer-card.selected { border-color: var(--gold); background: var(--gold-pale); }
+    .peer-avatar { width: 44px; height: 44px; background: var(--navy); color: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1rem; flex-shrink: 0; }
+    .peer-info .peer-name { font-weight: 700; font-size: 0.95rem; }
+    .peer-info .peer-id { font-size: 0.73rem; color: var(--text-muted); font-family: 'Space Mono', monospace; }
+    .peer-role-badge { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-top: 3px; display: inline-block; }
+    .peer-check { margin-left: auto; width: 22px; height: 22px; border: 2px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
+    .peer-card.selected .peer-check { background: var(--gold); border-color: var(--gold); }
+    .peer-check::after { content:'✓'; color: var(--navy); font-size: 0.75rem; font-weight: 900; opacity: 0; transition: opacity 0.15s; }
+    .peer-card.selected .peer-check::after { opacity: 1; }
+
+    /* Reviewee banner */
+    .reviewee-banner {
+      background: var(--navy); color: #fff; border-radius: 14px;
+      padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .reviewee-banner .r-avatar { width: 48px; height: 48px; background: var(--gold); color: var(--navy); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; flex-shrink: 0; }
+    .reviewee-banner .r-name { font-weight: 700; font-size: 1.05rem; }
+    .reviewee-banner .r-sub { font-size: 0.78rem; color: rgba(255,255,255,0.6); margin-top: 0.2rem; }
+    .review-counter { margin-left: auto; background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 20px; font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--gold); white-space: nowrap; }
+
+    /* Form type label */
+    .form-type-label {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--gold-pale); border: 1.5px solid var(--gold-light);
+      color: var(--navy); font-size: 0.8rem; font-weight: 700;
+      padding: 5px 12px; border-radius: 20px; margin-bottom: 1.25rem;
+    }
+
+    /* Criteria */
+    .criteria-block { background: #fff; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; transition: border-color 0.2s; }
+    .criteria-block.rated { border-left: 4px solid var(--gold); }
+    .criteria-label { font-weight: 700; font-size: 0.95rem; color: var(--navy); margin-bottom: 0.25rem; }
+    .criteria-hint { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem; line-height: 1.5; }
+    .section-divider { display: flex; align-items: center; gap: 0.75rem; margin: 1.5rem 0 1rem; }
+    .section-divider span { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
+    .section-divider::before, .section-divider::after { content:''; flex:1; height:1px; background: var(--border); }
+
+    .rating-group { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
+    .rating-option { position: relative; }
+    .rating-option input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+    .rating-option label { display: block; text-align: center; padding: 0.5rem 0.25rem; border: 2px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.15s; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); line-height: 1.3; user-select: none; }
+    .rating-option label .dot { display: block; width: 8px; height: 8px; border-radius: 50%; margin: 0 auto 4px; }
+    .rating-option:nth-child(1) label .dot { background: var(--r1); }
+    .rating-option:nth-child(2) label .dot { background: var(--r2); }
+    .rating-option:nth-child(3) label .dot { background: var(--r3); }
+    .rating-option:nth-child(4) label .dot { background: var(--r4); }
+    .rating-option input:checked + label { color: var(--navy); font-weight: 700; }
+    .rating-option:nth-child(1) input:checked + label { border-color: var(--r1); background: #fef2f2; }
+    .rating-option:nth-child(2) input:checked + label { border-color: var(--r2); background: #fffbeb; }
+    .rating-option:nth-child(3) input:checked + label { border-color: var(--r3); background: #eff6ff; }
+    .rating-option:nth-child(4) input:checked + label { border-color: var(--r4); background: #f0fdf4; }
+    .rating-option label:hover { border-color: var(--gold); background: var(--gold-pale); }
+
+    .open-section { background: var(--gold-pale); border: 1.5px solid var(--gold-light); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; }
+    .open-section .open-q { font-weight: 700; font-size: 0.95rem; color: var(--navy); margin-bottom: 0.75rem; display: flex; gap: 0.5rem; align-items: flex-start; }
+    .open-q-optional { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; margin-left: 0.25rem; }
+
+    /* Buttons */
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 1.75rem; border-radius: 12px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; }
+    .btn-primary { background: var(--gold); color: var(--navy); box-shadow: 0 4px 12px rgba(232,184,75,0.35); }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-primary:disabled { background: var(--border); color: var(--text-muted); box-shadow: none; transform: none; cursor: not-allowed; }
+    .btn-secondary { background: transparent; color: var(--text-muted); border: 1.5px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--gold); color: var(--navy); }
+    .btn-row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-top: 1.5rem; }
+
+    /* Summary */
+    .summary-hero { background: var(--navy); color: #fff; border-radius: 20px; padding: 2.5rem 2rem; text-align: center; margin-bottom: 2rem; position: relative; overflow: hidden; }
+    .summary-hero::before { content:''; position:absolute; top:-40px; right:-40px; width:160px; height:160px; background:var(--gold); border-radius:50%; opacity:0.08; }
+    .summary-hero .hero-emoji { font-size: 3rem; margin-bottom: 1rem; }
+    .summary-hero h2 { font-size: 1.5rem; font-weight: 900; margin-bottom: 0.5rem; }
+    .summary-hero p { color: rgba(255,255,255,0.7); font-size: 0.9rem; }
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+    @media(max-width:480px) { .summary-grid { grid-template-columns: 1fr; } }
+    .summary-item { background: #fff; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+    .summary-item .si-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+    .summary-item .si-val { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-top: 0.25rem; }
+
+    .alert { border-radius: 10px; padding: 0.85rem 1rem; font-size: 0.875rem; margin-bottom: 1.25rem; display: flex; gap: 0.6rem; align-items: flex-start; }
+    .alert-warn  { background: #fffbeb; border: 1.5px solid #f59e0b; color: #92400e; }
+    .alert-info  { background: #eff6ff; border: 1.5px solid #3b82f6; color: #1e40af; }
+    .alert-success { background: #f0fdf4; border: 1.5px solid #10b981; color: #065f46; }
+    .alert-error { background: #fef2f2; border: 1.5px solid #ef4444; color: #991b1b; }
+
+    .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(10,22,40,0.7); z-index: 999; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; }
+    .loading-overlay.active { display: flex; }
+    .spinner { width: 44px; height: 44px; border: 4px solid rgba(232,184,75,0.3); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-overlay p { color: #fff; font-size: 0.9rem; }
+
+    .text-muted { color: var(--text-muted); font-size: 0.875rem; }
+    .mt-1 { margin-top: 0.5rem; }
+    .tag-leader { background: #e0f2fe; color: #0369a1; }
+    .tag-member  { background: #dcfce7; color: #15803d; }
+  </style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <p id="loadingMsg">處理中，請稍候⋯</p>
+</div>
+
+<header class="site-header">
+  <a class="logo" href="/">NTPC CULTURE 2026</a>
+  <span class="badge">互評與自評系統</span>
+</header>
+
+<div class="progress-bar">
+  <div class="progress-fill" id="progressFill" style="width:0%"></div>
+</div>
+
+<main class="main">
+
+  <!-- ══════ STEP 1：登入 ══════ -->
+  <div class="step active" id="step1">
+    <span class="step-tag">STEP 01</span>
+    <h1>你好！請先確認<br>你的參與者身份 👋</h1>
+    <p class="step-desc">請輸入你的姓名，學生請一併輸入參與者編號；大隊長及行政團隊只需輸入姓名。</p>
+
+    <div class="card">
+      <div class="card-label">姓名</div>
+      <input type="text" id="inputName" placeholder="例：王小明" autocomplete="off">
+    </div>
+    <div class="card" id="idCard">
+      <div class="card-label">參與者編號</div>
+      <input type="text" id="inputId" placeholder="例：NTPCCA-001" autocomplete="off" style="font-family:'Space Mono',monospace;">
+      <p class="text-muted mt-1">可在報名確認信或 TIF 個人頁面中查詢</p>
+    </div>
+
+    <div style="margin-bottom:1.25rem;">
+      <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-size:0.875rem;color:var(--text-muted);">
+        <input type="checkbox" id="chkAdmin" onchange="toggleAdmin()"
+          style="width:16px;height:16px;cursor:pointer;accent-color:#e8b84b;">
+        我是大隊長或行政團隊（無參與者編號）
+      </label>
+    </div>
+
+    <div class="alert alert-warn" id="loginError" style="display:none">
+      ⚠️ <span id="loginErrorMsg"></span>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="doLogin()">確認身份 →</button>
+    </div>
+  </div>
+
+  <!-- ══════ STEP 2：選擇專案 ══════ -->
+  <div class="step" id="step2">
+    <span class="step-tag">STEP 02</span>
+    <h1>選擇你要進行<br>評分的專案 📋</h1>
+    <p class="step-desc">請選擇你已完整參與、且開放評分的文化專案。</p>
+
+    <div id="identityBanner2"></div>
+    <div id="projectGrid" class="project-grid"></div>
+    <div class="alert alert-info" id="noProjects" style="display:none">
+      ℹ️ 目前沒有開放評分的專案，請等待專案結束後再來填寫。
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goStep(1)">← 返回</button>
+      <button class="btn btn-primary" id="btnSelectProject" disabled onclick="goToMode()">選擇此專案 →</button>
+    </div>
+  </div>
+
+  <!-- ══════ STEP 3：選擇模式（自評 or 互評） ══════ -->
+  <div class="step" id="step3">
+    <span class="step-tag">STEP 03</span>
+    <h1>你要進行<br>自評還是互評？ 🎯</h1>
+    <p class="step-desc">自評是針對自己的表現填寫；互評是評價同專案的其他學員。</p>
+
+    <div id="identityBanner3"></div>
+
+    <div class="mode-grid">
+      <button class="mode-btn" id="modeSelf" onclick="selectMode('self')">
+        <div class="mode-emoji">🪞</div>
+        <div class="mode-title">自評</div>
+        <div class="mode-desc">針對自己在此專案<br>的表現進行評價</div>
+      </button>
+      <button class="mode-btn" id="modePeer" onclick="selectMode('peer')">
+        <div class="mode-emoji">👥</div>
+        <div class="mode-title">互評</div>
+        <div class="mode-desc">評價同專案<br>其他學員的表現</div>
+      </button>
+    </div>
+
+    <div class="alert alert-info" id="selfDoneAlert" style="display:none">
+      ✅ 你已完成此專案的自評。
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goStep(2)">← 換專案</button>
+      <button class="btn btn-primary" id="btnGoForm" disabled onclick="goFromMode()">繼續 →</button>
+    </div>
+  </div>
+
+  <!-- ══════ STEP 4：選擇被評者（互評用） ══════ -->
+  <div class="step" id="step4">
+    <span class="step-tag">STEP 04</span>
+    <h1>選擇你要評的<br>學員 👤</h1>
+    <p class="step-desc">每次填寫一位學員。完成後可繼續評下一位。</p>
+
+    <div id="peerList"></div>
+    <div class="alert alert-success" id="allDoneAlert" style="display:none">
+      🎉 你已完成此專案所有學員的互評！
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goStep(3)">← 返回</button>
+      <button class="btn btn-primary" id="btnStartReview" disabled onclick="startReview()">開始互評 →</button>
+    </div>
+  </div>
+
+  <!-- ══════ STEP 5：填寫表單 ══════ -->
+  <div class="step" id="step5">
+    <span class="step-tag">STEP 05</span>
+    <h1 id="formTitle">評分表單</h1>
+    <p class="step-desc" id="formDesc"></p>
+
+    <div id="revieweeBanner"></div>
+    <div id="formTypeLabel"></div>
+    <div id="alertMsg"></div>
+    <div id="criteriaBlocks"></div>
+    <div id="openQuestions"></div>
+
+    <div class="alert alert-error" id="errorMsg" style="display:none">
+      ❌ <span id="errorText"></span>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="btnBackFromForm" onclick="backFromForm()">← 返回</button>
+      <button class="btn btn-primary" onclick="submitForm()">送出 ✓</button>
+    </div>
+  </div>
+
+  <!-- ══════ STEP 6：完成 ══════ -->
+  <div class="step" id="step6">
+    <div class="summary-hero">
+      <div class="hero-emoji" id="doneEmoji">🎊</div>
+      <h2 id="doneTitle">已送出！</h2>
+      <p id="doneSubtitle">感謝你認真填寫！</p>
+    </div>
+    <div class="summary-grid" id="summaryGrid"></div>
+    <div class="alert alert-info">
+      ℹ️ 評分結果由專案小組統一彙整，如需查詢請聯繫 <strong>ntpcca@wceo.org</strong>
+    </div>
+    <div class="btn-row" id="doneActions"></div>
+  </div>
+
+</main>
+
+<script>
+// ════════════════════════════════════════════
+//  CONFIG
+// ════════════════════════════════════════════
+const GAS_URL = 'YOUR_GAS_WEB_APP_URL_HERE';
+
+// 角色定義
+const ROLES = {
+  '行政團隊':   { label: '行政團隊', cls: 'role-admin',      canBeReviewed: false, isLeader: false },
+  '大隊長':     { label: '大隊長',   cls: 'role-leader',     canBeReviewed: false, isLeader: false },
+  '儲備大隊長': { label: '儲備大隊長', cls: 'role-sub-leader', canBeReviewed: true,  isLeader: true  },
+  '中隊長':     { label: '中隊長',   cls: 'role-mid-leader', canBeReviewed: true,  isLeader: true  },
+  '參與學員':   { label: '參與學員', cls: 'role-member',     canBeReviewed: true,  isLeader: false },
+};
+
+// 基本8題（所有人共用）
+const CRITERIA_BASE = [
+  { key: 'time',    label: '時間管理與準時度',  hint: '如線上開會及專案執行是否準時參與' },
+  { key: 'proact',  label: '積極主動性',        hint: '如主動提出疑問，解決執行專案時困境' },
+  { key: 'comm',    label: '溝通表達能力',       hint: '如能夠在會議中發言表達意見，或協助團隊溝通' },
+  { key: 'team',    label: '團隊互助精神',       hint: '如協助夥伴解決困境，使專案共好' },
+  { key: 'culture', label: '新北文化素養',       hint: '如能透過學習，對新北在地文化侃侃而談' },
+  { key: 'task',    label: '任務負責程度與成果', hint: '如是否能夠完成自己所負責的工作，且成果能使用於專案' },
+  { key: 'reflect', label: '回饋與反思能力',     hint: '如能夠針對團隊問題，提出有建設性的回饋與反省' },
+  { key: 'growth',  label: '自我突破與進步',     hint: '如完成專案前後相比，能力有明顯提升與進步' },
+];
+
+// 領導力加題（評儲備大隊長／中隊長時使用）
+const CRITERIA_LEADER = [
+  { key: 'organize', label: '專案組織力', hint: '例如能夠統籌專案相關任務，整理多項資訊，幫助學員執行專案' },
+  { key: 'lead',     label: '團隊領導力', hint: '例如能夠領導多位學員，有團隊意識地共同完成任務' },
+];
+
+const RATING_LEVELS = [
+  { value: '尚待加強' },
+  { value: '基本達標' },
+  { value: '表現優異' },
+  { value: '超越期待' },
+];
+
+// ════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════
+let S = {
+  name: '', id: '', role: '', projects: [],
+  selectedProject: null,
+  mode: null,           // 'self' | 'peer'
+  selectedPeer: null,
+  peers: [],            // reviewable peers in selected project
+  completedPeers: [],   // IDs reviewed this session
+  selfDone: false,      // self-review done this session
+};
+
+// ════════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════════
+const TOTAL = 6;
+function goStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+  // progress: treat 1b same as 1
+  const nNum = (n === '1b') ? 1 : Number(n);
+  document.getElementById('progressFill').style.width = Math.round((nNum-1)/(TOTAL-1)*100) + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ════════════════════════════════════════════
+//  STEP 1 — LOGIN
+// ════════════════════════════════════════════
+// ── 查詢階段（step1 → step1b）──
+async function doLookup() {
+  const name  = document.getElementById('inputName').value.trim();
+  const phone = document.getElementById('inputPhone').value.trim();
+  if (!name)  { showLoginError('請填寫姓名。'); return; }
+  if (!phone || !/^\d{3}$/.test(phone)) { showLoginError('請填寫 3 位數字的手機後三碼。'); return; }
+
+  showLoading(true, '查詢資料中⋯');
+  try {
+    const res = await gasCall({ action: 'login', name, phone });
+    if (res.ok) {
+      // 暫存查詢結果，等確認後再正式登入
+      S._pending = { name: res.name, id: res.id, role: res.role, projects: res.projects };
+      hideLoginError();
+      renderConfirmCard(res);
+      goStep('1b');
+    } else {
+      showLoginError(res.message || '找不到符合的參與者，請確認姓名與手機後三碼。');
+    }
+  } catch(e) { showLoginError('連線失敗，請稍後再試。'); }
+  finally { showLoading(false); }
+}
+
+// ── 確認階段（step1b → step2）──
+function confirmLogin() {
+  const p = S._pending;
+  S.name = p.name; S.id = p.id; S.role = p.role;
+  S.projects = p.projects; S.completedPeers = []; S.selfDone = false;
+  S._pending = null;
+  renderProjectStep();
+  goStep(2);
+}
+
+function renderConfirmCard(res) {
+  const ROLE_COLORS = {
+    '行政團隊':   '#7c3aed',
+    '大隊長':     '#1d4ed8',
+    '儲備大隊長': '#0369a1',
+    '中隊長':     '#0891b2',
+    '參與學員':   '#059669',
+  };
+  const color = ROLE_COLORS[res.role] || '#6b7280';
+  document.getElementById('confirmAvatar').textContent = res.name.charAt(0);
+  document.getElementById('confirmName').textContent   = res.name;
+  document.getElementById('confirmId').textContent     = res.id;
+  const roleBadge = document.getElementById('confirmRole');
+  roleBadge.textContent = res.role;
+  roleBadge.style.background = color;
+  roleBadge.style.color = '#fff';
+}
+
+function showLoginError(msg) { document.getElementById('loginError').style.display='flex'; document.getElementById('loginErrorMsg').textContent=msg; }
+function hideLoginError()    { document.getElementById('loginError').style.display='none'; }
+
+// ════════════════════════════════════════════
+//  STEP 2 — 選擇專案
+// ════════════════════════════════════════════
+function renderProjectStep() {
+  document.getElementById('identityBanner2').innerHTML = identityBannerHTML();
+  const grid = document.getElementById('projectGrid');
+  const noP  = document.getElementById('noProjects');
+  if (!S.projects || S.projects.length === 0) {
+    grid.innerHTML = ''; noP.style.display = 'flex'; return;
+  }
+  noP.style.display = 'none';
+  grid.innerHTML = S.projects.map(p => `
+    <button class="project-btn" data-id="${p.id}" onclick="selectProject('${p.id}')">
+      <span class="proj-emoji">${p.emoji || '🎯'}</span>
+      <div class="proj-name">${p.name}</div>
+      <div class="proj-date">${p.date || ''}</div>
+    </button>
+  `).join('');
+
+  // 若 URL 帶有 ?project= 參數，自動預選並跳過選擇步驟
+  const urlProject = new URLSearchParams(window.location.search).get('project');
+  if (urlProject) {
+    const matched = S.projects.find(p => p.id === urlProject);
+    if (matched) {
+      selectProject(urlProject);
+      // 短暫停留讓 banner 渲染，再自動跳轉
+      setTimeout(() => {
+        if (S.selectedProject) goToMode();
+      }, 120);
+    }
+  }
+}
+function selectProject(id) {
+  document.querySelectorAll('.project-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelector(`.project-btn[data-id="${id}"]`).classList.add('selected');
+  S.selectedProject = S.projects.find(p => p.id === id);
+  document.getElementById('btnSelectProject').disabled = false;
+}
+function goToMode() {
+  if (!S.selectedProject) return;
+  renderModeStep();
+  goStep(3);
+}
+
+// ════════════════════════════════════════════
+//  STEP 3 — 選擇模式
+// ════════════════════════════════════════════
+function renderModeStep() {
+  document.getElementById('identityBanner3').innerHTML = identityBannerHTML();
+  S.mode = null;
+  document.getElementById('modeSelf').classList.remove('selected');
+  document.getElementById('modePeer').classList.remove('selected');
+  document.getElementById('btnGoForm').disabled = true;
+
+  // 行政/大隊長 不需要自評 → 只顯示互評
+  const role = ROLES[S.role];
+  if (role && !role.canBeReviewed) {
+    document.getElementById('modeSelf').style.display = 'none';
+  } else {
+    document.getElementById('modeSelf').style.display = '';
+  }
+  document.getElementById('selfDoneAlert').style.display = S.selfDone ? 'flex' : 'none';
+}
+function selectMode(m) {
+  S.mode = m;
+  document.getElementById('modeSelf').classList.toggle('selected', m==='self');
+  document.getElementById('modePeer').classList.toggle('selected', m==='peer');
+  document.getElementById('btnGoForm').disabled = false;
+}
+function goFromMode() {
+  if (!S.mode) return;
+  if (S.mode === 'self') {
+    renderFormSelf();
+    goStep(5);
+  } else {
+    renderPeerList();
+    goStep(4);
+  }
+}
+
+// ════════════════════════════════════════════
+//  STEP 4 — 選擇被評者
+// ════════════════════════════════════════════
+function renderPeerList() {
+  const list = document.getElementById('peerList');
+  const allDone = document.getElementById('allDoneAlert');
+
+  // peers = 同專案中可被評的學生（canBeReviewed=true），排除自己
+  const reviewable = (S.selectedProject.peers || []).filter(p =>
+    p.id !== S.id && !S.completedPeers.includes(p.id)
+  );
+
+  if (reviewable.length === 0) {
+    list.innerHTML = ''; allDone.style.display = 'flex';
+    document.getElementById('btnStartReview').disabled = true;
+    return;
+  }
+  allDone.style.display = 'none';
+  list.innerHTML = reviewable.map(p => {
+    const r = ROLES[p.role] || {};
+    const tagCls = r.isLeader ? 'tag-leader' : 'tag-member';
+    return `
+      <div class="peer-card" data-id="${p.id}" onclick="selectPeer('${p.id}')">
+        <div class="peer-avatar">${p.name.charAt(0)}</div>
+        <div class="peer-info">
+          <div class="peer-name">${p.name}</div>
+          <div class="peer-id">${p.id}</div>
+          <span class="peer-role-badge ${tagCls}">${p.role || ''}</span>
+        </div>
+        <div class="peer-check"></div>
+      </div>`;
+  }).join('');
+  S.selectedPeer = null;
+  document.getElementById('btnStartReview').disabled = true;
+}
+function selectPeer(id) {
+  document.querySelectorAll('.peer-card').forEach(c => c.classList.remove('selected'));
+  document.querySelector(`.peer-card[data-id="${id}"]`).classList.add('selected');
+  S.selectedPeer = (S.selectedProject.peers || []).find(p => p.id === id);
+  document.getElementById('btnStartReview').disabled = false;
+}
+function startReview() {
+  if (!S.selectedPeer) return;
+  renderFormPeer();
+  goStep(5);
+}
+
+// ════════════════════════════════════════════
+//  STEP 5 — 表單渲染
+// ════════════════════════════════════════════
+
+// ── 自評 ──
+function renderFormSelf() {
+  const isLeader = ROLES[S.role] && ROLES[S.role].isLeader;
+  document.getElementById('formTitle').textContent = '自我評價表單';
+  document.getElementById('formDesc').textContent =
+    `請以「${isLeader ? '專案儲備大隊長或中隊長' : '文化專案組員'}」身份，針對自己在此專案的表現進行自我評價。`;
+
+  document.getElementById('revieweeBanner').innerHTML = `
+    <div class="reviewee-banner">
+      <div class="r-avatar">${S.name.charAt(0)}</div>
+      <div>
+        <div class="r-name">${S.name}（自評）</div>
+        <div class="r-sub">${S.id} ・ ${S.selectedProject.name}</div>
+      </div>
+      <div class="review-counter">自評</div>
+    </div>`;
+
+  document.getElementById('formTypeLabel').innerHTML =
+    `<span class="form-type-label">🪞 自評表單・${isLeader ? '幹部版' : '學員版'}</span>`;
+
+  renderCriteriaBlocks(isLeader ? false : false, 'self'); // 自評不加領導力題（依需求可調整）
+  renderOpenQuestions('self');
+  document.getElementById('btnBackFromForm').onclick = () => goStep(3);
+  document.getElementById('errorMsg').style.display = 'none';
+}
+
+// ── 互評 ──
+function renderFormPeer() {
+  const peer = S.selectedPeer;
+  const targetIsLeader = ROLES[peer.role] && ROLES[peer.role].isLeader;
+  const total = (S.selectedProject.peers || []).filter(p => p.id !== S.id).length;
+  const done  = S.completedPeers.length + 1;
+
+  document.getElementById('formTitle').textContent = '互評表單';
+  document.getElementById('formDesc').textContent = '請根據你與這位學員合作的真實觀察填寫。';
+
+  document.getElementById('revieweeBanner').innerHTML = `
+    <div class="reviewee-banner">
+      <div class="r-avatar">${peer.name.charAt(0)}</div>
+      <div>
+        <div class="r-name">${peer.name}</div>
+        <div class="r-sub">${peer.id} ・ ${peer.role} ・ ${S.selectedProject.name}</div>
+      </div>
+      <div class="review-counter">${done} / ${total}</div>
+    </div>`;
+
+  document.getElementById('formTypeLabel').innerHTML =
+    `<span class="form-type-label">👥 互評表單・${targetIsLeader ? '幹部版（含領導力題）' : '學員版'}</span>`;
+
+  renderCriteriaBlocks(targetIsLeader, 'peer');
+  renderOpenQuestions('peer', targetIsLeader);
+  document.getElementById('btnBackFromForm').onclick = () => { renderPeerList(); goStep(4); };
+  document.getElementById('errorMsg').style.display = 'none';
+}
+
+function renderCriteriaBlocks(includeLeader, mode) {
+  const criteria = includeLeader ? [...CRITERIA_BASE, ...CRITERIA_LEADER] : CRITERIA_BASE;
+  const blocks = document.getElementById('criteriaBlocks');
+  let html = '';
+
+  if (includeLeader) {
+    html += CRITERIA_BASE.map((c, i) => criteriaBlockHTML(c, i+1)).join('');
+    html += `<div class="section-divider"><span>領導力評分</span></div>`;
+    html += CRITERIA_LEADER.map((c, i) => criteriaBlockHTML(c, CRITERIA_BASE.length + i + 1)).join('');
+  } else {
+    html += CRITERIA_BASE.map((c, i) => criteriaBlockHTML(c, i+1)).join('');
+  }
+
+  blocks.innerHTML = html;
+
+  criteria.forEach(c => {
+    document.querySelectorAll(`input[name="rating_${c.key}"]`).forEach(r => {
+      r.addEventListener('change', () => {
+        document.getElementById(`cblock_${c.key}`).classList.add('rated');
+      });
+    });
+  });
+}
+
+function criteriaBlockHTML(c, idx) {
+  return `
+    <div class="criteria-block" id="cblock_${c.key}">
+      <div class="criteria-label">${idx}. ${c.label}</div>
+      <div class="criteria-hint">${c.hint}</div>
+      <div class="rating-group">
+        ${RATING_LEVELS.map((r, ri) => `
+          <div class="rating-option">
+            <input type="radio" name="rating_${c.key}" id="r_${c.key}_${ri}" value="${r.value}">
+            <label for="r_${c.key}_${ri}"><span class="dot"></span>${r.value}</label>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function renderOpenQuestions(mode, targetIsLeader) {
+  const el = document.getElementById('openQuestions');
+  if (mode === 'self') {
+    el.innerHTML = `
+      <div class="open-section">
+        <div class="open-q">✏️ 參與完這場專案後，你覺得自己貢獻最多、最有價值的事情是？</div>
+        <textarea id="openQ1" placeholder="請用幾句話描述⋯" rows="3"></textarea>
+      </div>
+      <div class="open-section">
+        <div class="open-q">✏️ 參與完這場專案後，你覺得自己有待加強的事情是？</div>
+        <textarea id="openQ2" placeholder="請用幾句話描述⋯" rows="3"></textarea>
+      </div>`;
+  } else if (targetIsLeader) {
+    el.innerHTML = `
+      <div class="open-section">
+        <div class="open-q">✏️ 請問你是否對這位隊長有任何肯定或建議？<span class="open-q-optional">（非必填）</span></div>
+        <textarea id="openQ1" placeholder="請用幾句話描述⋯" rows="3"></textarea>
+      </div>`;
+  } else {
+    // 評參與學員
+    el.innerHTML = `
+      <div class="open-section">
+        <div class="open-q">✏️ 在這場專案中，你覺得這位組員可靠、能夠信任的地方是？</div>
+        <textarea id="openQ1" placeholder="請用幾句話描述⋯" rows="3"></textarea>
+      </div>
+      <div class="open-section">
+        <div class="open-q">✏️ 承上題，請簡述原因。</div>
+        <textarea id="openQ2" placeholder="請用幾句話描述⋯" rows="3"></textarea>
+      </div>`;
+  }
+}
+
+// ════════════════════════════════════════════
+//  SUBMIT
+// ════════════════════════════════════════════
+async function submitForm() {
+  const mode = S.mode;
+  const peer = S.selectedPeer;
+  const targetIsLeader = mode === 'peer' && peer && ROLES[peer.role] && ROLES[peer.role].isLeader;
+  const criteria = (mode === 'peer' && targetIsLeader)
+    ? [...CRITERIA_BASE, ...CRITERIA_LEADER]
+    : CRITERIA_BASE;
+
+  // Validate ratings
+  const ratings = {};
+  let missing = [];
+  criteria.forEach(c => {
+    const checked = document.querySelector(`input[name="rating_${c.key}"]:checked`);
+    if (!checked) missing.push(c.label);
+    else ratings[c.key] = checked.value;
+  });
+  if (missing.length > 0) {
+    showError(`請完成所有評分項目（尚缺：${missing[0]} 等 ${missing.length} 項）`);
+    return;
+  }
+
+  const openQ1 = document.getElementById('openQ1')?.value.trim() || '';
+  const openQ2 = document.getElementById('openQ2')?.value.trim() || '';
+
+  const payload = {
+    action: 'submit',
+    mode,
+    reviewerId:    S.id,
+    reviewerName:  S.name,
+    reviewerRole:  S.role,
+    revieweeId:    mode === 'self' ? S.id   : peer.id,
+    revieweeName:  mode === 'self' ? S.name : peer.name,
+    revieweeRole:  mode === 'self' ? S.role : peer.role,
+    projectId:     S.selectedProject.id,
+    projectName:   S.selectedProject.name,
+    ratings,
+    openQ1, openQ2,
+    timestamp: new Date().toISOString(),
+  };
+
+  showLoading(true, '送出中，請稍候⋯');
+  try {
+    const res = await gasCall(payload);
+    if (res.ok) {
+      if (mode === 'self') S.selfDone = true;
+      else S.completedPeers.push(peer.id);
+      renderDone(mode, peer);
+      goStep(6);
+    } else {
+      showError(res.message || '送出失敗，請稍後再試。');
+    }
+  } catch(e) { showError('連線失敗，請稍後再試。'); }
+  finally { showLoading(false); }
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.style.display = 'flex';
+  document.getElementById('errorText').textContent = msg;
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ════════════════════════════════════════════
+//  STEP 6 — DONE
+// ════════════════════════════════════════════
+function renderDone(mode, peer) {
+  const remaining = mode === 'peer'
+    ? (S.selectedProject.peers || []).filter(p => p.id !== S.id && !S.completedPeers.includes(p.id)).length
+    : 0;
+
+  document.getElementById('doneEmoji').textContent  = mode === 'self' ? '🪞' : '🎊';
+  document.getElementById('doneTitle').textContent  = mode === 'self' ? '自評已送出！' : '互評已送出！';
+  document.getElementById('doneSubtitle').textContent = '感謝你認真填寫，你的回饋很有價值！';
+
+  document.getElementById('summaryGrid').innerHTML = `
+    <div class="summary-item"><div class="si-label">填寫類型</div><div class="si-val">${mode==='self'?'自評':'互評'}</div></div>
+    <div class="summary-item"><div class="si-label">${mode==='self'?'評價對象':'已評對象'}</div><div class="si-val">${mode==='self'?S.name:peer.name}</div></div>
+    <div class="summary-item"><div class="si-label">專案</div><div class="si-val">${S.selectedProject.name}</div></div>
+    <div class="summary-item"><div class="si-label">${mode==='self'?'你的身份':'尚未評的學員'}</div><div class="si-val">${mode==='self'?S.role:remaining+' 位'}</div></div>
+  `;
+
+  const actions = document.getElementById('doneActions');
+  if (mode === 'peer' && remaining > 0) {
+    actions.innerHTML = `
+      <button class="btn btn-primary" onclick="continueNext()">繼續評下一位 →</button>
+      <button class="btn btn-secondary" onclick="goStep(3)">返回選擇</button>`;
+  } else {
+    actions.innerHTML = `
+      <button class="btn btn-primary" onclick="goStep(3)">返回選擇模式</button>
+      <button class="btn btn-secondary" onclick="goStep(2)">換其他專案</button>`;
+  }
+}
+
+function continueNext() { renderPeerList(); goStep(4); }
+function backFromForm() { goStep(3); }
+
+// ════════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════════
+function identityBannerHTML() {
+  const r = ROLES[S.role] || {};
+  return `
+    <div class="identity-banner">
+      <div class="id-avatar">${S.name.charAt(0)}</div>
+      <div>
+        <div class="id-name">${S.name}</div>
+        <div class="id-sub">${S.id}</div>
+      </div>
+      <span class="role-badge ${r.cls || ''}">${S.role}</span>
+    </div>`;
+}
+
+async function gasCall(payload) {
+  const url = GAS_URL + '?data=' + encodeURIComponent(JSON.stringify(payload));
+  const res  = await fetch(url, { method: 'GET', redirect: 'follow' });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return await res.json();
+}
+
+function showLoading(show, msg) {
+  document.getElementById('loadingOverlay').classList.toggle('active', show);
+  if (msg) document.getElementById('loadingMsg').textContent = msg;
+}
+
+document.getElementById('inputPhone').addEventListener('keypress', e => {
+  if (e.key === 'Enter') doLookup();
+});
+document.getElementById('inputName').addEventListener('keypress', e => {
+  if (e.key === 'Enter') doLookup();
+});
+</script>
+</body>
+</html>
