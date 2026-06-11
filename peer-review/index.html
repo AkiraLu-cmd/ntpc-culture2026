@@ -467,13 +467,44 @@
     <div id="projPanels"></div>
   </div>
 
+  <!-- 匿名問卷 -->
+  <div class="survey-section" id="surveySection" style="display:none;">
+    <div class="sec-head" style="margin-top:2.5rem;">匿名滿意度問卷</div>
+    <div class="notice" style="border-left-color:#8b5cf6; margin-bottom:1.5rem;">
+      🔒 <strong>本問卷完全匿名</strong>，不會記錄任何個人資訊，請放心據實填寫。<br>
+      你的回饋將幫助我們改善未來的專案品質，非常感謝！
+    </div>
+
+    <!-- 選擇專案（若只有一個則自動帶入） -->
+    <div id="surveyProjRow" style="margin-bottom:1.25rem; display:none;">
+      <div class="field-label">選擇問卷對應的專案</div>
+      <select id="surveyProjSelect" style="
+        width:100%; padding:.7rem 1rem;
+        border:1.5px solid var(--border); border-radius:10px;
+        font-family:'Noto Sans TC',sans-serif; font-size:.95rem;
+        color:var(--text); background:var(--white); outline:none;
+        -webkit-appearance:none; cursor:pointer;
+      "></select>
+    </div>
+
+    <div id="surveyQuestions"></div>
+
+    <div class="alert alert-err" id="surveyErr">❌ <span id="surveyErrMsg"></span></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btnSurvey" onclick="submitSurvey()">送出問卷 ✓</button>
+    </div>
+    <div class="alert alert-ok" id="surveyDone" style="margin-top:1rem;">
+      ✅ 問卷已送出，感謝你的回饋！
+    </div>
+  </div>
+
 </div><!-- /page -->
 
 <script>
 // ══════════════════════════════════════════════
 //  CONFIG — 填入你的 Apps Script Web App URL
 // ══════════════════════════════════════════════
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwpo1xdOWpmUGC7ZItWjBiNggmkLE5fO4xgYz4eABtDv0FnoiIjlHTI6w8PJsz6UHZk/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwoxsLdLRqzedFh6jKwhge5BYEOL3xUp0_h7BjSIwK55uQiWel2HkNTVd37TemPblJs/exec';
 
 // 評分面向
 const CRITERIA_BASE = [
@@ -529,8 +560,14 @@ async function doLookup(name, phone) {
     if (res.ok) {
       ME = res;
       showIdBanner(res);
+      // 初始化 DONE，並帶入後台已完成紀錄
       DONE = {};
-      res.projects.forEach(p => { DONE[p.id] = { self: false, peers: [] }; });
+      res.projects.forEach(p => {
+        DONE[p.id] = {
+          self:  (res.completedSelf  || []).includes(p.id),
+          peers: (res.completedPeers || {})[p.id] || [],
+        };
+      });
       renderProjects(res.projects);
     } else {
       showAlert('alertLogin', res.message || '找不到符合的參與者，請確認姓名與手機後三碼。');
@@ -584,6 +621,10 @@ function renderProjects(projects) {
   });
 
   document.getElementById('projSection').classList.add('show');
+
+  // 顯示並初始化匿名問卷
+  renderSurvey(projects);
+  document.getElementById('surveySection').style.display = 'block';
 
   // scroll to projects
   setTimeout(() => {
@@ -882,6 +923,108 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ══════════════════════════════════════════════
+//  SURVEY
+// ══════════════════════════════════════════════
+const SURVEY_QS = [
+  { key:'q1', label:'作為專案執行學員，你有多願意推薦朋友或同學參與此專案？',    lo:'0 = 完全不願意推薦', hi:'10 = 非常願意推薦' },
+  { key:'q2', label:'你對「{專案名稱}」專案活動的整體感受如何？',               lo:'0 = 非常不滿意',     hi:'10 = 非常滿意'     },
+  { key:'q3', label:'你對「{專案名稱}」專案活動的執行方式感受如何？',            lo:'0 = 非常不滿意',     hi:'10 = 非常滿意'     },
+  { key:'q4', label:'你對「{專案名稱}」專案活動的行政聯繫感受如何？',            lo:'0 = 非常不滿意',     hi:'10 = 非常滿意'     },
+  { key:'q5', label:'你覺得這次活動有增加你對在地文化的了解嗎？',               lo:'0 = 完全沒有增加',   hi:'10 = 增加非常多'   },
+  { key:'q6', label:'這次活動後，你會推薦朋友來參訪活動地點嗎？',               lo:'0 = 完全不會推薦',   hi:'10 = 非常願意推薦' },
+];
+
+function renderSurvey(projects) {
+  // 專案選擇
+  const projRow    = document.getElementById('surveyProjRow');
+  const projSelect = document.getElementById('surveyProjSelect');
+  projSelect.innerHTML = '';
+  projects.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id; opt.textContent = p.emoji + ' ' + p.name;
+    projSelect.appendChild(opt);
+  });
+  projRow.style.display = projects.length > 1 ? 'block' : 'none';
+  projSelect.onchange = () => renderSurveyQuestions();
+  renderSurveyQuestions();
+}
+
+function getSurveyProject() {
+  const sel = document.getElementById('surveyProjSelect');
+  return ME.projects.find(p => p.id === sel.value) || ME.projects[0];
+}
+
+function renderSurveyQuestions() {
+  const proj = getSurveyProject();
+  const el   = document.getElementById('surveyQuestions');
+  el.innerHTML = SURVEY_QS.map((q, i) => {
+    const label = q.label.replace('{專案名稱}', proj.name);
+    return `
+    <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:.85rem;box-shadow:var(--shadow);">
+      <div style="font-weight:700;font-size:.9rem;color:var(--navy);margin-bottom:.5rem;">Q${i+1}. ${label}</div>
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:.85rem;">${q.lo}　／　${q.hi}</div>
+      <div style="display:flex;gap:.35rem;flex-wrap:wrap;" id="sq-${q.key}">
+        ${[0,1,2,3,4,5,6,7,8,9,10].map(n => `
+          <label style="flex:1;min-width:36px;text-align:center;">
+            <input type="radio" name="sq-${q.key}" value="${n}" style="display:none;"
+              onchange="document.querySelectorAll('[data-sq=\'${q.key}\']').forEach(b=>b.style.background='');this.parentElement.querySelector('span').style.background='var(--gold)';this.parentElement.querySelector('span').style.color='var(--navy)';">
+            <span data-sq="${q.key}" style="display:block;padding:.4rem .2rem;border:1.5px solid var(--border);border-radius:8px;font-size:.82rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s;"
+              onclick="this.previousElementSibling.click();">${n}</span>
+          </label>`).join('')}
+      </div>
+    </div>`;
+  }).join('') + `
+  <div style="background:var(--gold-pale);border:1.5px solid #f0d878;border-radius:var(--radius);padding:1.25rem;margin-bottom:.85rem;">
+    <div style="font-weight:700;font-size:.9rem;color:var(--navy);margin-bottom:.65rem;">Q7. 有什麼話想跟計畫說，或對未來活動、課程的建議？</div>
+    <textarea id="sq-q7" placeholder="請自由填寫（非必填）" style="min-height:80px;"></textarea>
+  </div>`;
+}
+
+async function submitSurvey() {
+  const proj = getSurveyProject();
+  // 收集 Q1–Q6
+  const vals = {};
+  let missing = [];
+  SURVEY_QS.forEach(q => {
+    const checked = document.querySelector(`input[name="sq-${q.key}"]:checked`);
+    if (!checked) missing.push('Q' + (SURVEY_QS.indexOf(q)+1));
+    else vals[q.key] = Number(checked.value);
+  });
+  if (missing.length) {
+    document.getElementById('surveyErr').classList.add('show');
+    document.getElementById('surveyErrMsg').textContent = `請完成所有評分題目（尚缺：${missing.join('、')}）`;
+    return;
+  }
+  document.getElementById('surveyErr').classList.remove('show');
+
+  const payload = {
+    action:      'submitSurvey',
+    projectId:   proj.id,
+    projectName: proj.name,
+    ...vals,
+    q7: document.getElementById('sq-q7').value.trim(),
+  };
+
+  showLoading('送出問卷⋯');
+  try {
+    const res = await gasGet(payload);
+    if (res.ok) {
+      document.getElementById('btnSurvey').disabled = true;
+      document.getElementById('surveyDone').classList.add('show');
+      document.getElementById('surveyDone').scrollIntoView({ behavior:'smooth', block:'center' });
+    } else {
+      document.getElementById('surveyErr').classList.add('show');
+      document.getElementById('surveyErrMsg').textContent = res.message || '送出失敗，請稍後再試。';
+    }
+  } catch(e) {
+    document.getElementById('surveyErr').classList.add('show');
+    document.getElementById('surveyErrMsg').textContent = '連線失敗，請稍後再試。';
+  } finally {
+    hideLoading();
+  }
 }
 
 async function gasGet(payload) {
