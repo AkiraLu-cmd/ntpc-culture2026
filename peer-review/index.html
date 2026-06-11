@@ -622,6 +622,9 @@ function renderProjects(projects) {
 
   document.getElementById('projSection').classList.add('show');
 
+  // 套用已完成狀態（重新登入後恢復）
+  applyDoneState(projects);
+
   // 顯示並初始化匿名問卷
   renderSurvey(projects);
   document.getElementById('surveySection').style.display = 'block';
@@ -635,6 +638,32 @@ function renderProjects(projects) {
 function switchProj(projId) {
   document.querySelectorAll('.proj-tab').forEach(t => t.classList.toggle('active', t.dataset.proj===projId));
   document.querySelectorAll('.proj-panel').forEach(p => p.classList.toggle('active', p.id==='panel-'+projId));
+}
+
+// 登入後根據 DONE 恢復已完成狀態
+function applyDoneState(projects) {
+  projects.forEach(proj => {
+    const d = DONE[proj.id];
+    if (!d) return;
+
+    // 自評已完成
+    if (d.self) {
+      const chip = document.getElementById(`selfDoneChip-${proj.id}`);
+      const block = document.getElementById(`self-${proj.id}`);
+      if (chip)  chip.style.display = 'inline-block';
+      if (block) {
+        block.classList.remove('open');
+        const hdr = block.querySelector('.self-block-hdr');
+        if (hdr) hdr.style.cursor = 'default';
+      }
+    }
+
+    // 互評已完成
+    (d.peers || []).forEach(peerId => {
+      const btn = document.getElementById(`peerBtn-${proj.id}-${peerId}`);
+      if (btn) btn.classList.add('done');
+    });
+  });
 }
 
 function buildProjPanel(proj) {
