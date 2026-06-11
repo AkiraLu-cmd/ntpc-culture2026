@@ -3,941 +3,891 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>學員互評與自評系統｜新北文化大使</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+  <title>學員互評系統｜新北文化大使 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --navy: #0a1628;
-      --navy-mid: #162040;
-      --gold: #e8b84b;
-      --gold-light: #f5d47a;
+      --navy:      #0a1628;
+      --gold:      #e8b84b;
+      --gold-lt:   #f5d47a;
       --gold-pale: #fdf3d8;
-      --cream: #fdfaf3;
-      --text: #1a1a2e;
-      --text-muted: #6b7280;
-      --border: #e5e7eb;
-      --radius: 16px;
-      --shadow: 0 4px 24px rgba(10,22,40,0.10);
+      --cream:     #fdfaf3;
+      --text:      #1a1a2e;
+      --muted:     #6b7280;
+      --border:    #e5e7eb;
+      --white:     #ffffff;
       --r1: #ef4444; --r2: #f59e0b; --r3: #3b82f6; --r4: #10b981;
+      --radius: 16px;
+      --shadow: 0 4px 20px rgba(10,22,40,0.09);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Noto Sans TC', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Sans TC', sans-serif; background: var(--cream); color: var(--text); }
 
-    .site-header {
-      background: var(--navy); padding: 0 2rem;
+    /* ── Header ── */
+    .hdr {
+      background: var(--navy);
+      height: 58px; padding: 0 1.5rem;
       display: flex; align-items: center; justify-content: space-between;
-      height: 64px; position: sticky; top: 0; z-index: 100;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      position: sticky; top: 0; z-index: 200;
+      box-shadow: 0 2px 12px rgba(0,0,0,.3);
     }
-    .site-header .logo { color: var(--gold); font-family: 'Space Mono', monospace; font-size: 0.85rem; letter-spacing: 0.05em; text-decoration: none; }
-    .site-header .badge { background: var(--gold); color: var(--navy); font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+    .hdr-logo { font-family:'Space Mono',monospace; font-size:.78rem; color:var(--gold); letter-spacing:.06em; text-decoration:none; }
+    .hdr-tag  { font-family:'Space Mono',monospace; font-size:.65rem; color:rgba(255,255,255,.4); letter-spacing:.1em; }
 
-    .progress-bar { height: 4px; background: var(--border); }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); transition: width 0.5s ease; }
-
-    .main { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-
-    .step { display: none; animation: fadeIn 0.35s ease; }
-    .step.active { display: block; }
-    @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-
-    .step-tag { display: inline-block; background: var(--navy); color: var(--gold); font-family: 'Space Mono', monospace; font-size: 0.7rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; letter-spacing: 0.08em; margin-bottom: 1rem; }
-    .step h1 { font-size: clamp(1.4rem, 4vw, 1.9rem); font-weight: 900; color: var(--navy); line-height: 1.2; margin-bottom: 0.5rem; }
-    .step-desc { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 2rem; }
-
-    .card { background: #fff; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.25rem; box-shadow: var(--shadow); }
-    .card:focus-within { border-color: var(--gold); }
-    .card-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-
-    input[type="text"], select, textarea {
-      width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 10px;
-      font-family: 'Noto Sans TC', sans-serif; font-size: 0.95rem; color: var(--text);
-      background: #fff; outline: none; -webkit-appearance: none; transition: border-color 0.2s, box-shadow 0.2s;
+    /* ── Hero ── */
+    .hero {
+      background: var(--navy);
+      padding: 3rem 1.5rem 2.75rem;
+      text-align: center;
     }
-    input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(232,184,75,0.15); }
-    select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; cursor: pointer; }
-    textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
-
-    /* Identity badge */
-    .identity-banner {
-      background: var(--navy); color: #fff; border-radius: 14px;
-      padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;
-      display: flex; align-items: center; gap: 1rem;
+    .hero-pill {
+      display: inline-block;
+      background: rgba(232,184,75,.15);
+      border: 1px solid rgba(232,184,75,.35);
+      color: var(--gold);
+      font-size: .7rem; font-weight: 700;
+      font-family: 'Space Mono', monospace;
+      letter-spacing: .1em;
+      padding: 4px 14px; border-radius: 20px;
+      margin-bottom: 1rem;
     }
-    .identity-banner .id-avatar {
-      width: 52px; height: 52px; background: var(--gold); color: var(--navy);
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-weight: 900; font-size: 1.2rem; flex-shrink: 0;
+    .hero h1 {
+      font-size: clamp(1.6rem, 5vw, 2.2rem);
+      font-weight: 900; color: #fff; line-height: 1.2;
+      margin-bottom: .85rem;
     }
-    .identity-banner .id-name { font-weight: 700; font-size: 1.1rem; }
-    .identity-banner .id-sub { font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 0.2rem; }
-    .role-badge {
-      margin-left: auto; padding: 5px 12px; border-radius: 20px;
-      font-size: 0.78rem; font-weight: 700; white-space: nowrap; flex-shrink: 0;
-    }
-    .role-admin     { background: #7c3aed; color: #fff; }
-    .role-leader    { background: #1d4ed8; color: #fff; }
-    .role-sub-leader { background: #0369a1; color: #fff; }
-    .role-mid-leader { background: #0891b2; color: #fff; }
-    .role-member    { background: #059669; color: #fff; }
-
-    /* Mode selection */
-    .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-    @media(max-width:480px) { .mode-grid { grid-template-columns: 1fr; } }
-    .mode-btn {
-      background: #fff; border: 2px solid var(--border); border-radius: 14px;
-      padding: 1.5rem 1.25rem; cursor: pointer; text-align: center; transition: all 0.2s;
-    }
-    .mode-btn:hover { border-color: var(--gold-light); background: var(--gold-pale); }
-    .mode-btn.selected { border-color: var(--gold); background: var(--gold-pale); }
-    .mode-btn .mode-emoji { font-size: 2rem; margin-bottom: 0.5rem; }
-    .mode-btn .mode-title { font-weight: 700; font-size: 1rem; color: var(--navy); }
-    .mode-btn .mode-desc { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem; line-height: 1.4; }
-
-    /* Project grid */
-    .project-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-    @media(max-width:500px) { .project-grid { grid-template-columns: 1fr; } }
-    .project-btn {
-      background: #fff; border: 2px solid var(--border); border-radius: 12px;
-      padding: 1rem; cursor: pointer; text-align: left; transition: all 0.2s; position: relative; overflow: hidden;
-    }
-    .project-btn::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:var(--gold); transform:scaleY(0); transition:transform 0.2s; }
-    .project-btn:hover { border-color: var(--gold-light); background: var(--gold-pale); }
-    .project-btn.selected { border-color: var(--gold); background: var(--gold-pale); }
-    .project-btn.selected::before { transform: scaleY(1); }
-    .project-btn .proj-emoji { font-size: 1.4rem; margin-bottom: 0.4rem; display: block; }
-    .project-btn .proj-name { font-weight: 700; font-size: 0.88rem; color: var(--navy); line-height: 1.3; }
-    .project-btn .proj-date { font-size: 0.73rem; color: var(--text-muted); margin-top: 0.25rem; }
-
-    /* Peer list */
-    .peer-card {
-      display: flex; align-items: center; gap: 1rem;
-      background: #fff; border: 2px solid var(--border); border-radius: 12px;
-      padding: 1rem 1.25rem; cursor: pointer; transition: all 0.2s; margin-bottom: 0.75rem;
-    }
-    .peer-card:hover { border-color: var(--gold-light); }
-    .peer-card.selected { border-color: var(--gold); background: var(--gold-pale); }
-    .peer-avatar { width: 44px; height: 44px; background: var(--navy); color: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1rem; flex-shrink: 0; }
-    .peer-info .peer-name { font-weight: 700; font-size: 0.95rem; }
-    .peer-info .peer-id { font-size: 0.73rem; color: var(--text-muted); font-family: 'Space Mono', monospace; }
-    .peer-role-badge { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-top: 3px; display: inline-block; }
-    .peer-check { margin-left: auto; width: 22px; height: 22px; border: 2px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
-    .peer-card.selected .peer-check { background: var(--gold); border-color: var(--gold); }
-    .peer-check::after { content:'✓'; color: var(--navy); font-size: 0.75rem; font-weight: 900; opacity: 0; transition: opacity 0.15s; }
-    .peer-card.selected .peer-check::after { opacity: 1; }
-
-    /* Reviewee banner */
-    .reviewee-banner {
-      background: var(--navy); color: #fff; border-radius: 14px;
-      padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;
-      display: flex; align-items: center; gap: 1rem;
-    }
-    .reviewee-banner .r-avatar { width: 48px; height: 48px; background: var(--gold); color: var(--navy); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; flex-shrink: 0; }
-    .reviewee-banner .r-name { font-weight: 700; font-size: 1.05rem; }
-    .reviewee-banner .r-sub { font-size: 0.78rem; color: rgba(255,255,255,0.6); margin-top: 0.2rem; }
-    .review-counter { margin-left: auto; background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 20px; font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--gold); white-space: nowrap; }
-
-    /* Form type label */
-    .form-type-label {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      background: var(--gold-pale); border: 1.5px solid var(--gold-light);
-      color: var(--navy); font-size: 0.8rem; font-weight: 700;
-      padding: 5px 12px; border-radius: 20px; margin-bottom: 1.25rem;
+    .hero h1 em { font-style: normal; color: var(--gold); }
+    .hero p {
+      color: rgba(255,255,255,.65); font-size: .88rem;
+      line-height: 1.7; max-width: 520px; margin: 0 auto;
     }
 
-    /* Criteria */
-    .criteria-block { background: #fff; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; transition: border-color 0.2s; }
+    /* ── Page wrapper ── */
+    .page { max-width: 700px; margin: 0 auto; padding: 2rem 1.25rem 5rem; }
+
+    /* ── Notice ── */
+    .notice {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-left: 4px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+      font-size: .875rem; line-height: 1.75; color: #374151;
+    }
+    .notice strong { color: var(--navy); }
+
+    /* ── Section heading ── */
+    .sec-head {
+      font-size: .72rem; font-weight: 700;
+      font-family: 'Space Mono', monospace;
+      letter-spacing: .12em; color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: .85rem;
+      display: flex; align-items: center; gap: .6rem;
+    }
+    .sec-head::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    /* ── Login card ── */
+    .login-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+    .field-label {
+      font-size: .72rem; font-weight: 700;
+      color: var(--muted); text-transform: uppercase;
+      letter-spacing: .1em; margin-bottom: .45rem;
+    }
+    .field-row { display: grid; grid-template-columns: 1fr 140px; gap: .75rem; margin-bottom: 1rem; }
+    @media(max-width:480px) { .field-row { grid-template-columns: 1fr; } }
+
+    input[type=text] {
+      width: 100%; padding: .7rem 1rem;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-family: 'Noto Sans TC', sans-serif; font-size: .95rem;
+      color: var(--text); background: var(--white);
+      outline: none; transition: border-color .2s, box-shadow .2s;
+      -webkit-appearance: none;
+    }
+    input[type=text]:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(232,184,75,.15); }
+
+    /* ── Identity banner (after lookup) ── */
+    .id-banner {
+      display: none;
+      background: var(--navy); color: #fff;
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      align-items: center; gap: .85rem;
+      margin-bottom: 2rem;
+    }
+    .id-banner.show { display: flex; }
+    .id-av {
+      width: 44px; height: 44px;
+      background: var(--gold); color: var(--navy);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; font-weight: 900; flex-shrink: 0;
+    }
+    .id-name  { font-weight: 700; font-size: 1rem; }
+    .id-sub   { font-size: .75rem; color: rgba(255,255,255,.55); margin-top: .15rem; font-family:'Space Mono',monospace; }
+    .id-badge {
+      margin-left: auto;
+      padding: 4px 12px; border-radius: 20px;
+      font-size: .72rem; font-weight: 700; flex-shrink: 0;
+    }
+
+    /* ── Alert ── */
+    .alert {
+      border-radius: 10px; padding: .8rem 1rem;
+      font-size: .85rem; margin-bottom: 1.25rem;
+      display: none; gap: .5rem; align-items: flex-start;
+    }
+    .alert.show { display: flex; }
+    .alert-warn { background:#fffbeb; border:1.5px solid #f59e0b; color:#92400e; }
+    .alert-err  { background:#fef2f2; border:1.5px solid #ef4444; color:#991b1b; }
+    .alert-ok   { background:#f0fdf4; border:1.5px solid #10b981; color:#065f46; }
+
+    /* ── Project tabs ── */
+    .proj-section { display: none; }
+    .proj-section.show { display: block; }
+
+    .proj-tabs {
+      display: flex; gap: .6rem; flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .proj-tab {
+      padding: .55rem 1.1rem;
+      border: 2px solid var(--border); border-radius: 30px;
+      background: var(--white); cursor: pointer;
+      font-size: .85rem; font-weight: 700; color: var(--muted);
+      transition: all .2s; font-family: 'Noto Sans TC', sans-serif;
+    }
+    .proj-tab:hover { border-color: var(--gold-lt); color: var(--navy); }
+    .proj-tab.active { border-color: var(--gold); background: var(--gold-pale); color: var(--navy); }
+
+    /* ── Project panel ── */
+    .proj-panel { display: none; }
+    .proj-panel.active { display: block; animation: fadeUp .3s ease; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── Self-review block ── */
+    .self-block {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .self-block-hdr {
+      padding: 1rem 1.25rem;
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; user-select: none;
+    }
+    .self-block-hdr:hover { background: var(--gold-pale); }
+    .self-block-title {
+      display: flex; align-items: center; gap: .6rem;
+      font-weight: 700; font-size: .95rem; color: var(--navy);
+    }
+    .self-block-title .emoji { font-size: 1.1rem; }
+    .done-chip {
+      font-size: .68rem; font-weight: 700;
+      background: #dcfce7; color: #15803d;
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .expand-icon { color: var(--muted); font-size: .85rem; transition: transform .2s; }
+    .self-block.open .expand-icon { transform: rotate(180deg); }
+    .self-block-body { display: none; padding: 0 1.25rem 1.25rem; }
+    .self-block.open .self-block-body { display: block; }
+
+    /* ── Peer list ── */
+    .peer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: .75rem;
+      margin-bottom: 1.5rem;
+    }
+    .peer-btn {
+      background: var(--white);
+      border: 2px solid var(--border); border-radius: 14px;
+      padding: 1rem .85rem; text-align: center;
+      cursor: pointer; transition: all .2s;
+      position: relative;
+    }
+    .peer-btn:hover:not(.done):not(.reviewing) {
+      border-color: var(--gold); background: var(--gold-pale);
+      transform: translateY(-2px); box-shadow: 0 4px 14px rgba(10,22,40,.1);
+    }
+    .peer-btn.done { opacity: .55; cursor: not-allowed; }
+    .peer-btn.reviewing { border-color: var(--gold); background: var(--gold-pale); }
+    .peer-av {
+      width: 40px; height: 40px;
+      background: var(--navy); color: var(--gold);
+      border-radius: 50%; margin: 0 auto .55rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .95rem; font-weight: 900;
+    }
+    .peer-btn.done .peer-av { background: #e5e7eb; color: var(--muted); }
+    .peer-name  { font-size: .85rem; font-weight: 700; color: var(--navy); margin-bottom: .25rem; }
+    .peer-role  { font-size: .7rem; color: var(--muted); }
+    .peer-check {
+      position: absolute; top: .4rem; right: .4rem;
+      width: 18px; height: 18px;
+      background: #10b981; border-radius: 50%;
+      display: none; align-items: center; justify-content: center;
+      font-size: .6rem; color: #fff;
+    }
+    .peer-btn.done .peer-check { display: flex; }
+
+    /* ── Review form ── */
+    .review-form {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem; margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+      display: none;
+    }
+    .review-form.show { display: block; animation: fadeUp .3s ease; }
+
+    .reviewee-hdr {
+      background: var(--navy); color: #fff;
+      border-radius: 12px; padding: 1rem 1.25rem;
+      display: flex; align-items: center; gap: .85rem;
+      margin-bottom: 1.5rem;
+    }
+    .reviewee-av {
+      width: 44px; height: 44px;
+      background: var(--gold); color: var(--navy);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 1.1rem; flex-shrink: 0;
+    }
+    .reviewee-name { font-weight: 700; font-size: 1rem; }
+    .reviewee-sub  { font-size: .75rem; color: rgba(255,255,255,.55); margin-top:.15rem; }
+    .form-type-tag {
+      margin-left: auto; flex-shrink: 0;
+      background: rgba(255,255,255,.1);
+      padding: 4px 10px; border-radius: 20px;
+      font-size: .68rem; font-weight: 700; color: var(--gold);
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* ── Criteria ── */
+    .criteria-block {
+      border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 1.1rem;
+      margin-bottom: .85rem; transition: border-color .2s;
+    }
     .criteria-block.rated { border-left: 4px solid var(--gold); }
-    .criteria-label { font-weight: 700; font-size: 0.95rem; color: var(--navy); margin-bottom: 0.25rem; }
-    .criteria-hint { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem; line-height: 1.5; }
-    .section-divider { display: flex; align-items: center; gap: 0.75rem; margin: 1.5rem 0 1rem; }
-    .section-divider span { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
-    .section-divider::before, .section-divider::after { content:''; flex:1; height:1px; background: var(--border); }
+    .criteria-label { font-weight: 700; font-size: .9rem; color: var(--navy); margin-bottom: .2rem; }
+    .criteria-hint  { font-size: .75rem; color: var(--muted); margin-bottom: .65rem; line-height: 1.5; }
 
-    .rating-group { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
-    .rating-option { position: relative; }
-    .rating-option input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
-    .rating-option label { display: block; text-align: center; padding: 0.5rem 0.25rem; border: 2px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.15s; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); line-height: 1.3; user-select: none; }
-    .rating-option label .dot { display: block; width: 8px; height: 8px; border-radius: 50%; margin: 0 auto 4px; }
-    .rating-option:nth-child(1) label .dot { background: var(--r1); }
-    .rating-option:nth-child(2) label .dot { background: var(--r2); }
-    .rating-option:nth-child(3) label .dot { background: var(--r3); }
-    .rating-option:nth-child(4) label .dot { background: var(--r4); }
-    .rating-option input:checked + label { color: var(--navy); font-weight: 700; }
-    .rating-option:nth-child(1) input:checked + label { border-color: var(--r1); background: #fef2f2; }
-    .rating-option:nth-child(2) input:checked + label { border-color: var(--r2); background: #fffbeb; }
-    .rating-option:nth-child(3) input:checked + label { border-color: var(--r3); background: #eff6ff; }
-    .rating-option:nth-child(4) input:checked + label { border-color: var(--r4); background: #f0fdf4; }
-    .rating-option label:hover { border-color: var(--gold); background: var(--gold-pale); }
+    .rating-group { display: grid; grid-template-columns: repeat(4,1fr); gap: .4rem; }
+    .r-opt { position: relative; }
+    .r-opt input { position:absolute; opacity:0; width:0; height:0; }
+    .r-opt label {
+      display: block; text-align: center;
+      padding: .45rem .2rem;
+      border: 2px solid var(--border); border-radius: 8px;
+      cursor: pointer; font-size: .72rem; font-weight: 600;
+      color: var(--muted); line-height: 1.3; user-select: none;
+      transition: all .15s;
+    }
+    .r-opt label .dot {
+      display: block; width: 7px; height: 7px;
+      border-radius: 50%; margin: 0 auto 3px;
+    }
+    .r-opt:nth-child(1) label .dot { background: var(--r1); }
+    .r-opt:nth-child(2) label .dot { background: var(--r2); }
+    .r-opt:nth-child(3) label .dot { background: var(--r3); }
+    .r-opt:nth-child(4) label .dot { background: var(--r4); }
+    .r-opt input:checked + label { color: var(--navy); font-weight: 700; }
+    .r-opt:nth-child(1) input:checked + label { border-color:var(--r1); background:#fef2f2; }
+    .r-opt:nth-child(2) input:checked + label { border-color:var(--r2); background:#fffbeb; }
+    .r-opt:nth-child(3) input:checked + label { border-color:var(--r3); background:#eff6ff; }
+    .r-opt:nth-child(4) input:checked + label { border-color:var(--r4); background:#f0fdf4; }
+    .r-opt label:hover { border-color: var(--gold); background: var(--gold-pale); }
 
-    .open-section { background: var(--gold-pale); border: 1.5px solid var(--gold-light); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; }
-    .open-section .open-q { font-weight: 700; font-size: 0.95rem; color: var(--navy); margin-bottom: 0.75rem; display: flex; gap: 0.5rem; align-items: flex-start; }
-    .open-q-optional { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; margin-left: 0.25rem; }
+    .section-divider {
+      display: flex; align-items: center; gap: .6rem;
+      margin: 1.25rem 0 .85rem;
+      font-size: .7rem; font-weight: 700;
+      color: var(--muted); text-transform: uppercase; letter-spacing: .1em;
+    }
+    .section-divider::before, .section-divider::after {
+      content:''; flex:1; height:1px; background:var(--border);
+    }
 
-    /* Buttons */
-    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 1.75rem; border-radius: 12px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; }
-    .btn-primary { background: var(--gold); color: var(--navy); box-shadow: 0 4px 12px rgba(232,184,75,0.35); }
-    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
-    .btn-primary:disabled { background: var(--border); color: var(--text-muted); box-shadow: none; transform: none; cursor: not-allowed; }
-    .btn-secondary { background: transparent; color: var(--text-muted); border: 1.5px solid var(--border); }
-    .btn-secondary:hover { border-color: var(--gold); color: var(--navy); }
-    .btn-row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-top: 1.5rem; }
+    .open-q {
+      background: var(--gold-pale);
+      border: 1.5px solid #f0d878;
+      border-radius: 12px; padding: 1.1rem;
+      margin-bottom: .85rem;
+    }
+    .open-q .q-label {
+      font-weight: 700; font-size: .88rem;
+      color: var(--navy); margin-bottom: .65rem;
+    }
+    textarea {
+      width: 100%; resize: vertical; min-height: 80px;
+      padding: .65rem .9rem;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      font-family: 'Noto Sans TC', sans-serif; font-size: .88rem;
+      line-height: 1.6; color: var(--text); background: var(--white);
+      outline: none; transition: border-color .2s;
+      -webkit-appearance: none;
+    }
+    textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(232,184,75,.15); }
 
-    /* Summary */
-    .summary-hero { background: var(--navy); color: #fff; border-radius: 20px; padding: 2.5rem 2rem; text-align: center; margin-bottom: 2rem; position: relative; overflow: hidden; }
-    .summary-hero::before { content:''; position:absolute; top:-40px; right:-40px; width:160px; height:160px; background:var(--gold); border-radius:50%; opacity:0.08; }
-    .summary-hero .hero-emoji { font-size: 3rem; margin-bottom: 1rem; }
-    .summary-hero h2 { font-size: 1.5rem; font-weight: 900; margin-bottom: 0.5rem; }
-    .summary-hero p { color: rgba(255,255,255,0.7); font-size: 0.9rem; }
-    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
-    @media(max-width:480px) { .summary-grid { grid-template-columns: 1fr; } }
-    .summary-item { background: #fff; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
-    .summary-item .si-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
-    .summary-item .si-val { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-top: 0.25rem; }
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: .45rem;
+      padding: .8rem 1.6rem; border-radius: 10px;
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: .9rem; font-weight: 700;
+      cursor: pointer; border: none; transition: all .2s;
+    }
+    .btn-primary {
+      background: var(--gold); color: var(--navy);
+      box-shadow: 0 3px 10px rgba(232,184,75,.35);
+    }
+    .btn-primary:hover { background: var(--gold-lt); transform: translateY(-1px); }
+    .btn-primary:disabled { background: var(--border); color: var(--muted); box-shadow:none; transform:none; cursor:not-allowed; }
+    .btn-ghost {
+      background: transparent; color: var(--muted);
+      border: 1.5px solid var(--border);
+    }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--navy); }
+    .btn-row { display: flex; gap: .65rem; flex-wrap: wrap; margin-top: 1.25rem; }
 
-    .alert { border-radius: 10px; padding: 0.85rem 1rem; font-size: 0.875rem; margin-bottom: 1.25rem; display: flex; gap: 0.6rem; align-items: flex-start; }
-    .alert-warn  { background: #fffbeb; border: 1.5px solid #f59e0b; color: #92400e; }
-    .alert-info  { background: #eff6ff; border: 1.5px solid #3b82f6; color: #1e40af; }
-    .alert-success { background: #f0fdf4; border: 1.5px solid #10b981; color: #065f46; }
-    .alert-error { background: #fef2f2; border: 1.5px solid #ef4444; color: #991b1b; }
-
-    .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(10,22,40,0.7); z-index: 999; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; }
-    .loading-overlay.active { display: flex; }
-    .spinner { width: 44px; height: 44px; border: 4px solid rgba(232,184,75,0.3); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    /* ── Loading ── */
+    .loading-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(10,22,40,.65); z-index: 999;
+      align-items: center; justify-content: center; flex-direction: column; gap: .85rem;
+    }
+    .loading-overlay.on { display: flex; }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 4px solid rgba(232,184,75,.25);
+      border-top-color: var(--gold);
+      border-radius: 50%; animation: spin .8s linear infinite;
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .loading-overlay p { color: #fff; font-size: 0.9rem; }
+    .loading-overlay p { color:#fff; font-size:.88rem; }
 
-    .text-muted { color: var(--text-muted); font-size: 0.875rem; }
-    .mt-1 { margin-top: 0.5rem; }
-    .tag-leader { background: #e0f2fe; color: #0369a1; }
-    .tag-member  { background: #dcfce7; color: #15803d; }
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--navy); color: #fff;
+      padding: .75rem 1.5rem; border-radius: 30px;
+      font-size: .875rem; font-weight: 700;
+      box-shadow: 0 4px 20px rgba(0,0,0,.3);
+      transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+      z-index: 300; white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    .text-muted { color: var(--muted); font-size: .8rem; margin-top: .35rem; }
   </style>
 </head>
 <body>
 
-<div class="loading-overlay" id="loadingOverlay">
+<div class="loading-overlay" id="loading">
   <div class="spinner"></div>
-  <p id="loadingMsg">處理中，請稍候⋯</p>
+  <p id="loadingMsg">處理中⋯</p>
 </div>
+<div class="toast" id="toast"></div>
 
-<header class="site-header">
-  <a class="logo" href="/">NTPC CULTURE 2026</a>
-  <span class="badge">互評與自評系統</span>
+<!-- Header -->
+<header class="hdr">
+  <a class="hdr-logo" href="/">NTPC CULTURE</a>
+  <span class="hdr-tag">2026 學員互評</span>
 </header>
 
-<div class="progress-bar">
-  <div class="progress-fill" id="progressFill" style="width:0%"></div>
-</div>
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-pill">PEER REVIEW SYSTEM</div>
+  <h1>新北文化大使<br><em>學員互評系統</em></h1>
+  <p>輸入你的資料，系統將自動帶出你參與的專案與可評分的組員。</p>
+</section>
 
-<main class="main">
+<div class="page">
 
-  <!-- ══════ STEP 1：登入 ══════ -->
-  <div class="step active" id="step1">
-    <span class="step-tag">STEP 01</span>
-    <h1>你好！請輸入<br>你的基本資料 👋</h1>
-    <p class="step-desc">輸入姓名與手機後三碼，系統將自動顯示你的參與者編號。</p>
+  <!-- 說明 -->
+  <div class="notice">
+    <strong>📋 填寫說明</strong><br>
+    為深入了解學員在各文化專案中的參與情形，本計畫特別設置「學員互評」機制。評分採<strong>具名方式</strong>進行，僅同一專案的學員得相互評分，每位學員對每位組員<strong>限填一次</strong>。<br><br>
+    本互評結果僅供內部參考，年度結束後將公布整體平均，<strong>不會公開個別填寫內容</strong>，請放心據實填寫。
+  </div>
 
-    <div class="card">
-      <div class="card-label">姓名</div>
-      <input type="text" id="inputName" placeholder="例：王小明" autocomplete="off">
-    </div>
-
-    <div class="card">
-      <div class="card-label">手機後三碼</div>
-      <input type="text" id="inputPhone" placeholder="例：327"
-        maxlength="3" inputmode="numeric" pattern="[0-9]*"
-        autocomplete="off"
-        style="font-family:'Space Mono',monospace; letter-spacing:0.25em; font-size:1.25rem; text-align:center;">
-      <p class="text-muted mt-1">填寫報名時所留手機號碼的最後三位數字</p>
-    </div>
-
-    <!-- 即時顯示查詢結果 -->
-    <div id="lookupResult" style="display:none; margin-bottom:1.25rem;">
-      <div style="
-        background: var(--navy);
-        color: #fff;
-        border-radius: var(--radius);
-        padding: 1.25rem 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-      ">
-        <div id="lookupAvatar" style="
-          width: 48px; height: 48px;
-          background: var(--gold);
-          color: var(--navy);
-          border-radius: 50%;
-          display: flex; align-items: center; justify-content: center;
-          font-size: 1.2rem; font-weight: 900;
-          flex-shrink: 0;
-        "></div>
-        <div>
-          <div id="lookupName" style="font-weight:700; font-size:1.05rem;"></div>
-          <div id="lookupId" style="font-family:'Space Mono',monospace; font-size:0.78rem; color:rgba(255,255,255,0.6); margin-top:0.2rem;"></div>
-        </div>
-        <div id="lookupRoleBadge" style="
-          margin-left: auto;
-          padding: 4px 12px;
-          border-radius: 20px;
-          font-size: 0.75rem;
-          font-weight: 700;
-          white-space: nowrap;
-          flex-shrink: 0;
-        "></div>
+  <!-- 登入區 -->
+  <div class="sec-head">輸入你的資料</div>
+  <div class="login-card">
+    <div class="field-row">
+      <div>
+        <div class="field-label">姓名</div>
+        <input type="text" id="iName" placeholder="例：王小明" autocomplete="off">
+      </div>
+      <div>
+        <div class="field-label">手機後三碼</div>
+        <input type="text" id="iPhone" placeholder="例：327"
+          maxlength="3" inputmode="numeric" autocomplete="off"
+          style="font-family:'Space Mono',monospace;letter-spacing:.2em;text-align:center;">
       </div>
     </div>
-
-    <div class="alert alert-warn" id="loginError" style="display:none">
-      ⚠️ <span id="loginErrorMsg"></span>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn btn-primary" id="btnLogin" disabled onclick="confirmLogin()">確認，進入互評 →</button>
-    </div>
+    <div class="text-muted">填寫報名時所留手機號碼的最後三位數字</div>
   </div>
 
-  <!-- ══════ STEP 2：選擇專案 ══════ -->
-  <div class="step" id="step2">
-    <span class="step-tag">STEP 02</span>
-    <h1>選擇你要進行<br>評分的專案 📋</h1>
-    <p class="step-desc">請選擇你已完整參與、且開放評分的文化專案。</p>
+  <!-- 錯誤提示 -->
+  <div class="alert alert-warn" id="alertLogin">⚠️ <span id="alertLoginMsg"></span></div>
 
-    <div id="identityBanner2"></div>
-    <div id="projectGrid" class="project-grid"></div>
-    <div class="alert alert-info" id="noProjects" style="display:none">
-      ℹ️ 目前沒有開放評分的專案，請等待專案結束後再來填寫。
+  <!-- 身份 banner -->
+  <div class="id-banner" id="idBanner">
+    <div class="id-av" id="idAv"></div>
+    <div>
+      <div class="id-name" id="idName"></div>
+      <div class="id-sub"  id="idSub"></div>
     </div>
-
-    <div class="btn-row">
-      <button class="btn btn-secondary" onclick="goStep(1)">← 返回</button>
-      <button class="btn btn-primary" id="btnSelectProject" disabled onclick="goToMode()">選擇此專案 →</button>
-    </div>
+    <span class="id-badge" id="idBadge"></span>
   </div>
 
-  <!-- ══════ STEP 3：選擇模式（自評 or 互評） ══════ -->
-  <div class="step" id="step3">
-    <span class="step-tag">STEP 03</span>
-    <h1>你要進行<br>自評還是互評？ 🎯</h1>
-    <p class="step-desc">自評是針對自己的表現填寫；互評是評價同專案的其他學員。</p>
-
-    <div id="identityBanner3"></div>
-
-    <div class="mode-grid">
-      <button class="mode-btn" id="modeSelf" onclick="selectMode('self')">
-        <div class="mode-emoji">🪞</div>
-        <div class="mode-title">自評</div>
-        <div class="mode-desc">針對自己在此專案<br>的表現進行評價</div>
-      </button>
-      <button class="mode-btn" id="modePeer" onclick="selectMode('peer')">
-        <div class="mode-emoji">👥</div>
-        <div class="mode-title">互評</div>
-        <div class="mode-desc">評價同專案<br>其他學員的表現</div>
-      </button>
-    </div>
-
-    <div class="alert alert-info" id="selfDoneAlert" style="display:none">
-      ✅ 你已完成此專案的自評。
-    </div>
-
-    <div class="btn-row">
-      <button class="btn btn-secondary" onclick="goStep(2)">← 換專案</button>
-      <button class="btn btn-primary" id="btnGoForm" disabled onclick="goFromMode()">繼續 →</button>
-    </div>
+  <!-- 專案區 -->
+  <div class="proj-section" id="projSection">
+    <div class="sec-head">你參與的專案</div>
+    <div class="proj-tabs" id="projTabs"></div>
+    <div id="projPanels"></div>
   </div>
 
-  <!-- ══════ STEP 4：選擇被評者（互評用） ══════ -->
-  <div class="step" id="step4">
-    <span class="step-tag">STEP 04</span>
-    <h1>選擇你要評的<br>學員 👤</h1>
-    <p class="step-desc">每次填寫一位學員。完成後可繼續評下一位。</p>
-
-    <div id="peerList"></div>
-    <div class="alert alert-success" id="allDoneAlert" style="display:none">
-      🎉 你已完成此專案所有學員的互評！
-    </div>
-
-    <div class="btn-row">
-      <button class="btn btn-secondary" onclick="goStep(3)">← 返回</button>
-      <button class="btn btn-primary" id="btnStartReview" disabled onclick="startReview()">開始互評 →</button>
-    </div>
-  </div>
-
-  <!-- ══════ STEP 5：填寫表單 ══════ -->
-  <div class="step" id="step5">
-    <span class="step-tag">STEP 05</span>
-    <h1 id="formTitle">評分表單</h1>
-    <p class="step-desc" id="formDesc"></p>
-
-    <div id="revieweeBanner"></div>
-    <div id="formTypeLabel"></div>
-    <div id="alertMsg"></div>
-    <div id="criteriaBlocks"></div>
-    <div id="openQuestions"></div>
-
-    <div class="alert alert-error" id="errorMsg" style="display:none">
-      ❌ <span id="errorText"></span>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn btn-secondary" id="btnBackFromForm" onclick="backFromForm()">← 返回</button>
-      <button class="btn btn-primary" onclick="submitForm()">送出 ✓</button>
-    </div>
-  </div>
-
-  <!-- ══════ STEP 6：完成 ══════ -->
-  <div class="step" id="step6">
-    <div class="summary-hero">
-      <div class="hero-emoji" id="doneEmoji">🎊</div>
-      <h2 id="doneTitle">已送出！</h2>
-      <p id="doneSubtitle">感謝你認真填寫！</p>
-    </div>
-    <div class="summary-grid" id="summaryGrid"></div>
-    <div class="alert alert-info">
-      ℹ️ 評分結果由專案小組統一彙整，如需查詢請聯繫 <strong>ntpcca@wceo.org</strong>
-    </div>
-    <div class="btn-row" id="doneActions"></div>
-  </div>
-
-</main>
+</div><!-- /page -->
 
 <script>
-// ════════════════════════════════════════════
-//  CONFIG
-// ════════════════════════════════════════════
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbzIQg6r7tANiCnpkP6WEPyu_oE_aHLEQvh8gBxf7Gk41vmDNZaAsC0xAc0SbzvI7Aho/exec';
+// ══════════════════════════════════════════════
+//  CONFIG — 填入你的 Apps Script Web App URL
+// ══════════════════════════════════════════════
+const GAS_URL = 'YOUR_GAS_WEB_APP_URL_HERE';
 
-// 角色定義
-const ROLES = {
-  '行政團隊':   { label: '行政團隊', cls: 'role-admin',      canBeReviewed: false, isLeader: false },
-  '大隊長':     { label: '大隊長',   cls: 'role-leader',     canBeReviewed: false, isLeader: false },
-  '儲備大隊長': { label: '儲備大隊長', cls: 'role-sub-leader', canBeReviewed: true,  isLeader: true  },
-  '中隊長':     { label: '中隊長',   cls: 'role-mid-leader', canBeReviewed: true,  isLeader: true  },
-  '參與學員':   { label: '參與學員', cls: 'role-member',     canBeReviewed: true,  isLeader: false },
-};
-
-// 基本8題（所有人共用）
+// 評分面向
 const CRITERIA_BASE = [
-  { key: 'time',    label: '時間管理與準時度',  hint: '如線上開會及專案執行是否準時參與' },
-  { key: 'proact',  label: '積極主動性',        hint: '如主動提出疑問，解決執行專案時困境' },
-  { key: 'comm',    label: '溝通表達能力',       hint: '如能夠在會議中發言表達意見，或協助團隊溝通' },
-  { key: 'team',    label: '團隊互助精神',       hint: '如協助夥伴解決困境，使專案共好' },
-  { key: 'culture', label: '新北文化素養',       hint: '如能透過學習，對新北在地文化侃侃而談' },
-  { key: 'task',    label: '任務負責程度與成果', hint: '如是否能夠完成自己所負責的工作，且成果能使用於專案' },
-  { key: 'reflect', label: '回饋與反思能力',     hint: '如能夠針對團隊問題，提出有建設性的回饋與反省' },
-  { key: 'growth',  label: '自我突破與進步',     hint: '如完成專案前後相比，能力有明顯提升與進步' },
+  { key:'time',    label:'時間管理與準時度',   hint:'如線上開會及專案執行是否準時參與' },
+  { key:'proact',  label:'積極主動性',         hint:'如主動提出疑問，解決執行專案時困境' },
+  { key:'comm',    label:'溝通表達能力',        hint:'如能在會議中發言表達意見，或協助團隊溝通' },
+  { key:'team',    label:'團隊互助精神',        hint:'如協助夥伴解決困境，使專案共好' },
+  { key:'culture', label:'新北文化素養',        hint:'如能透過學習，對新北在地文化侃侃而談' },
+  { key:'task',    label:'任務負責程度與成果',  hint:'如是否能完成自己負責的工作，且成果能使用於專案' },
+  { key:'reflect', label:'回饋與反思能力',      hint:'如能針對團隊問題提出有建設性的回饋與反省' },
+  { key:'growth',  label:'自我突破與進步',      hint:'如完成專案前後相比，能力有明顯提升與進步' },
 ];
-
-// 領導力加題（評儲備大隊長／中隊長時使用）
 const CRITERIA_LEADER = [
-  { key: 'organize', label: '專案組織力', hint: '例如能夠統籌專案相關任務，整理多項資訊，幫助學員執行專案' },
-  { key: 'lead',     label: '團隊領導力', hint: '例如能夠領導多位學員，有團隊意識地共同完成任務' },
+  { key:'organize', label:'專案組織力', hint:'能統籌專案任務、整理資訊，幫助學員執行專案' },
+  { key:'lead',     label:'團隊領導力', hint:'能領導多位學員，有團隊意識地共同完成任務' },
 ];
+const RATING_LEVELS = ['尚待加強','基本達標','表現優異','超越期待'];
+const LEADER_ROLES  = ['儲備大隊長','中隊長'];
+const ROLE_COLORS   = {
+  '行政團隊':'#7c3aed','大隊長':'#1d4ed8',
+  '儲備大隊長':'#0369a1','中隊長':'#0891b2','參與學員':'#059669',
+};
 
-const RATING_LEVELS = [
-  { value: '尚待加強' },
-  { value: '基本達標' },
-  { value: '表現優異' },
-  { value: '超越期待' },
-];
-
-// ════════════════════════════════════════════
+// ══════════════════════════════════════════════
 //  STATE
-// ════════════════════════════════════════════
-let S = {
-  name: '', id: '', role: '', projects: [],
-  selectedProject: null,
-  mode: null,           // 'self' | 'peer'
-  selectedPeer: null,
-  peers: [],            // reviewable peers in selected project
-  completedPeers: [],   // IDs reviewed this session
-  selfDone: false,      // self-review done this session
-};
+// ══════════════════════════════════════════════
+let ME = null;           // { id, name, role, projects }
+let DONE = {};           // { projId: { self: bool, peers: [id,...] } }
 
-// ════════════════════════════════════════════
-//  NAVIGATION
-// ════════════════════════════════════════════
-const TOTAL = 6;
-function goStep(n) {
-  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-  document.getElementById('step' + n).classList.add('active');
-  // progress: treat 1b same as 1
-  const nNum = (n === '1b') ? 1 : Number(n);
-  document.getElementById('progressFill').style.width = Math.round((nNum-1)/(TOTAL-1)*100) + '%';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+// ══════════════════════════════════════════════
+//  LOOKUP（即時查詢）
+// ══════════════════════════════════════════════
+let _timer = null;
+document.getElementById('iName').addEventListener('input',  triggerLookup);
+document.getElementById('iPhone').addEventListener('input', triggerLookup);
+document.getElementById('iName').addEventListener('keypress', e => { if(e.key==='Enter') document.getElementById('iPhone').focus(); });
 
-// ════════════════════════════════════════════
-//  STEP 1 — LOGIN（即時查詢）
-// ════════════════════════════════════════════
-const ROLE_COLORS = {
-  '行政團隊':   '#7c3aed',
-  '大隊長':     '#1d4ed8',
-  '儲備大隊長': '#0369a1',
-  '中隊長':     '#0891b2',
-  '參與學員':   '#059669',
-};
-
-let _lookupTimer = null;
-let _lookupResult = null;
-
-function onInputChange() {
-  // 清除上次查詢結果
-  hideLookupResult();
-  hideLoginError();
-  document.getElementById('btnLogin').disabled = true;
-  _lookupResult = null;
-
-  const name  = document.getElementById('inputName').value.trim();
-  const phone = document.getElementById('inputPhone').value.trim();
-
-  // 姓名有內容 + 後三碼剛好3位數 → 自動觸發查詢
+function triggerLookup() {
+  const name  = document.getElementById('iName').value.trim();
+  const phone = document.getElementById('iPhone').value.trim();
+  clearTimeout(_timer);
+  hideIdBanner(); hideProjSection(); hideAlert('alertLogin');
+  ME = null;
   if (name && /^\d{3}$/.test(phone)) {
-    clearTimeout(_lookupTimer);
-    _lookupTimer = setTimeout(() => doLookup(name, phone), 400);
+    _timer = setTimeout(() => doLookup(name, phone), 450);
   }
 }
 
 async function doLookup(name, phone) {
-  showLoading(true, '查詢中⋯');
+  showLoading('查詢中⋯');
   try {
-    const res = await gasCall({ action: 'login', name, phone });
+    const res = await gasGet({ action:'login', name, phone });
     if (res.ok) {
-      _lookupResult = res;
-      hideLoginError();
-      showLookupResult(res);
-      document.getElementById('btnLogin').disabled = false;
+      ME = res;
+      showIdBanner(res);
+      DONE = {};
+      res.projects.forEach(p => { DONE[p.id] = { self: false, peers: [] }; });
+      renderProjects(res.projects);
     } else {
-      hideLookupResult();
-      showLoginError(res.message || '找不到符合的參與者，請確認姓名與手機後三碼。');
+      showAlert('alertLogin', res.message || '找不到符合的參與者，請確認姓名與手機後三碼。');
     }
   } catch(e) {
-    hideLookupResult();
-    showLoginError('連線失敗，請稍後再試。');
+    showAlert('alertLogin', '連線失敗，請稍後再試。');
   } finally {
-    showLoading(false);
+    hideLoading();
   }
 }
 
-function showLookupResult(res) {
+// ══════════════════════════════════════════════
+//  IDENTITY BANNER
+// ══════════════════════════════════════════════
+function showIdBanner(res) {
   const isAdmin = ['行政團隊','大隊長'].includes(res.role);
-  const displayId = isAdmin ? '大隊長 / 行政團隊' : res.id;
-  const color = ROLE_COLORS[res.role] || '#6b7280';
+  document.getElementById('idAv').textContent   = res.name.charAt(0);
+  document.getElementById('idName').textContent = res.name;
+  document.getElementById('idSub').textContent  = isAdmin ? '大隊長 / 行政團隊' : res.id;
+  const badge = document.getElementById('idBadge');
+  badge.textContent       = res.role;
+  badge.style.background  = ROLE_COLORS[res.role] || '#6b7280';
+  badge.style.color       = '#fff';
+  document.getElementById('idBanner').classList.add('show');
+}
+function hideIdBanner() { document.getElementById('idBanner').classList.remove('show'); }
 
-  document.getElementById('lookupAvatar').textContent    = res.name.charAt(0);
-  document.getElementById('lookupName').textContent      = res.name;
-  document.getElementById('lookupId').textContent        = displayId;
-  const badge = document.getElementById('lookupRoleBadge');
-  badge.textContent        = res.role;
-  badge.style.background   = color;
-  badge.style.color        = '#fff';
-  document.getElementById('lookupResult').style.display = 'block';
+// ══════════════════════════════════════════════
+//  PROJECTS
+// ══════════════════════════════════════════════
+function renderProjects(projects) {
+  const tabs   = document.getElementById('projTabs');
+  const panels = document.getElementById('projPanels');
+  tabs.innerHTML = ''; panels.innerHTML = '';
+
+  projects.forEach((proj, idx) => {
+    // Tab
+    const tab = document.createElement('button');
+    tab.className = 'proj-tab' + (idx===0?' active':'');
+    tab.textContent = proj.emoji + ' ' + proj.name;
+    tab.onclick = () => switchProj(proj.id);
+    tab.dataset.proj = proj.id;
+    tabs.appendChild(tab);
+
+    // Panel
+    const panel = document.createElement('div');
+    panel.className = 'proj-panel' + (idx===0?' active':'');
+    panel.id = 'panel-' + proj.id;
+    panel.innerHTML = buildProjPanel(proj);
+    panels.appendChild(panel);
+  });
+
+  document.getElementById('projSection').classList.add('show');
+
+  // scroll to projects
+  setTimeout(() => {
+    document.getElementById('projSection').scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 100);
 }
 
-function hideLookupResult() {
-  document.getElementById('lookupResult').style.display = 'none';
+function switchProj(projId) {
+  document.querySelectorAll('.proj-tab').forEach(t => t.classList.toggle('active', t.dataset.proj===projId));
+  document.querySelectorAll('.proj-panel').forEach(p => p.classList.toggle('active', p.id==='panel-'+projId));
 }
 
-// 按下「確認，進入互評」
-function confirmLogin() {
-  if (!_lookupResult) return;
-  const res = _lookupResult;
-  S.name = res.name; S.id = res.id; S.role = res.role;
-  S.projects = res.projects; S.completedPeers = []; S.selfDone = false;
-  renderProjectStep();
-  goStep(2);
-}
+function buildProjPanel(proj) {
+  const canBeReviewed = ['儲備大隊長','中隊長','參與學員'];
+  const iCanSelf = canBeReviewed.includes(ME.role);
 
-function showLoginError(msg) { document.getElementById('loginError').style.display='flex'; document.getElementById('loginErrorMsg').textContent=msg; }
-function hideLoginError()    { document.getElementById('loginError').style.display='none'; }
-
-// ════════════════════════════════════════════
-//  STEP 2 — 選擇專案
-// ════════════════════════════════════════════
-function renderProjectStep() {
-  document.getElementById('identityBanner2').innerHTML = identityBannerHTML();
-  const grid = document.getElementById('projectGrid');
-  const noP  = document.getElementById('noProjects');
-  if (!S.projects || S.projects.length === 0) {
-    grid.innerHTML = ''; noP.style.display = 'flex'; return;
-  }
-  noP.style.display = 'none';
-  grid.innerHTML = S.projects.map(p => `
-    <button class="project-btn" data-id="${p.id}" onclick="selectProject('${p.id}')">
-      <span class="proj-emoji">${p.emoji || '🎯'}</span>
-      <div class="proj-name">${p.name}</div>
-      <div class="proj-date">${p.date || ''}</div>
-    </button>
-  `).join('');
-
-  // 若 URL 帶有 ?project= 參數，自動預選並跳過選擇步驟
-  const urlProject = new URLSearchParams(window.location.search).get('project');
-  if (urlProject) {
-    const matched = S.projects.find(p => p.id === urlProject);
-    if (matched) {
-      selectProject(urlProject);
-      // 短暫停留讓 banner 渲染，再自動跳轉
-      setTimeout(() => {
-        if (S.selectedProject) goToMode();
-      }, 120);
-    }
-  }
-}
-function selectProject(id) {
-  document.querySelectorAll('.project-btn').forEach(b => b.classList.remove('selected'));
-  document.querySelector(`.project-btn[data-id="${id}"]`).classList.add('selected');
-  S.selectedProject = S.projects.find(p => p.id === id);
-  document.getElementById('btnSelectProject').disabled = false;
-}
-function goToMode() {
-  if (!S.selectedProject) return;
-  renderModeStep();
-  goStep(3);
-}
-
-// ════════════════════════════════════════════
-//  STEP 3 — 選擇模式
-// ════════════════════════════════════════════
-function renderModeStep() {
-  document.getElementById('identityBanner3').innerHTML = identityBannerHTML();
-  S.mode = null;
-  document.getElementById('modeSelf').classList.remove('selected');
-  document.getElementById('modePeer').classList.remove('selected');
-  document.getElementById('btnGoForm').disabled = true;
-
-  // 行政/大隊長 不需要自評 → 只顯示互評
-  const role = ROLES[S.role];
-  if (role && !role.canBeReviewed) {
-    document.getElementById('modeSelf').style.display = 'none';
-  } else {
-    document.getElementById('modeSelf').style.display = '';
-  }
-  document.getElementById('selfDoneAlert').style.display = S.selfDone ? 'flex' : 'none';
-}
-function selectMode(m) {
-  S.mode = m;
-  document.getElementById('modeSelf').classList.toggle('selected', m==='self');
-  document.getElementById('modePeer').classList.toggle('selected', m==='peer');
-  document.getElementById('btnGoForm').disabled = false;
-}
-function goFromMode() {
-  if (!S.mode) return;
-  if (S.mode === 'self') {
-    renderFormSelf();
-    goStep(5);
-  } else {
-    renderPeerList();
-    goStep(4);
-  }
-}
-
-// ════════════════════════════════════════════
-//  STEP 4 — 選擇被評者
-// ════════════════════════════════════════════
-function renderPeerList() {
-  const list = document.getElementById('peerList');
-  const allDone = document.getElementById('allDoneAlert');
-
-  // peers = 同專案中可被評的學生（canBeReviewed=true），排除自己
-  const reviewable = (S.selectedProject.peers || []).filter(p =>
-    p.id !== S.id && !S.completedPeers.includes(p.id)
-  );
-
-  if (reviewable.length === 0) {
-    list.innerHTML = ''; allDone.style.display = 'flex';
-    document.getElementById('btnStartReview').disabled = true;
-    return;
-  }
-  allDone.style.display = 'none';
-  list.innerHTML = reviewable.map(p => {
-    const r = ROLES[p.role] || {};
-    const tagCls = r.isLeader ? 'tag-leader' : 'tag-member';
-    return `
-      <div class="peer-card" data-id="${p.id}" onclick="selectPeer('${p.id}')">
-        <div class="peer-avatar">${p.name.charAt(0)}</div>
-        <div class="peer-info">
-          <div class="peer-name">${p.name}</div>
-          <div class="peer-id">${p.id}</div>
-          <span class="peer-role-badge ${tagCls}">${p.role || ''}</span>
-        </div>
-        <div class="peer-check"></div>
-      </div>`;
-  }).join('');
-  S.selectedPeer = null;
-  document.getElementById('btnStartReview').disabled = true;
-}
-function selectPeer(id) {
-  document.querySelectorAll('.peer-card').forEach(c => c.classList.remove('selected'));
-  document.querySelector(`.peer-card[data-id="${id}"]`).classList.add('selected');
-  S.selectedPeer = (S.selectedProject.peers || []).find(p => p.id === id);
-  document.getElementById('btnStartReview').disabled = false;
-}
-function startReview() {
-  if (!S.selectedPeer) return;
-  renderFormPeer();
-  goStep(5);
-}
-
-// ════════════════════════════════════════════
-//  STEP 5 — 表單渲染
-// ════════════════════════════════════════════
-
-// ── 自評 ──
-function renderFormSelf() {
-  const isLeader = ROLES[S.role] && ROLES[S.role].isLeader;
-  document.getElementById('formTitle').textContent = '自我評價表單';
-  document.getElementById('formDesc').textContent =
-    `請以「${isLeader ? '專案儲備大隊長或中隊長' : '文化專案組員'}」身份，針對自己在此專案的表現進行自我評價。`;
-
-  document.getElementById('revieweeBanner').innerHTML = `
-    <div class="reviewee-banner">
-      <div class="r-avatar">${S.name.charAt(0)}</div>
-      <div>
-        <div class="r-name">${S.name}（自評）</div>
-        <div class="r-sub">${S.id} ・ ${S.selectedProject.name}</div>
-      </div>
-      <div class="review-counter">自評</div>
-    </div>`;
-
-  document.getElementById('formTypeLabel').innerHTML =
-    `<span class="form-type-label">🪞 自評表單・${isLeader ? '幹部版' : '學員版'}</span>`;
-
-  renderCriteriaBlocks(isLeader ? false : false, 'self'); // 自評不加領導力題（依需求可調整）
-  renderOpenQuestions('self');
-  document.getElementById('btnBackFromForm').onclick = () => goStep(3);
-  document.getElementById('errorMsg').style.display = 'none';
-}
-
-// ── 互評 ──
-function renderFormPeer() {
-  const peer = S.selectedPeer;
-  const targetIsLeader = ROLES[peer.role] && ROLES[peer.role].isLeader;
-  const total = (S.selectedProject.peers || []).filter(p => p.id !== S.id).length;
-  const done  = S.completedPeers.length + 1;
-
-  document.getElementById('formTitle').textContent = '互評表單';
-  document.getElementById('formDesc').textContent = '請根據你與這位學員合作的真實觀察填寫。';
-
-  document.getElementById('revieweeBanner').innerHTML = `
-    <div class="reviewee-banner">
-      <div class="r-avatar">${peer.name.charAt(0)}</div>
-      <div>
-        <div class="r-name">${peer.name}</div>
-        <div class="r-sub">${peer.id} ・ ${peer.role} ・ ${S.selectedProject.name}</div>
-      </div>
-      <div class="review-counter">${done} / ${total}</div>
-    </div>`;
-
-  document.getElementById('formTypeLabel').innerHTML =
-    `<span class="form-type-label">👥 互評表單・${targetIsLeader ? '幹部版（含領導力題）' : '學員版'}</span>`;
-
-  renderCriteriaBlocks(targetIsLeader, 'peer');
-  renderOpenQuestions('peer', targetIsLeader);
-  document.getElementById('btnBackFromForm').onclick = () => { renderPeerList(); goStep(4); };
-  document.getElementById('errorMsg').style.display = 'none';
-}
-
-function renderCriteriaBlocks(includeLeader, mode) {
-  const criteria = includeLeader ? [...CRITERIA_BASE, ...CRITERIA_LEADER] : CRITERIA_BASE;
-  const blocks = document.getElementById('criteriaBlocks');
   let html = '';
 
-  if (includeLeader) {
-    html += CRITERIA_BASE.map((c, i) => criteriaBlockHTML(c, i+1)).join('');
-    html += `<div class="section-divider"><span>領導力評分</span></div>`;
-    html += CRITERIA_LEADER.map((c, i) => criteriaBlockHTML(c, CRITERIA_BASE.length + i + 1)).join('');
-  } else {
-    html += CRITERIA_BASE.map((c, i) => criteriaBlockHTML(c, i+1)).join('');
-  }
-
-  blocks.innerHTML = html;
-
-  criteria.forEach(c => {
-    document.querySelectorAll(`input[name="rating_${c.key}"]`).forEach(r => {
-      r.addEventListener('change', () => {
-        document.getElementById(`cblock_${c.key}`).classList.add('rated');
-      });
-    });
-  });
-}
-
-function criteriaBlockHTML(c, idx) {
-  return `
-    <div class="criteria-block" id="cblock_${c.key}">
-      <div class="criteria-label">${idx}. ${c.label}</div>
-      <div class="criteria-hint">${c.hint}</div>
-      <div class="rating-group">
-        ${RATING_LEVELS.map((r, ri) => `
-          <div class="rating-option">
-            <input type="radio" name="rating_${c.key}" id="r_${c.key}_${ri}" value="${r.value}">
-            <label for="r_${c.key}_${ri}"><span class="dot"></span>${r.value}</label>
-          </div>`).join('')}
+  // ── 自評區 ──
+  if (iCanSelf) {
+    html += `
+    <div class="self-block" id="self-${proj.id}">
+      <div class="self-block-hdr" onclick="toggleSelf('${proj.id}')">
+        <div class="self-block-title">
+          <span class="emoji">🪞</span> 自評
+          <span style="font-size:.75rem;color:var(--muted);font-weight:400">針對自己在此專案的表現</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:.6rem;">
+          <span class="done-chip" id="selfDoneChip-${proj.id}" style="display:none">✓ 已完成</span>
+          <span class="expand-icon">▼</span>
+        </div>
+      </div>
+      <div class="self-block-body">
+        ${buildForm('self', proj.id, null)}
       </div>
     </div>`;
-}
-
-function renderOpenQuestions(mode, targetIsLeader) {
-  const el = document.getElementById('openQuestions');
-  if (mode === 'self') {
-    el.innerHTML = `
-      <div class="open-section">
-        <div class="open-q">✏️ 參與完這場專案後，你覺得自己貢獻最多、最有價值的事情是？</div>
-        <textarea id="openQ1" placeholder="請用幾句話描述⋯" rows="3"></textarea>
-      </div>
-      <div class="open-section">
-        <div class="open-q">✏️ 參與完這場專案後，你覺得自己有待加強的事情是？</div>
-        <textarea id="openQ2" placeholder="請用幾句話描述⋯" rows="3"></textarea>
-      </div>`;
-  } else if (targetIsLeader) {
-    el.innerHTML = `
-      <div class="open-section">
-        <div class="open-q">✏️ 請問你是否對這位隊長有任何肯定或建議？<span class="open-q-optional">（非必填）</span></div>
-        <textarea id="openQ1" placeholder="請用幾句話描述⋯" rows="3"></textarea>
-      </div>`;
-  } else {
-    // 評參與學員
-    el.innerHTML = `
-      <div class="open-section">
-        <div class="open-q">✏️ 在這場專案中，你覺得這位組員可靠、能夠信任的地方是？</div>
-        <textarea id="openQ1" placeholder="請用幾句話描述⋯" rows="3"></textarea>
-      </div>
-      <div class="open-section">
-        <div class="open-q">✏️ 承上題，請簡述原因。</div>
-        <textarea id="openQ2" placeholder="請用幾句話描述⋯" rows="3"></textarea>
-      </div>`;
   }
+
+  // ── 互評區 ──
+  html += `<div class="sec-head" style="margin-top:1.5rem;">互評組員</div>`;
+
+  if (!proj.peers || proj.peers.length === 0) {
+    html += `<div style="color:var(--muted);font-size:.875rem;padding:.5rem 0;">此專案暫無可評分的組員。</div>`;
+  } else {
+    html += `<div class="peer-grid" id="peerGrid-${proj.id}">`;
+    proj.peers.forEach(peer => {
+      html += `
+        <div class="peer-btn" id="peerBtn-${proj.id}-${peer.id}" onclick="selectPeer('${proj.id}','${peer.id}')">
+          <div class="peer-av">${peer.name.charAt(0)}</div>
+          <div class="peer-name">${peer.name}</div>
+          <div class="peer-role">${peer.role}</div>
+          <div class="peer-check">✓</div>
+        </div>`;
+    });
+    html += `</div>`;
+
+    // 每位 peer 的評分表單（預先建立，預設隱藏）
+    proj.peers.forEach(peer => {
+      html += `<div id="form-${proj.id}-${peer.id}" class="review-form">
+        ${buildForm('peer', proj.id, peer)}
+      </div>`;
+    });
+  }
+
+  return html;
 }
 
-// ════════════════════════════════════════════
-//  SUBMIT
-// ════════════════════════════════════════════
-async function submitForm() {
-  const mode = S.mode;
-  const peer = S.selectedPeer;
-  const targetIsLeader = mode === 'peer' && peer && ROLES[peer.role] && ROLES[peer.role].isLeader;
-  const criteria = (mode === 'peer' && targetIsLeader)
+// ══════════════════════════════════════════════
+//  FORM BUILDER
+// ══════════════════════════════════════════════
+function buildForm(mode, projId, peer) {
+  const isLeaderTarget = peer && LEADER_ROLES.includes(peer.role);
+  const criteria = isLeaderTarget
     ? [...CRITERIA_BASE, ...CRITERIA_LEADER]
     : CRITERIA_BASE;
 
-  // Validate ratings
+  const formKey = mode==='self' ? `self__${projId}` : `peer__${projId}__${peer.id}`;
+
+  let html = '';
+
+  // Header (only for peer)
+  if (mode === 'peer') {
+    html += `
+    <div class="reviewee-hdr">
+      <div class="reviewee-av">${peer.name.charAt(0)}</div>
+      <div>
+        <div class="reviewee-name">${peer.name}</div>
+        <div class="reviewee-sub">${peer.role}</div>
+      </div>
+      <span class="form-type-tag">${isLeaderTarget ? '幹部版' : '學員版'}</span>
+    </div>`;
+  }
+
+  // Criteria
+  criteria.forEach((c, i) => {
+    // section divider before leader criteria
+    if (isLeaderTarget && i === CRITERIA_BASE.length) {
+      html += `<div class="section-divider">領導力評分</div>`;
+    }
+    html += `
+    <div class="criteria-block" id="cb-${formKey}-${c.key}">
+      <div class="criteria-label">${i+1}. ${c.label}</div>
+      <div class="criteria-hint">${c.hint}</div>
+      <div class="rating-group">
+        ${RATING_LEVELS.map((lv,ri) => `
+          <div class="r-opt">
+            <input type="radio" name="r-${formKey}-${c.key}" id="r-${formKey}-${c.key}-${ri}" value="${lv}"
+              onchange="document.getElementById('cb-${formKey}-${c.key}').classList.add('rated')">
+            <label for="r-${formKey}-${c.key}-${ri}"><span class="dot"></span>${lv}</label>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  });
+
+  // Open questions
+  if (mode === 'self') {
+    html += `
+    <div class="open-q">
+      <div class="q-label">✏️ 參與完這場專案後，你覺得自己貢獻最多、最有價值的事情是？</div>
+      <textarea id="oq1-${formKey}" placeholder="請用幾句話描述⋯"></textarea>
+    </div>
+    <div class="open-q">
+      <div class="q-label">✏️ 參與完這場專案後，你覺得自己有待加強的事情是？</div>
+      <textarea id="oq2-${formKey}" placeholder="請用幾句話描述⋯"></textarea>
+    </div>`;
+  } else if (isLeaderTarget) {
+    html += `
+    <div class="open-q">
+      <div class="q-label">✏️ 你對這位隊長有什麼肯定或建議？<span style="font-weight:400;color:var(--muted)">（非必填）</span></div>
+      <textarea id="oq1-${formKey}" placeholder="請用幾句話描述⋯"></textarea>
+    </div>`;
+  } else {
+    html += `
+    <div class="open-q">
+      <div class="q-label">✏️ 在這場專案中，你覺得這位組員可靠、能夠信任的地方是？</div>
+      <textarea id="oq1-${formKey}" placeholder="請用幾句話描述⋯"></textarea>
+    </div>
+    <div class="open-q">
+      <div class="q-label">✏️ 承上題，請簡述原因。</div>
+      <textarea id="oq2-${formKey}" placeholder="請用幾句話描述⋯"></textarea>
+    </div>`;
+  }
+
+  // Error + buttons
+  html += `
+  <div class="alert alert-err" id="err-${formKey}">❌ <span id="errMsg-${formKey}"></span></div>
+  <div class="btn-row">`;
+
+  if (mode === 'peer') {
+    html += `<button class="btn btn-ghost" onclick="closePeerForm('${projId}','${peer.id}')">取消</button>`;
+  }
+  html += `<button class="btn btn-primary" onclick="submitForm('${mode}','${projId}','${peer ? peer.id : ''}')">送出評分 ✓</button>`;
+  html += `</div>`;
+
+  return html;
+}
+
+// ══════════════════════════════════════════════
+//  SELF TOGGLE
+// ══════════════════════════════════════════════
+function toggleSelf(projId) {
+  const block = document.getElementById('self-' + projId);
+  if (!block) return;
+  // If already done, don't re-open
+  if (DONE[projId] && DONE[projId].self) return;
+  block.classList.toggle('open');
+}
+
+// ══════════════════════════════════════════════
+//  PEER SELECT
+// ══════════════════════════════════════════════
+function selectPeer(projId, peerId) {
+  if (DONE[projId] && DONE[projId].peers.includes(peerId)) return; // already done
+
+  // Close any open form first
+  document.querySelectorAll('.review-form.show').forEach(f => {
+    f.classList.remove('show');
+  });
+  document.querySelectorAll('.peer-btn.reviewing').forEach(b => b.classList.remove('reviewing'));
+
+  // Open this peer's form
+  const btn  = document.getElementById(`peerBtn-${projId}-${peerId}`);
+  const form = document.getElementById(`form-${projId}-${peerId}`);
+  if (btn)  btn.classList.add('reviewing');
+  if (form) {
+    form.classList.add('show');
+    setTimeout(() => form.scrollIntoView({ behavior:'smooth', block:'start' }), 50);
+  }
+}
+
+function closePeerForm(projId, peerId) {
+  const btn  = document.getElementById(`peerBtn-${projId}-${peerId}`);
+  const form = document.getElementById(`form-${projId}-${peerId}`);
+  if (btn)  btn.classList.remove('reviewing');
+  if (form) form.classList.remove('show');
+}
+
+// ══════════════════════════════════════════════
+//  SUBMIT
+// ══════════════════════════════════════════════
+async function submitForm(mode, projId, peerId) {
+  const formKey  = mode==='self' ? `self__${projId}` : `peer__${projId}__${peerId}`;
+  const proj     = ME.projects.find(p => p.id===projId);
+  const peer     = peerId ? proj.peers.find(p => p.id===peerId) : null;
+  const isLeader = peer && LEADER_ROLES.includes(peer.role);
+  const criteria = isLeader ? [...CRITERIA_BASE,...CRITERIA_LEADER] : CRITERIA_BASE;
+
+  // Validate
   const ratings = {};
   let missing = [];
   criteria.forEach(c => {
-    const checked = document.querySelector(`input[name="rating_${c.key}"]:checked`);
-    if (!checked) missing.push(c.label);
-    else ratings[c.key] = checked.value;
+    const el = document.querySelector(`input[name="r-${formKey}-${c.key}"]:checked`);
+    if (!el) missing.push(c.label);
+    else ratings[c.key] = el.value;
   });
-  if (missing.length > 0) {
-    showError(`請完成所有評分項目（尚缺：${missing[0]} 等 ${missing.length} 項）`);
+  if (missing.length) {
+    showFormErr(formKey, `請完成所有評分項目（尚缺：${missing[0]} 等 ${missing.length} 項）`);
     return;
   }
+  hideFormErr(formKey);
 
-  const openQ1 = document.getElementById('openQ1')?.value.trim() || '';
-  const openQ2 = document.getElementById('openQ2')?.value.trim() || '';
+  const oq1 = document.getElementById(`oq1-${formKey}`)?.value.trim() || '';
+  const oq2 = document.getElementById(`oq2-${formKey}`)?.value.trim() || '';
 
   const payload = {
-    action: 'submit',
+    action:       'submit',
     mode,
-    reviewerId:    S.id,
-    reviewerName:  S.name,
-    reviewerRole:  S.role,
-    revieweeId:    mode === 'self' ? S.id   : peer.id,
-    revieweeName:  mode === 'self' ? S.name : peer.name,
-    revieweeRole:  mode === 'self' ? S.role : peer.role,
-    projectId:     S.selectedProject.id,
-    projectName:   S.selectedProject.name,
-    ratings,
-    openQ1, openQ2,
+    reviewerId:   ME.id,
+    reviewerName: ME.name,
+    reviewerRole: ME.role,
+    revieweeId:   mode==='self' ? ME.id   : peer.id,
+    revieweeName: mode==='self' ? ME.name : peer.name,
+    revieweeRole: mode==='self' ? ME.role : peer.role,
+    projectId:    projId,
+    projectName:  proj.name,
+    ratings, oq1, oq2,
     timestamp: new Date().toISOString(),
   };
 
-  showLoading(true, '送出中，請稍候⋯');
+  showLoading('送出中⋯');
   try {
-    const res = await gasCall(payload);
+    const res = await gasGet(payload);
     if (res.ok) {
-      if (mode === 'self') S.selfDone = true;
-      else S.completedPeers.push(peer.id);
-      renderDone(mode, peer);
-      goStep(6);
+      if (mode === 'self') {
+        DONE[projId].self = true;
+        const block = document.getElementById('self-' + projId);
+        block.classList.remove('open');
+        document.getElementById(`selfDoneChip-${projId}`).style.display = 'inline-block';
+        // disable re-open
+        block.querySelector('.self-block-hdr').style.cursor = 'default';
+      } else {
+        DONE[projId].peers.push(peerId);
+        const btn = document.getElementById(`peerBtn-${projId}-${peerId}`);
+        btn.classList.remove('reviewing'); btn.classList.add('done');
+        document.getElementById(`form-${projId}-${peerId}`).classList.remove('show');
+      }
+      showToast(mode==='self' ? '✅ 自評已送出！' : `✅ 已完成對 ${peer.name} 的評分！`);
     } else {
-      showError(res.message || '送出失敗，請稍後再試。');
+      showFormErr(formKey, res.message || '送出失敗，請稍後再試。');
     }
-  } catch(e) { showError('連線失敗，請稍後再試。'); }
-  finally { showLoading(false); }
-}
-
-function showError(msg) {
-  const el = document.getElementById('errorMsg');
-  el.style.display = 'flex';
-  document.getElementById('errorText').textContent = msg;
-  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-
-// ════════════════════════════════════════════
-//  STEP 6 — DONE
-// ════════════════════════════════════════════
-function renderDone(mode, peer) {
-  const remaining = mode === 'peer'
-    ? (S.selectedProject.peers || []).filter(p => p.id !== S.id && !S.completedPeers.includes(p.id)).length
-    : 0;
-
-  document.getElementById('doneEmoji').textContent  = mode === 'self' ? '🪞' : '🎊';
-  document.getElementById('doneTitle').textContent  = mode === 'self' ? '自評已送出！' : '互評已送出！';
-  document.getElementById('doneSubtitle').textContent = '感謝你認真填寫，你的回饋很有價值！';
-
-  document.getElementById('summaryGrid').innerHTML = `
-    <div class="summary-item"><div class="si-label">填寫類型</div><div class="si-val">${mode==='self'?'自評':'互評'}</div></div>
-    <div class="summary-item"><div class="si-label">${mode==='self'?'評價對象':'已評對象'}</div><div class="si-val">${mode==='self'?S.name:peer.name}</div></div>
-    <div class="summary-item"><div class="si-label">專案</div><div class="si-val">${S.selectedProject.name}</div></div>
-    <div class="summary-item"><div class="si-label">${mode==='self'?'你的身份':'尚未評的學員'}</div><div class="si-val">${mode==='self'?S.role:remaining+' 位'}</div></div>
-  `;
-
-  const actions = document.getElementById('doneActions');
-  if (mode === 'peer' && remaining > 0) {
-    actions.innerHTML = `
-      <button class="btn btn-primary" onclick="continueNext()">繼續評下一位 →</button>
-      <button class="btn btn-secondary" onclick="goStep(3)">返回選擇</button>`;
-  } else {
-    actions.innerHTML = `
-      <button class="btn btn-primary" onclick="goStep(3)">返回選擇模式</button>
-      <button class="btn btn-secondary" onclick="goStep(2)">換其他專案</button>`;
+  } catch(e) {
+    showFormErr(formKey, '連線失敗，請稍後再試。');
+  } finally {
+    hideLoading();
   }
 }
 
-function continueNext() { renderPeerList(); goStep(4); }
-function backFromForm() { goStep(3); }
-
-// ════════════════════════════════════════════
+// ══════════════════════════════════════════════
 //  HELPERS
-// ════════════════════════════════════════════
-function identityBannerHTML() {
-  const r = ROLES[S.role] || {};
-  return `
-    <div class="identity-banner">
-      <div class="id-avatar">${S.name.charAt(0)}</div>
-      <div>
-        <div class="id-name">${S.name}</div>
-        <div class="id-sub">${S.id}</div>
-      </div>
-      <span class="role-badge ${r.cls || ''}">${S.role}</span>
-    </div>`;
+// ══════════════════════════════════════════════
+function hideProjSection() { document.getElementById('projSection').classList.remove('show'); }
+
+function showAlert(id, msg)  { const el=document.getElementById(id); el.classList.add('show'); el.querySelector('span')?el.querySelector('span').textContent=msg:el.textContent='⚠️ '+msg; }
+function hideAlert(id)       { document.getElementById(id).classList.remove('show'); }
+
+function showFormErr(fk, msg) {
+  const el = document.getElementById('err-'+fk);
+  if (!el) return;
+  el.classList.add('show');
+  document.getElementById('errMsg-'+fk).textContent = msg;
+  el.scrollIntoView({ behavior:'smooth', block:'center' });
+}
+function hideFormErr(fk) {
+  const el = document.getElementById('err-'+fk);
+  if (el) el.classList.remove('show');
 }
 
-async function gasCall(payload) {
+function showLoading(msg) {
+  document.getElementById('loadingMsg').textContent = msg||'處理中⋯';
+  document.getElementById('loading').classList.add('on');
+}
+function hideLoading() { document.getElementById('loading').classList.remove('on'); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+async function gasGet(payload) {
   const url = GAS_URL + '?data=' + encodeURIComponent(JSON.stringify(payload));
-  const res  = await fetch(url, { method: 'GET', redirect: 'follow' });
+  const res = await fetch(url, { method:'GET', redirect:'follow' });
   if (!res.ok) throw new Error('HTTP ' + res.status);
-  return await res.json();
+  return res.json();
 }
-
-function showLoading(show, msg) {
-  document.getElementById('loadingOverlay').classList.toggle('active', show);
-  if (msg) document.getElementById('loadingMsg').textContent = msg;
-}
-
-document.getElementById('inputName').addEventListener('input',   onInputChange);
-document.getElementById('inputPhone').addEventListener('input',  onInputChange);
-document.getElementById('inputName').addEventListener('keypress', e => { if (e.key === 'Enter') document.getElementById('inputPhone').focus(); });
-document.getElementById('inputPhone').addEventListener('keypress', e => { if (e.key === 'Enter' && !document.getElementById('btnLogin').disabled) confirmLogin(); });
 </script>
 </body>
 </html>
