@@ -234,25 +234,57 @@
   <!-- ══════ STEP 1：登入 ══════ -->
   <div class="step active" id="step1">
     <span class="step-tag">STEP 01</span>
-    <h1>你好！請先確認<br>你的參與者身份 👋</h1>
-    <p class="step-desc">請輸入你的姓名，學生請一併輸入參與者編號；大隊長及行政團隊只需輸入姓名。</p>
+    <h1>你好！請輸入<br>你的基本資料 👋</h1>
+    <p class="step-desc">輸入姓名與手機後三碼，系統將自動顯示你的參與者編號。</p>
 
     <div class="card">
       <div class="card-label">姓名</div>
       <input type="text" id="inputName" placeholder="例：王小明" autocomplete="off">
     </div>
-    <div class="card" id="idCard">
-      <div class="card-label">參與者編號</div>
-      <input type="text" id="inputId" placeholder="例：NTPCCA-001" autocomplete="off" style="font-family:'Space Mono',monospace;">
-      <p class="text-muted mt-1">可在報名確認信或 TIF 個人頁面中查詢</p>
+
+    <div class="card">
+      <div class="card-label">手機後三碼</div>
+      <input type="text" id="inputPhone" placeholder="例：327"
+        maxlength="3" inputmode="numeric" pattern="[0-9]*"
+        autocomplete="off"
+        style="font-family:'Space Mono',monospace; letter-spacing:0.25em; font-size:1.25rem; text-align:center;">
+      <p class="text-muted mt-1">填寫報名時所留手機號碼的最後三位數字</p>
     </div>
 
-    <div style="margin-bottom:1.25rem;">
-      <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-size:0.875rem;color:var(--text-muted);">
-        <input type="checkbox" id="chkAdmin" onchange="toggleAdmin()"
-          style="width:16px;height:16px;cursor:pointer;accent-color:#e8b84b;">
-        我是大隊長或行政團隊（無參與者編號）
-      </label>
+    <!-- 即時顯示查詢結果 -->
+    <div id="lookupResult" style="display:none; margin-bottom:1.25rem;">
+      <div style="
+        background: var(--navy);
+        color: #fff;
+        border-radius: var(--radius);
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      ">
+        <div id="lookupAvatar" style="
+          width: 48px; height: 48px;
+          background: var(--gold);
+          color: var(--navy);
+          border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 1.2rem; font-weight: 900;
+          flex-shrink: 0;
+        "></div>
+        <div>
+          <div id="lookupName" style="font-weight:700; font-size:1.05rem;"></div>
+          <div id="lookupId" style="font-family:'Space Mono',monospace; font-size:0.78rem; color:rgba(255,255,255,0.6); margin-top:0.2rem;"></div>
+        </div>
+        <div id="lookupRoleBadge" style="
+          margin-left: auto;
+          padding: 4px 12px;
+          border-radius: 20px;
+          font-size: 0.75rem;
+          font-weight: 700;
+          white-space: nowrap;
+          flex-shrink: 0;
+        "></div>
+      </div>
     </div>
 
     <div class="alert alert-warn" id="loginError" style="display:none">
@@ -260,7 +292,7 @@
     </div>
 
     <div class="btn-row">
-      <button class="btn btn-primary" onclick="doLogin()">確認身份 →</button>
+      <button class="btn btn-primary" id="btnLogin" disabled onclick="confirmLogin()">確認，進入互評 →</button>
     </div>
   </div>
 
@@ -435,57 +467,84 @@ function goStep(n) {
 }
 
 // ════════════════════════════════════════════
-//  STEP 1 — LOGIN
+//  STEP 1 — LOGIN（即時查詢）
 // ════════════════════════════════════════════
-// ── 查詢階段（step1 → step1b）──
-async function doLookup() {
+const ROLE_COLORS = {
+  '行政團隊':   '#7c3aed',
+  '大隊長':     '#1d4ed8',
+  '儲備大隊長': '#0369a1',
+  '中隊長':     '#0891b2',
+  '參與學員':   '#059669',
+};
+
+let _lookupTimer = null;
+let _lookupResult = null;
+
+function onInputChange() {
+  // 清除上次查詢結果
+  hideLookupResult();
+  hideLoginError();
+  document.getElementById('btnLogin').disabled = true;
+  _lookupResult = null;
+
   const name  = document.getElementById('inputName').value.trim();
   const phone = document.getElementById('inputPhone').value.trim();
-  if (!name)  { showLoginError('請填寫姓名。'); return; }
-  if (!phone || !/^\d{3}$/.test(phone)) { showLoginError('請填寫 3 位數字的手機後三碼。'); return; }
 
-  showLoading(true, '查詢資料中⋯');
+  // 姓名有內容 + 後三碼剛好3位數 → 自動觸發查詢
+  if (name && /^\d{3}$/.test(phone)) {
+    clearTimeout(_lookupTimer);
+    _lookupTimer = setTimeout(() => doLookup(name, phone), 400);
+  }
+}
+
+async function doLookup(name, phone) {
+  showLoading(true, '查詢中⋯');
   try {
     const res = await gasCall({ action: 'login', name, phone });
     if (res.ok) {
-      // 暫存查詢結果，等確認後再正式登入
-      S._pending = { name: res.name, id: res.id, role: res.role, projects: res.projects };
+      _lookupResult = res;
       hideLoginError();
-      renderConfirmCard(res);
-      goStep('1b');
+      showLookupResult(res);
+      document.getElementById('btnLogin').disabled = false;
     } else {
+      hideLookupResult();
       showLoginError(res.message || '找不到符合的參與者，請確認姓名與手機後三碼。');
     }
-  } catch(e) { showLoginError('連線失敗，請稍後再試。'); }
-  finally { showLoading(false); }
+  } catch(e) {
+    hideLookupResult();
+    showLoginError('連線失敗，請稍後再試。');
+  } finally {
+    showLoading(false);
+  }
 }
 
-// ── 確認階段（step1b → step2）──
+function showLookupResult(res) {
+  const isAdmin = ['行政團隊','大隊長'].includes(res.role);
+  const displayId = isAdmin ? '大隊長 / 行政團隊' : res.id;
+  const color = ROLE_COLORS[res.role] || '#6b7280';
+
+  document.getElementById('lookupAvatar').textContent    = res.name.charAt(0);
+  document.getElementById('lookupName').textContent      = res.name;
+  document.getElementById('lookupId').textContent        = displayId;
+  const badge = document.getElementById('lookupRoleBadge');
+  badge.textContent        = res.role;
+  badge.style.background   = color;
+  badge.style.color        = '#fff';
+  document.getElementById('lookupResult').style.display = 'block';
+}
+
+function hideLookupResult() {
+  document.getElementById('lookupResult').style.display = 'none';
+}
+
+// 按下「確認，進入互評」
 function confirmLogin() {
-  const p = S._pending;
-  S.name = p.name; S.id = p.id; S.role = p.role;
-  S.projects = p.projects; S.completedPeers = []; S.selfDone = false;
-  S._pending = null;
+  if (!_lookupResult) return;
+  const res = _lookupResult;
+  S.name = res.name; S.id = res.id; S.role = res.role;
+  S.projects = res.projects; S.completedPeers = []; S.selfDone = false;
   renderProjectStep();
   goStep(2);
-}
-
-function renderConfirmCard(res) {
-  const ROLE_COLORS = {
-    '行政團隊':   '#7c3aed',
-    '大隊長':     '#1d4ed8',
-    '儲備大隊長': '#0369a1',
-    '中隊長':     '#0891b2',
-    '參與學員':   '#059669',
-  };
-  const color = ROLE_COLORS[res.role] || '#6b7280';
-  document.getElementById('confirmAvatar').textContent = res.name.charAt(0);
-  document.getElementById('confirmName').textContent   = res.name;
-  document.getElementById('confirmId').textContent     = res.id;
-  const roleBadge = document.getElementById('confirmRole');
-  roleBadge.textContent = res.role;
-  roleBadge.style.background = color;
-  roleBadge.style.color = '#fff';
 }
 
 function showLoginError(msg) { document.getElementById('loginError').style.display='flex'; document.getElementById('loginErrorMsg').textContent=msg; }
@@ -875,12 +934,10 @@ function showLoading(show, msg) {
   if (msg) document.getElementById('loadingMsg').textContent = msg;
 }
 
-document.getElementById('inputPhone').addEventListener('keypress', e => {
-  if (e.key === 'Enter') doLookup();
-});
-document.getElementById('inputName').addEventListener('keypress', e => {
-  if (e.key === 'Enter') doLookup();
-});
+document.getElementById('inputName').addEventListener('input',   onInputChange);
+document.getElementById('inputPhone').addEventListener('input',  onInputChange);
+document.getElementById('inputName').addEventListener('keypress', e => { if (e.key === 'Enter') document.getElementById('inputPhone').focus(); });
+document.getElementById('inputPhone').addEventListener('keypress', e => { if (e.key === 'Enter' && !document.getElementById('btnLogin').disabled) confirmLogin(); });
 </script>
 </body>
 </html>
