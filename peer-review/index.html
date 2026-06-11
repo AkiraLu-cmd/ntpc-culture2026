@@ -16,7 +16,7 @@
       --muted:     #6b7280;
       --border:    #e5e7eb;
       --white:     #ffffff;
-      --r1: #ef4444; --r2: #f59e0b; --r3: #3b82f6; --r4: #10b981;
+      --r0: #7f1d1d; --r1: #ef4444; --r2: #f59e0b; --r3: #3b82f6; --r4: #10b981;
       --radius: 16px;
       --shadow: 0 4px 20px rgba(10,22,40,0.09);
     }
@@ -288,7 +288,7 @@
     .criteria-label { font-weight: 700; font-size: .9rem; color: var(--navy); margin-bottom: .2rem; }
     .criteria-hint  { font-size: .75rem; color: var(--muted); margin-bottom: .65rem; line-height: 1.5; }
 
-    .rating-group { display: grid; grid-template-columns: repeat(4,1fr); gap: .4rem; }
+    .rating-group { display: grid; grid-template-columns: repeat(5,1fr); gap: .4rem; }
     .r-opt { position: relative; }
     .r-opt input { position:absolute; opacity:0; width:0; height:0; }
     .r-opt label {
@@ -303,15 +303,17 @@
       display: block; width: 7px; height: 7px;
       border-radius: 50%; margin: 0 auto 3px;
     }
-    .r-opt:nth-child(1) label .dot { background: var(--r1); }
-    .r-opt:nth-child(2) label .dot { background: var(--r2); }
-    .r-opt:nth-child(3) label .dot { background: var(--r3); }
-    .r-opt:nth-child(4) label .dot { background: var(--r4); }
+    .r-opt:nth-child(1) label .dot { background: var(--r0); }
+    .r-opt:nth-child(2) label .dot { background: var(--r1); }
+    .r-opt:nth-child(3) label .dot { background: var(--r2); }
+    .r-opt:nth-child(4) label .dot { background: var(--r3); }
+    .r-opt:nth-child(5) label .dot { background: var(--r4); }
     .r-opt input:checked + label { color: var(--navy); font-weight: 700; }
-    .r-opt:nth-child(1) input:checked + label { border-color:var(--r1); background:#fef2f2; }
-    .r-opt:nth-child(2) input:checked + label { border-color:var(--r2); background:#fffbeb; }
-    .r-opt:nth-child(3) input:checked + label { border-color:var(--r3); background:#eff6ff; }
-    .r-opt:nth-child(4) input:checked + label { border-color:var(--r4); background:#f0fdf4; }
+    .r-opt:nth-child(1) input:checked + label { border-color:var(--r0); background:#fef2f2; }
+    .r-opt:nth-child(2) input:checked + label { border-color:var(--r1); background:#fee2e2; }
+    .r-opt:nth-child(3) input:checked + label { border-color:var(--r2); background:#fffbeb; }
+    .r-opt:nth-child(4) input:checked + label { border-color:var(--r3); background:#eff6ff; }
+    .r-opt:nth-child(5) input:checked + label { border-color:var(--r4); background:#f0fdf4; }
     .r-opt label:hover { border-color: var(--gold); background: var(--gold-pale); }
 
     .section-divider {
@@ -488,7 +490,7 @@ const CRITERIA_LEADER = [
   { key:'organize', label:'專案組織力', hint:'能統籌專案任務、整理資訊，幫助學員執行專案' },
   { key:'lead',     label:'團隊領導力', hint:'能領導多位學員，有團隊意識地共同完成任務' },
 ];
-const RATING_LEVELS = ['尚待加強','基本達標','表現優異','超越期待'];
+const RATING_LEVELS = ['需要大幅改進','尚待加強','基本達標','表現優異','超越期待'];
 const LEADER_ROLES  = ['儲備大隊長','中隊長'];
 const ROLE_COLORS   = {
   '行政團隊':'#7c3aed','大隊長':'#1d4ed8',
@@ -803,8 +805,8 @@ async function submitForm(mode, projId, peerId) {
   }
   hideFormErr(formKey);
 
-  const oq1 = document.getElementById(`oq1-${formKey}`)?.value.trim() || '';
-  const oq2 = document.getElementById(`oq2-${formKey}`)?.value.trim() || '';
+  const openQ1 = document.getElementById(`oq1-${formKey}`)?.value.trim() || '';
+  const openQ2 = document.getElementById(`oq2-${formKey}`)?.value.trim() || '';
 
   const payload = {
     action:       'submit',
@@ -817,7 +819,7 @@ async function submitForm(mode, projId, peerId) {
     revieweeRole: mode==='self' ? ME.role : peer.role,
     projectId:    projId,
     projectName:  proj.name,
-    ratings, oq1, oq2,
+    ratings, openQ1, openQ2,
     timestamp: new Date().toISOString(),
   };
 
