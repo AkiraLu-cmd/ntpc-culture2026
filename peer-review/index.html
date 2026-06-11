@@ -986,41 +986,78 @@ function getSurveyProject() {
   return ME.projects.find(p => p.id === sel.value) || ME.projects[0];
 }
 
+// 儲存問卷答案
+const SURVEY_VALS = {};
+
 function renderSurveyQuestions() {
   const proj = getSurveyProject();
-  const el   = document.getElementById('surveyQuestions');
-  el.innerHTML = SURVEY_QS.map((q, i) => {
+  // 重置答案
+  SURVEY_QS.forEach(q => { SURVEY_VALS[q.key] = null; });
+
+  const el = document.getElementById('surveyQuestions');
+  let html = '';
+
+  SURVEY_QS.forEach((q, i) => {
     const label = q.label.replace('{專案名稱}', proj.name);
-    return `
+    html += `
     <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:.85rem;box-shadow:var(--shadow);">
-      <div style="font-weight:700;font-size:.9rem;color:var(--navy);margin-bottom:.5rem;">Q${i+1}. ${label}</div>
-      <div style="font-size:.75rem;color:var(--muted);margin-bottom:.85rem;">${q.lo}　／　${q.hi}</div>
-      <div style="display:flex;gap:.35rem;flex-wrap:wrap;" id="sq-${q.key}">
+      <div style="font-weight:700;font-size:.9rem;color:var(--navy);margin-bottom:.4rem;">Q${i+1}. ${label}</div>
+      <div style="font-size:.73rem;color:var(--muted);margin-bottom:.85rem;">${q.lo}　／　${q.hi}</div>
+      <div style="display:flex;gap:.3rem;flex-wrap:wrap;" id="sqg-${q.key}">
         ${[0,1,2,3,4,5,6,7,8,9,10].map(n => `
-          <label style="flex:1;min-width:36px;text-align:center;">
-            <input type="radio" name="sq-${q.key}" value="${n}" style="display:none;"
-              onchange="document.querySelectorAll('[data-sq=\'${q.key}\']').forEach(b=>b.style.background='');this.parentElement.querySelector('span').style.background='var(--gold)';this.parentElement.querySelector('span').style.color='var(--navy)';">
-            <span data-sq="${q.key}" style="display:block;padding:.4rem .2rem;border:1.5px solid var(--border);border-radius:8px;font-size:.82rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s;"
-              onclick="this.previousElementSibling.click();">${n}</span>
-          </label>`).join('')}
+          <button type="button"
+            data-qkey="${q.key}" data-val="${n}"
+            onclick="selectSurveyScore('${q.key}', ${n})"
+            style="flex:1;min-width:34px;padding:.45rem .15rem;
+              border:1.5px solid var(--border);border-radius:8px;
+              background:var(--white);color:var(--muted);
+              font-size:.82rem;font-weight:600;cursor:pointer;
+              transition:all .15s;font-family:'Noto Sans TC',sans-serif;"
+            id="sqb-${q.key}-${n}">${n}</button>`).join('')}
       </div>
     </div>`;
-  }).join('') + `
+  });
+
+  html += `
   <div style="background:var(--gold-pale);border:1.5px solid #f0d878;border-radius:var(--radius);padding:1.25rem;margin-bottom:.85rem;">
     <div style="font-weight:700;font-size:.9rem;color:var(--navy);margin-bottom:.65rem;">Q7. 有什麼話想跟計畫說，或對未來活動、課程的建議？</div>
-    <textarea id="sq-q7" placeholder="請自由填寫（非必填）" style="min-height:80px;"></textarea>
+    <textarea id="sq-q7" placeholder="請自由填寫（非必填）"></textarea>
   </div>`;
+
+  el.innerHTML = html;
+}
+
+function selectSurveyScore(qkey, val) {
+  SURVEY_VALS[qkey] = val;
+  // 更新按鈕樣式：同組全部重設，選中的高亮
+  for (let n = 0; n <= 10; n++) {
+    const btn = document.getElementById(`sqb-${qkey}-${n}`);
+    if (!btn) continue;
+    if (n === val) {
+      btn.style.background   = 'var(--gold)';
+      btn.style.color        = 'var(--navy)';
+      btn.style.borderColor  = 'var(--gold)';
+      btn.style.fontWeight   = '900';
+    } else {
+      btn.style.background   = 'var(--white)';
+      btn.style.color        = 'var(--muted)';
+      btn.style.borderColor  = 'var(--border)';
+      btn.style.fontWeight   = '600';
+    }
+  }
 }
 
 async function submitSurvey() {
   const proj = getSurveyProject();
-  // 收集 Q1–Q6
+  // 收集 Q1–Q6 from SURVEY_VALS
   const vals = {};
   let missing = [];
-  SURVEY_QS.forEach(q => {
-    const checked = document.querySelector(`input[name="sq-${q.key}"]:checked`);
-    if (!checked) missing.push('Q' + (SURVEY_QS.indexOf(q)+1));
-    else vals[q.key] = Number(checked.value);
+  SURVEY_QS.forEach((q, i) => {
+    if (SURVEY_VALS[q.key] === null || SURVEY_VALS[q.key] === undefined) {
+      missing.push('Q' + (i + 1));
+    } else {
+      vals[q.key] = SURVEY_VALS[q.key];
+    }
   });
   if (missing.length) {
     document.getElementById('surveyErr').classList.add('show');
