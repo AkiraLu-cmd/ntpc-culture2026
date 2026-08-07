@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>課程報名｜新北文化大使</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('H-L0gj00x0VV5Cs50');</script>
+<style>
+:root{--navy:#0f2347;--navy2:#1a3a6b;--gold:#c9a84c;--cream:#f5f0e8;--offwhite:#faf8f4;--text:#1a2a4a;--muted:#6b7a99;--red:#e05252;--green:#2e9e6b;--border:rgba(15,35,71,0.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--offwhite);color:var(--text);min-height:100vh}
+
+/* NAV */
+.site-nav{background:var(--navy);padding:0 24px;display:flex;align-items:center;gap:0;position:sticky;top:0;z-index:100}
+.nav-logo{color:var(--gold);font-weight:900;font-size:14px;padding:14px 0;text-decoration:none;margin-right:auto}
+.nav-link{color:rgba(255,255,255,.65);font-size:13px;font-weight:600;padding:14px 14px;text-decoration:none;border-bottom:2px solid transparent;transition:color .15s}
+.nav-link:hover{color:#fff}
+.nav-link.active{color:#fff;border-bottom-color:var(--gold)}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);padding:48px 24px 40px;text-align:center}
+.hero-badge{display:inline-block;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.4);border-radius:50px;padding:5px 16px;font-size:12px;color:var(--gold);font-weight:700;letter-spacing:1px;margin-bottom:14px}
+.hero-title{color:white;font-size:clamp(22px,5vw,32px);font-weight:900;line-height:1.25;margin-bottom:8px}
+.hero-sub{color:rgba(255,255,255,.6);font-size:14px}
+
+/* COURSE CARD */
+.container{max-width:620px;margin:0 auto;padding:28px 20px 60px}
+.course-card{background:white;border-radius:16px;padding:24px;border:0.5px solid var(--border);margin-bottom:20px}
+.course-tag{display:inline-block;background:var(--gold);color:var(--navy);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.06em;margin-bottom:12px}
+.course-title{font-size:18px;font-weight:900;color:var(--navy);margin-bottom:16px;line-height:1.3}
+.course-info{display:flex;flex-direction:column;gap:8px}
+.course-row{display:flex;align-items:flex-start;gap:10px;font-size:14px}
+.course-icon{width:20px;flex-shrink:0;text-align:center;margin-top:1px}
+.course-label{color:var(--muted);font-size:12px;min-width:40px;flex-shrink:0;margin-top:2px}
+.course-value{color:var(--text);font-weight:500;flex:1}
+.course-highlight{background:var(--cream);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:13px;color:var(--navy);font-weight:600}
+
+/* FORM */
+.form-card{background:white;border-radius:16px;padding:26px 22px;border:0.5px solid var(--border)}
+.form-card-title{font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.form-card-title::before{content:'';width:3px;height:13px;background:var(--gold);border-radius:2px;flex-shrink:0}
+.field{margin-bottom:18px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px}
+.field label .req{color:var(--red);margin-left:3px}
+.field label .hint{font-weight:400;color:var(--muted);font-size:11px;margin-left:6px}
+input[type=text],input[type=email],input[type=tel],select{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:'Noto Sans TC',sans-serif;font-size:14px;color:var(--text);background:var(--offwhite);transition:border-color .2s;appearance:none}
+input:focus,select:focus{outline:none;border-color:var(--navy);background:white}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7a99' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.field.error input,.field.error select{border-color:var(--red)!important}
+.err-msg{font-size:12px;color:var(--red);margin-top:4px;display:none}
+.field.error .err-msg{display:block}
+
+/* CHECKBOX GROUP */
+.checkbox-group{display:flex;flex-direction:column;gap:8px}
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .18s;background:var(--offwhite)}
+.check-item:hover{border-color:var(--navy);background:white}
+.check-item.selected{border-color:var(--navy2);background:#eef2fa}
+.check-item input{display:none}
+.check-box{width:20px;height:20px;border:2px solid var(--border);border-radius:5px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .18s;background:white}
+.check-item.selected .check-box{background:var(--navy2);border-color:var(--navy2)}
+.check-tick{color:white;font-size:12px;display:none}
+.check-item.selected .check-tick{display:block}
+.check-text{flex:1}
+.check-name{font-size:14px;font-weight:600;color:var(--text)}
+.check-meta{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* SUBMIT */
+.submit-btn{width:100%;background:var(--navy);color:white;border:none;border-radius:10px;padding:16px;font-family:'Noto Sans TC',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:background .18s;letter-spacing:.04em;margin-top:20px;-webkit-tap-highlight-color:transparent}
+.submit-btn:hover:not(:disabled){background:var(--navy2)}
+.submit-btn:disabled{background:#ccc;cursor:not-allowed}
+.form-note{font-size:12px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.6}
+.form-note span{color:var(--red)}
+
+/* SUCCESS */
+#successScreen{display:none;text-align:center;padding:40px 20px 60px;max-width:620px;margin:0 auto}
+.success-circle{width:80px;height:80px;background:#e6f7ef;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:36px}
+.success-title{font-size:24px;font-weight:900;color:var(--navy);margin-bottom:8px}
+.success-sub{font-size:14px;color:var(--muted);margin-bottom:28px;line-height:1.7}
+.success-card{background:white;border-radius:14px;padding:20px;border:0.5px solid var(--border);text-align:left}
+.success-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:0.5px solid var(--border);gap:12px}
+.success-row:last-child{border-bottom:none}
+.success-row-label{font-size:12px;color:var(--muted);flex-shrink:0}
+.success-row-value{font-size:14px;font-weight:600;color:var(--navy);text-align:right}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="nav-logo" href="/">新北文化大使</a>
+  <a class="nav-link" href="/">首頁</a>
+  <a class="nav-link active" href="/registration.html">課程報名</a>
+  <a class="nav-link" href="/sound-shizhuang/" target="_blank">新莊遊戲</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">115年 新北市青年推廣文化計畫</div>
+  <div class="hero-title">課程報名</div>
+  <div class="hero-sub">填寫以下資料完成報名，報名確認信將寄至你填寫的 Email</div>
+</div>
+
+<div class="container" id="formContainer">
+
+  <!-- 課程資訊 -->
+  <div class="course-card">
+    <div class="course-tag">開放報名中</div>
+    <div class="course-title">POV：解鎖新北文化的「開箱實戰課」</div>
+    <div class="course-info">
+      <div class="course-row">
+        <span class="course-icon">📅</span>
+        <span class="course-label">日期</span>
+        <span class="course-value">2026 年 8 月 9 日（日）</span>
+      </div>
+      <div class="course-row">
+        <span class="course-icon">🕐</span>
+        <span class="course-label">時間</span>
+        <span class="course-value">13:30 – 15:30</span>
+      </div>
+      <div class="course-row">
+        <span class="course-icon">📍</span>
+        <span class="course-label">地點</span>
+        <span class="course-value">永安市民活動中心<br><span style="font-size:12px;color:var(--muted)">新北市永和區安樂路 431 號 2 樓</span></span>
+      </div>
+      <div class="course-row">
+        <span class="course-icon">🎤</span>
+        <span class="course-label">講師</span>
+        <span class="course-value">Youtube 咪蕾</span>
+      </div>
+      <div class="course-row">
+        <span class="course-icon">👥</span>
+        <span class="course-label">名額</span>
+        <span class="course-value">無限制</span>
+      </div>
+    </div>
+    <div class="course-highlight">🎁 本課程開放一般民眾參與，免費報名！</div>
+  </div>
+
+  <!-- 報名表單 -->
+  <div class="form-card">
+    <div class="form-card-title">填寫報名資料</div>
+
+    <div class="field" id="field-name">
+      <label>姓名 <span class="req">*</span></label>
+      <input type="text" id="name" placeholder="請填寫真實姓名">
+      <div class="err-msg">請填寫姓名</div>
+    </div>
+
+    <div class="field" id="field-email">
+      <label>Email <span class="req">*</span><span class="hint">報名確認信將寄至此信箱</span></label>
+      <input type="email" id="email" placeholder="example@email.com">
+      <div class="err-msg">請填寫有效的 Email</div>
+    </div>
+
+    <div class="field" id="field-phone">
+      <label>手機號碼 <span class="req">*</span></label>
+      <input type="tel" id="phone" placeholder="09xxxxxxxx" maxlength="10" inputmode="numeric">
+      <div class="err-msg">請填寫手機號碼</div>
+    </div>
+
+    <div class="field" id="field-school">
+      <label>學校 / 單位 <span class="req">*</span><span class="hint">社會人士請填工作單位或「社會人士」</span></label>
+      <input type="text" id="school" placeholder="例：新北市立某某高中">
+      <div class="err-msg">請填寫學校或單位</div>
+    </div>
+
+    <div class="field" id="field-grade">
+      <label>年級 / 身分 <span class="req">*</span></label>
+      <select id="grade">
+        <option value="">請選擇</option>
+        <optgroup label="高中職">
+          <option value="高中職一年級">高中職一年級</option>
+          <option value="高中職二年級">高中職二年級</option>
+          <option value="高中職三年級">高中職三年級</option>
+        </optgroup>
+        <optgroup label="大專院校">
+          <option value="大學一年級">大學一年級</option>
+          <option value="大學二年級">大學二年級</option>
+          <option value="大學三年級">大學三年級</option>
+          <option value="大學四年級">大學四年級</option>
+          <option value="研究生">研究生</option>
+        </optgroup>
+        <optgroup label="其他">
+          <option value="社會人士">社會人士</option>
+          <option value="其他">其他</option>
+        </optgroup>
+      </select>
+      <div class="err-msg">請選擇年級或身分</div>
+    </div>
+
+    <div class="field" id="field-courses">
+      <label>報名課程 <span class="req">*</span></label>
+      <div class="checkbox-group">
+        <div class="check-item" onclick="toggleCourse(this, 'POV：解鎖新北文化的「開箱實戰課」（8/9 13:30–15:30）')">
+          <input type="checkbox">
+          <div class="check-box"><span class="check-tick">✓</span></div>
+          <div class="check-text">
+            <div class="check-name">POV：解鎖新北文化的「開箱實戰課」</div>
+            <div class="check-meta">8月9日（日）13:30–15:30 ｜ 永安市民活動中心 ｜ 講師：Youtube 咪蕾</div>
+          </div>
+        </div>
+      </div>
+      <div class="err-msg" id="courses-err" style="display:none">請至少選擇一門課程</div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitForm()">送出報名 🎉</button>
+    <p class="form-note">所有欄位均為必填<span>（*）</span><br>送出後將自動寄送確認信至你填寫的 Email，請留意收件匣（含垃圾信件）</p>
+  </div>
+
+</div>
+
+<div id="successScreen">
+  <div class="success-circle">🎉</div>
+  <div class="success-title">報名成功！</div>
+  <div class="success-sub">確認信已寄至你的 Email，請留意收件匣。<br>如有疑問請聯絡 ntpcca@wceo.org</div>
+  <div class="success-card" id="successDetail"></div>
+</div>
+
+<script>
+const SERVICE_ID = 'service_gwjk4e9';
+const NOTIFY_TEMPLATE = 'template_2hbedks';
+const CONFIRM_TEMPLATE = 'template_0phk1no';
+
+let selectedCourses = [];
+
+function toggleCourse(el, courseName) {
+  el.classList.toggle('selected');
+  if (el.classList.contains('selected')) {
+    if (!selectedCourses.includes(courseName)) selectedCourses.push(courseName);
+  } else {
+    selectedCourses = selectedCourses.filter(c => c !== courseName);
+  }
+  document.getElementById('courses-err').style.display = 'none';
+}
+
+function validateField(id, checkFn) {
+  const el = document.getElementById('field-' + id);
+  const val = document.getElementById(id).value.trim();
+  if (!checkFn(val)) {
+    el.classList.add('error');
+    return false;
+  }
+  el.classList.remove('error');
+  return true;
+}
+
+function submitForm() {
+  let valid = true;
+
+  valid = validateField('name', v => v.length > 0) && valid;
+  valid = validateField('email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) && valid;
+  valid = validateField('phone', v => v.length >= 8) && valid;
+  valid = validateField('school', v => v.length > 0) && valid;
+  valid = validateField('grade', v => v.length > 0) && valid;
+
+  if (selectedCourses.length === 0) {
+    document.getElementById('courses-err').style.display = 'block';
+    document.getElementById('field-courses').classList.add('error');
+    valid = false;
+  }
+
+  if (!valid) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ 送出中…';
+
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const school = document.getElementById('school').value.trim();
+  const grade = document.getElementById('grade').value;
+  const coursesText = selectedCourses.join('\n');
+  const now = new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei', hour12: false });
+
+  const params = {
+    name, email, phone, school, grade,
+    courses: coursesText,
+    time: now
+  };
+
+  // 同時送出兩封信
+  Promise.all([
+    emailjs.send(SERVICE_ID, NOTIFY_TEMPLATE, params),
+    emailjs.send(SERVICE_ID, CONFIRM_TEMPLATE, params)
+  ]).then(() => {
+    document.getElementById('formContainer').style.display = 'none';
+    document.getElementById('successScreen').style.display = 'block';
+    document.getElementById('successDetail').innerHTML = `
+      <div class="success-row"><span class="success-row-label">姓名</span><span class="success-row-value">${name}</span></div>
+      <div class="success-row"><span class="success-row-label">Email</span><span class="success-row-value">${email}</span></div>
+      <div class="success-row"><span class="success-row-label">電話</span><span class="success-row-value">${phone}</span></div>
+      <div class="success-row"><span class="success-row-label">學校／單位</span><span class="success-row-value">${school}</span></div>
+      <div class="success-row"><span class="success-row-label">年級／身分</span><span class="success-row-value">${grade}</span></div>
+      <div class="success-row"><span class="success-row-label">報名課程</span><span class="success-row-value">${selectedCourses.join('<br>')}</span></div>`;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }).catch(err => {
+    btn.disabled = false;
+    btn.textContent = '送出報名 🎉';
+    alert('❌ 送出失敗，請再試一次。\n如持續失敗請直接 Email 至 ntpcca@wceo.org\n錯誤：' + JSON.stringify(err));
+  });
+}
+</script>
+</body>
+</html>
