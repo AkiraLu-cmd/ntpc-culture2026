@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>課程簽到 — 新北文化大使</title>
+  <style>
+    :root {
+      --primary: #0f2347;
+      --gold:    #c9a84c;
+      --bg:      #f8f6f1;
+      --card:    #ffffff;
+      --success: #2E7D32;
+      --danger:  #C62828;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+      width: 100%;
+      max-width: 540px;
+    }
+    .logo-bar {
+      background: var(--primary);
+      color: white;
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 12px;
+    }
+    .logo-bar h1 {
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+    .course-info {
+      font-size: 14px;
+      opacity: 0.85;
+      margin-top: 6px;
+      line-height: 1.6;
+    }
+    .badge-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .badge {
+      background: rgba(201,168,76,0.15);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: bold;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(15,35,71,0.08);
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 540px;
+      margin-bottom: 20px;
+    }
+    .card h2 {
+      font-size: 1.1rem;
+      color: var(--primary);
+      font-weight: 800;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--bg);
+    }
+    .input-group {
+      margin-bottom: 20px;
+    }
+    .input-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: #444;
+      margin-bottom: 8px;
+    }
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+    .prefix {
+      background: var(--primary);
+      color: white;
+      font-weight: bold;
+      font-size: 15px;
+      padding: 14px 14px;
+      border-radius: 10px;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+    }
+    input[type="text"], input[type="number"] {
+      flex: 1;
+      padding: 14px;
+      border: 2px solid #DDD;
+      border-radius: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      outline: none;
+      color: var(--primary);
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+    input:focus { border-color: var(--gold); }
+    .lookup-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 4px;
+      transition: 0.2s;
+    }
+    .lookup-btn:hover { background: #1a3560; }
+
+    /* 查詢結果區 */
+    .result-card {
+      display: none;
+      background: #F0F7FF;
+      border: 2px solid #90CAF9;
+      border-radius: 12px;
+      padding: 18px;
+      margin-top: 16px;
+    }
+    .result-card.found {
+      background: #F0F7FF;
+      border-color: #1565C0;
+    }
+    .result-card.not-found {
+      background: #FFF3E0;
+      border-color: var(--danger);
+    }
+    .result-label {
+      font-size: 13px;
+      color: #666;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .result-name {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--primary);
+      letter-spacing: 2px;
+    }
+    .result-id {
+      font-size: 14px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    /* 已簽到警示 */
+    .already-badge {
+      display: inline-block;
+      background: #FFF9C4;
+      border: 1.5px solid #F9A825;
+      color: #E65100;
+      font-size: 13px;
+      font-weight: bold;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-top: 6px;
+    }
+
+    .confirm-btn {
+      background: var(--success);
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 14px;
+      transition: 0.2s;
+    }
+    .confirm-btn:hover { background: #1B5E20; }
+    .confirm-btn:disabled { background: #AAA; cursor: not-allowed; }
+
+    /* 成功通知 */
+    .toast {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--success);
+      color: white;
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 16px;
+      z-index: 999;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      white-space: nowrap;
+    }
+
+    /* 已簽到名單 */
+    .log-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .log-table th {
+      background: var(--primary);
+      color: white;
+      padding: 10px;
+      text-align: left;
+    }
+    .log-table td {
+      padding: 10px;
+      border-bottom: 1px solid #EEE;
+    }
+    .log-table tr:nth-child(even) td { background: #F8F8F8; }
+    .count-badge {
+      display: inline-block;
+      background: var(--gold);
+      color: white;
+      font-weight: bold;
+      font-size: 13px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-left: 8px;
+    }
+    .note-input {
+      width: 100%;
+      padding: 10px;
+      border: 1.5px solid #DDD;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-top: 10px;
+      outline: none;
+    }
+    .note-input:focus { border-color: var(--gold); }
+  </style>
+</head>
+<body>
+
+<div class="toast" id="toast">✅ 簽到成功！</div>
+
+<header>
+  <div class="logo-bar">
+    <h1>🏮 新北文化大使 課程簽到</h1>
+    <div class="course-info">
+      POV：解鎖新北文化的「開箱實戰課」
+    </div>
+    <div class="badge-row">
+      <span class="badge">📅 2026年8月9日（日）</span>
+      <span class="badge">🕐 13:30–15:30</span>
+    </div>
+  </div>
+</header>
+
+<!-- 輸入區 -->
+<div class="card">
+  <h2>🔍 查詢學員編號</h2>
+  <div class="input-group">
+    <label>請輸入學員編號後三碼</label>
+    <div class="input-row">
+      <div class="prefix">NTPCCA－</div>
+      <input type="number" id="id-input" placeholder="001" min="1" max="999"
+             oninput="onInput()" onkeydown="if(event.key==='Enter') lookupStudent()">
+    </div>
+  </div>
+  <button class="lookup-btn" onclick="lookupStudent()">🔎 查詢姓名</button>
+
+  <!-- 查詢結果 -->
+  <div class="result-card" id="result-card">
+    <div class="result-label">查詢結果</div>
+    <div class="result-name" id="result-name">—</div>
+    <div class="result-id"  id="result-id">—</div>
+    <div id="already-warn"></div>
+    <input class="note-input" id="note-input" type="text" placeholder="備註（選填）">
+    <button class="confirm-btn" id="confirm-btn" onclick="confirmCheckin()">
+      ✅ 確認簽到
+    </button>
+  </div>
+</div>
+
+<!-- 已簽到名單 -->
+<div class="card">
+  <h2>📋 本場簽到紀錄
+    <span class="count-badge" id="count-badge">0 人</span>
+  </h2>
+  <table class="log-table">
+    <thead>
+      <tr><th>#</th><th>編號</th><th>姓名</th><th>時間</th></tr>
+    </thead>
+    <tbody id="log-body"></tbody>
+  </table>
+</div>
+
+<script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwDRfE2LuUwsd2TXQQz6pSdGW5Yn3PJXWAX14ijpwVL0zgnauKLgEhWIZcWHWSingmf/exec';
+const COURSE  = 'POV：解鎖新北文化的「開箱實戰課」（2026/08/09）';
+
+const STUDENTS = {
+  "NTPCCA-001": "呂家維",
+  "NTPCCA-002": "黃玉桂",
+  "NTPCCA-003": "蘇玟如",
+  "NTPCCA-004": "張廷羽",
+  "NTPCCA-005": "林正邦",
+  "NTPCCA-006": "姚均緯",
+  "NTPCCA-007": "呂柏陞",
+  "NTPCCA-008": "蘇（更正）玟如",
+  "NTPCCA-009": "亞竺葉",
+  "NTPCCA-010": "葉亞竺（更正）",
+  "NTPCCA-011": "林彥群",
+  "NTPCCA-012": "邱子倫",
+  "NTPCCA-013": "周昕嬡",
+  "NTPCCA-014": "張瑞庭",
+  "NTPCCA-015": "張瑞庭（更正）",
+  "NTPCCA-016": "張巧諭",
+  "NTPCCA-017": "奕榛黃",
+  "NTPCCA-018": "黃奕榛",
+  "NTPCCA-019": "謝蕙安",
+  "NTPCCA-020": "湘寗蔡",
+  "NTPCCA-021": "蔡湘寗(更正)",
+  "NTPCCA-022": "蘇安予",
+  "NTPCCA-023": "林雨欣",
+  "NTPCCA-024": "吳冠潁",
+  "NTPCCA-025": "林育德",
+  "NTPCCA-026": "褚俊儒",
+  "NTPCCA-027": "張芝穎",
+  "NTPCCA-028": "陳宥蓉（更正）",
+  "NTPCCA-029": "李宇宥",
+  "NTPCCA-030": "鍾欣庭",
+  "NTPCCA-031": "李品潔",
+  "NTPCCA-032": "蔡昀珊",
+  "NTPCCA-033": "陳立儒",
+  "NTPCCA-034": "邱筠媜",
+  "NTPCCA-035": "陳怡婷",
+  "NTPCCA-036": "陳品嫻",
+  "NTPCCA-037": "李宜庭",
+  "NTPCCA-038": "陳聖媛",
+  "NTPCCA-039": "周筱涵",
+  "NTPCCA-040": "廖徽瑜",
+  "NTPCCA-041": "梁家珍",
+  "NTPCCA-042": "廖徽瑜(更正)",
+  "NTPCCA-043": "廖品媛",
+  "NTPCCA-044": "李姿羽",
+  "NTPCCA-045": "楊堤米",
+  "NTPCCA-046": "郭心怡",
+  "NTPCCA-047": "李宇豪",
+  "NTPCCA-048": "林巧詒",
+  "NTPCCA-049": "林彤恩",
+  "NTPCCA-050": "袁睿",
+  "NTPCCA-051": "廖湘宜",
+  "NTPCCA-052": "鄧行甫",
+  "NTPCCA-053": "洪叔妤",
+  "NTPCCA-054": "楊庭瑄",
+  "NTPCCA-055": "袁宇彤",
+  "NTPCCA-056": "廖怡瑄",
+  "NTPCCA-057": "李欣芸",
+  "NTPCCA-058": "陳殷琪",
+  "NTPCCA-059": "王妘莛",
+  "NTPCCA-060": "葉詠妍",
+  "NTPCCA-061": "陳醇容",
+  "NTPCCA-062": "彭梓綺",
+  "NTPCCA-063": "蔡心柔",
+  "NTPCCA-064": "高佳愉",
+  "NTPCCA-065": "周以喬",
+  "NTPCCA-066": "王沛璇",
+  "NTPCCA-067": "林思涵",
+  "NTPCCA-068": "黃宇婕",
+  "NTPCCA-069": "李盈璇",
+  "NTPCCA-070": "闕佑芯",
+  "NTPCCA-071": "李宥辰",
+  "NTPCCA-072": "游舒涵",
+  "NTPCCA-073": "林詩嫻",
+  "NTPCCA-074": "李宇宣",
+  "NTPCCA-075": "林詩嫻（更正）",
+  "NTPCCA-076": "張嘉芳",
+  "NTPCCA-077": "莫菘衍",
+  "NTPCCA-078": "闕(更正)佑芯",
+  "NTPCCA-079": "鍾岩祐",
+  "NTPCCA-080": "李秉峰",
+  "NTPCCA-081": "林宸睿",
+  "NTPCCA-082": "翁允甜",
+  "NTPCCA-083": "劉冠廷",
+  "NTPCCA-084": "鐘昱晴",
+  "NTPCCA-085": "吳心田",
+  "NTPCCA-086": "李志衡",
+  "NTPCCA-087": "高萍袖",
+  "NTPCCA-088": "孫譽恩",
+  "NTPCCA-089": "陳乃嘉",
+  "NTPCCA-090": "程鈺芳",
+  "NTPCCA-091": "孫瑋成",
+  "NTPCCA-092": "姚守恩",
+  "NTPCCA-093": "洪苡甯",
+  "NTPCCA-094": "黃晨堯",
+  "NTPCCA-095": "林子芸",
+  "NTPCCA-096": "蔡欣芸",
+  "NTPCCA-097": "高珮綺",
+  "NTPCCA-098": "杜育葳",
+  "NTPCCA-099": "周炳宏",
+  "NTPCCA-100": "李宥蓁",
+  "NTPCCA-101": "康心蘋",
+  "NTPCCA-102": "謝燿聰",
+  "NTPCCA-103": "吳宸賓",
+  "NTPCCA-104": "洪煒辰",
+  "NTPCCA-105": "吳靖崴",
+  "NTPCCA-106": "盧宥喆",
+  "NTPCCA-107": "盧宥喆",
+  "NTPCCA-108": "呂枘萱",
+  "NTPCCA-109": "羅苡瑄",
+  "NTPCCA-110": "陳奕仲",
+  "NTPCCA-111": "吳則旻",
+  "NTPCCA-112": "杜憶蕙",
+  "NTPCCA-113": "莫晨熙",
+  "NTPCCA-114": "劉瑋祺",
+  "NTPCCA-115": "王逸咸",
+  "NTPCCA-116": "朱法昀",
+  "NTPCCA-117": "黃錡宥",
+  "NTPCCA-118": "莫晨熙",
+  "NTPCCA-119": "曾品誼",
+  "NTPCCA-120": "潘威志",
+  "NTPCCA-121": "蔡嘉哲",
+  "NTPCCA-122": "藍品婕",
+  "NTPCCA-123": "周昀萱",
+  "NTPCCA-124": "郭宜穎",
+  "NTPCCA-125": "陳沅妍"
+};
+
+// 本場已簽到（key = NTPCCA id, value = 時間）
+const checkedIn = {};
+
+let currentId   = null;
+let currentName = null;
+
+function pad(n) { return String(n).padStart(3, '0'); }
+
+function onInput() {
+  // 清除上一次查詢結果
+  document.getElementById('result-card').style.display = 'none';
+  currentId = null; currentName = null;
+}
+
+function lookupStudent() {
+  const raw = document.getElementById('id-input').value.trim();
+  if (!raw) { alert('請輸入編號'); return; }
+  const ntpcca_id = 'NTPCCA-' + pad(parseInt(raw));
+  const name = STUDENTS[ntpcca_id];
+
+  const card   = document.getElementById('result-card');
+  const nameEl = document.getElementById('result-name');
+  const idEl   = document.getElementById('result-id');
+  const warnEl = document.getElementById('already-warn');
+  const btn    = document.getElementById('confirm-btn');
+
+  card.className = 'result-card';
+  card.style.display = 'block';
+  warnEl.innerHTML = '';
+
+  if (!name) {
+    card.classList.add('not-found');
+    nameEl.style.color = 'var(--danger)';
+    nameEl.innerText = '找不到此編號';
+    idEl.innerText   = ntpcca_id + ' — 請確認號碼是否正確';
+    btn.disabled = true;
+    currentId = null; currentName = null;
+    return;
+  }
+
+  card.classList.add('found');
+  nameEl.style.color = 'var(--primary)';
+  nameEl.innerText = name;
+  idEl.innerText   = ntpcca_id;
+  currentId   = ntpcca_id;
+  currentName = name;
+
+  if (checkedIn[ntpcca_id]) {
+    warnEl.innerHTML = `<div class="already-badge">⚠️ 此學員今日已簽到（${checkedIn[ntpcca_id]}）</div>`;
+    btn.innerText  = '⚠️ 已簽到（再次確認送出）';
+    btn.style.background = '#E65100';
+  } else {
+    btn.innerText  = '✅ 確認簽到';
+    btn.style.background = 'var(--success)';
+  }
+  btn.disabled = false;
+}
+
+async function confirmCheckin() {
+  if (!currentId || !currentName) return;
+
+  const btn  = document.getElementById('confirm-btn');
+  const note = document.getElementById('note-input').value.trim();
+  btn.disabled = true;
+  btn.innerText = '送出中...';
+
+  const now = new Date().toLocaleString('zh-TW', {
+    timeZone: 'Asia/Taipei',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hour12: false
+  });
+
+  const record = {
+    timestamp : now,
+    ntpcca_id : currentId,
+    name      : currentName,
+    course    : COURSE,
+    note      : note
+  };
+
+  try {
+    await fetch(GAS_URL, {
+      method : 'POST',
+      mode   : 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body   : JSON.stringify(record)
+    });
+  } catch(e) {
+    console.warn('送出失敗:', e);
+  }
+
+  // 記錄本地已簽到
+  checkedIn[currentId] = now.slice(-8, -3);  // 只顯示 HH:MM
+
+  // 加入頁面名單
+  addToLog(currentId, currentName, now);
+
+  // 顯示 toast
+  showToast(`${currentName} 簽到成功！`);
+
+  // 清空輸入
+  document.getElementById('id-input').value = '';
+  document.getElementById('note-input').value = '';
+  document.getElementById('result-card').style.display = 'none';
+  document.getElementById('id-input').focus();
+  currentId = null; currentName = null;
+}
+
+function addToLog(id, name, time) {
+  const tbody = document.getElementById('log-body');
+  const count = tbody.rows.length + 1;
+  const tr = document.createElement('tr');
+  const timeStr = time.slice(-8, -3);  // HH:MM
+  tr.innerHTML = `<td>${count}</td><td>${id}</td><td style="font-weight:bold">${name}</td><td>${timeStr}</td>`;
+  tbody.insertBefore(tr, tbody.firstChild);  // 最新的在最上面
+  document.getElementById('count-badge').innerText = count + ' 人';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.innerText = '✅ ' + msg;
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 2500);
+}
+
+// 頁面載入後 focus 到輸入框
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('id-input').focus();
+});
+</script>
+</body>
+</html>
