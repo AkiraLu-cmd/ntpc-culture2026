@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Taipei Cultural Journey 2026 | Free Bilingual Tours</title>
+<meta name="description" content="Explore New Taipei's hidden gems with bilingual guides. Aug 22, 2026 · Free · 3 Routes: Pinglin, Tamsui & Banqiao. Led by young Cultural Ambassadors.">
+<meta property="og:title" content="New Taipei Cultural Journey 2026">
+<meta property="og:description" content="Free bilingual cultural tours in New Taipei City. Aug 22, 2026 · Pinglin · Tamsui · Banqiao">
+<meta property="og:url" content="https://ntpcyouthculture.org/cultural-tour.html">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0f2347;--navy2:#1a3a6b;--navy3:#2d5a9e;
+  --gold:#c9a84c;--gold2:#e8c870;--gold3:#fff9e6;
+  --cream:#f5f0e8;--offwhite:#faf8f4;
+  --text:#1a2a4a;--muted:#6b7a99;--border:rgba(15,35,71,0.12);
+  --green:#2e9e6b;
+  --pinglin:#2d6e4e;--pinglin-bg:#edf7f2;
+  --tamsui:#1a5a8a;--tamsui-bg:#e3f0f8;
+  --banqiao:#7a3d1a;--banqiao-bg:#f5ede3;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--offwhite);color:var(--text);overflow-x:hidden;line-height:1.6}
+.zh{font-family:'Noto Sans TC',sans-serif}
+
+/* NAV */
+.site-nav{background:var(--navy);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.06)}
+.nav-inner{max-width:1040px;margin:0 auto;padding:0 24px;display:flex;align-items:center}
+.nav-logo{color:var(--gold);font-weight:800;font-size:15px;padding:14px 0;text-decoration:none;margin-right:auto;letter-spacing:-.3px}
+.nav-logo span{font-family:'Noto Sans TC',sans-serif;font-size:11px;color:rgba(255,255,255,.4);display:block;font-weight:400;letter-spacing:.5px;margin-top:1px}
+.nav-link{color:rgba(255,255,255,.6);font-size:13px;font-weight:600;padding:14px 13px;text-decoration:none;border-bottom:2px solid transparent;transition:color .15s;white-space:nowrap}
+.nav-link:hover{color:#fff}
+.nav-link.active{color:#fff;border-bottom-color:var(--gold)}
+@media(max-width:520px){.nav-link{padding:14px 8px;font-size:12px}}
+
+/* HERO */
+.hero{background:var(--navy);min-height:90vh;display:flex;align-items:center;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#0a1a35 0%,#0f2347 40%,#1a4a6b 100%)}
+.hero-deco1{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(45,90,158,.25),transparent 70%);top:-100px;right:-100px;pointer-events:none}
+.hero-deco2{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.1),transparent 70%);bottom:-80px;left:-60px;pointer-events:none}
+.hero-inner{max-width:1040px;margin:0 auto;padding:80px 28px 60px;position:relative;z-index:2;display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center}
+@media(max-width:760px){.hero-inner{grid-template-columns:1fr}.hero-visual{display:none}}
+
+.hero-overline{display:inline-flex;align-items:center;gap:8px;margin-bottom:20px}
+.hero-overline-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-overline-text{font-size:12px;font-weight:700;color:var(--gold);letter-spacing:2px;text-transform:uppercase}
+.hero-overline-zh{font-size:11px;color:rgba(255,255,255,.35);font-family:'Noto Sans TC',sans-serif;margin-left:4px}
+
+.hero-title{font-size:clamp(36px,6vw,62px);font-weight:900;color:#fff;line-height:1.05;letter-spacing:-1.5px;margin-bottom:6px}
+.hero-title em{display:block;color:var(--gold);font-style:normal}
+.hero-subtitle{font-size:clamp(14px,2vw,18px);font-weight:500;color:rgba(255,255,255,.5);margin-bottom:22px;font-family:'Noto Sans TC',sans-serif;letter-spacing:.5px}
+
+.hero-desc{font-size:16px;color:rgba(255,255,255,.72);line-height:1.75;max-width:480px;margin-bottom:10px}
+.hero-desc-zh{font-size:13px;color:rgba(255,255,255,.38);line-height:1.7;max-width:460px;margin-bottom:36px;font-family:'Noto Sans TC',sans-serif}
+
+.hero-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:36px}
+.hero-pill{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:9px 16px}
+.hero-pill small{display:block;font-size:10px;color:rgba(255,255,255,.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
+.hero-pill strong{display:block;font-size:13px;color:#fff;font-weight:700}
+.hero-pill.pill-gold{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.35)}
+.hero-pill.pill-gold strong{color:var(--gold2)}
+
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--navy);padding:14px 30px;border-radius:50px;font-weight:800;font-size:15px;text-decoration:none;transition:transform .2s,box-shadow .2s;letter-spacing:-.2px}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,.35)}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);padding:14px 24px;border-radius:50px;font-weight:600;font-size:14px;text-decoration:none;transition:background .2s}
+.btn-ghost:hover{background:rgba(255,255,255,.14)}
+
+/* Hero visual */
+.hero-visual{position:relative}
+.hero-img-box{border-radius:20px;overflow:hidden;aspect-ratio:4/5;background:rgba(255,255,255,.05);border:2px dashed rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px}
+.hero-img-box img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-img-placeholder-text{color:rgba(255,255,255,.3);font-size:12px;text-align:center;padding:20px}
+.hero-badge{position:absolute;bottom:-16px;right:-10px;background:var(--navy2);border:2px solid var(--gold);border-radius:14px;padding:12px 16px;text-align:center}
+.hero-badge-num{font-size:22px;font-weight:900;color:var(--gold);line-height:1}
+.hero-badge-label{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px}
+
+/* GENERAL */
+.section{padding:80px 0}
+.section-cream{background:var(--cream);padding:80px 0}
+.section-dark{background:var(--navy);padding:80px 0}
+.container{max-width:1040px;margin:0 auto;padding:0 28px}
+
+.section-overline{font-size:11px;font-weight:700;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.section-overline::after{content:'';flex:1;height:1px;background:var(--gold);opacity:.25;max-width:60px}
+.section-overline-zh{font-size:11px;color:var(--muted);font-family:'Noto Sans TC',sans-serif;letter-spacing:.5px;margin-left:4px}
+
+.section-title{font-size:clamp(26px,4vw,40px);font-weight:900;color:var(--navy);line-height:1.1;letter-spacing:-1px;margin-bottom:6px}
+.section-title-white{color:#fff}
+.section-title-zh{font-size:clamp(14px,2vw,18px);color:var(--muted);font-family:'Noto Sans TC',sans-serif;font-weight:500;margin-bottom:28px;letter-spacing:.3px}
+.section-title-zh-white{color:rgba(255,255,255,.45)}
+.gold-bar{width:40px;height:4px;background:var(--gold);border-radius:2px;margin-bottom:32px}
+
+/* WHY */
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.why-card{background:white;border-radius:18px;padding:26px 22px;border:1.5px solid var(--border);transition:transform .2s,border-color .2s;text-align:center}
+.why-card:hover{transform:translateY(-4px);border-color:var(--navy3)}
+.why-em{font-size:36px;margin-bottom:14px;display:block}
+.why-title{font-size:16px;font-weight:800;color:var(--navy);margin-bottom:6px;letter-spacing:-.3px}
+.why-title-zh{font-size:12px;color:var(--muted);font-family:'Noto Sans TC',sans-serif;margin-bottom:10px}
+.why-desc{font-size:13px;color:var(--muted);line-height:1.65}
+.why-desc-zh{font-size:12px;color:rgba(107,122,153,.7);line-height:1.6;font-family:'Noto Sans TC',sans-serif;margin-top:6px;border-top:1px solid var(--border);padding-top:8px}
+
+/* ROUTES */
+.routes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:760px){.routes-grid{grid-template-columns:1fr}}
+
+.route-card{border-radius:20px;overflow:hidden;border:1.5px solid var(--border);background:white;transition:transform .2s,box-shadow .2s}
+.route-card:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(15,35,71,.1)}
+
+.route-photo{aspect-ratio:16/9;position:relative;overflow:hidden;background:var(--navy)}
+.route-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.route-card:hover .route-photo img{transform:scale(1.05)}
+.route-photo-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(15,35,71,.75) 0%,rgba(15,35,71,.1) 60%)}
+.route-photo-label{position:absolute;bottom:14px;left:14px;right:14px}
+.route-num-badge{display:inline-block;background:var(--gold);color:var(--navy);font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;margin-bottom:6px;letter-spacing:.5px}
+.route-photo-title{font-size:18px;font-weight:900;color:#fff;letter-spacing:-.3px;line-height:1.15}
+.route-photo-title-zh{font-size:12px;color:rgba(255,255,255,.65);font-family:'Noto Sans TC',sans-serif;margin-top:3px}
+
+/* Photo placeholder */
+.route-photo-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:var(--navy2);height:100%;padding:20px}
+.route-photo-placeholder-icon{font-size:28px;opacity:.5}
+.route-photo-placeholder-text{font-size:11px;color:rgba(255,255,255,.35);text-align:center;font-family:'Noto Sans TC',sans-serif}
+
+.route-body{padding:20px}
+.route-theme{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:3px}
+.route-theme-zh{font-size:12px;color:var(--muted);font-family:'Noto Sans TC',sans-serif;margin-bottom:14px}
+
+.route-info{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.route-info-row{display:flex;gap:8px;font-size:13px;align-items:flex-start}
+.ri-icon{width:18px;text-align:center;flex-shrink:0;margin-top:1px}
+.ri-main{color:var(--text);font-weight:500}
+.ri-sub{font-size:11px;color:var(--muted);font-family:'Noto Sans TC',sans-serif;display:block;margin-top:1px}
+
+.route-quota-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px}
+.quota-pinglin{background:var(--pinglin-bg);color:var(--pinglin)}
+.quota-tamsui{background:var(--tamsui-bg);color:var(--tamsui)}
+.quota-banqiao{background:var(--banqiao-bg);color:var(--banqiao)}
+
+.route-cta{display:block;text-align:center;padding:11px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;margin-top:14px;transition:opacity .2s;font-family:'Inter',sans-serif}
+.cta-pinglin{background:var(--pinglin-bg);color:var(--pinglin)}
+.cta-tamsui{background:var(--tamsui-bg);color:var(--tamsui)}
+.cta-banqiao{background:var(--banqiao-bg);color:var(--banqiao)}
+.route-cta:hover{opacity:.75}
+
+/* FORM */
+.form-outer{max-width:640px;margin:40px auto 0}
+.form-card{background:white;border-radius:22px;padding:36px 32px;border:1px solid var(--border)}
+@media(max-width:520px){.form-card{padding:26px 20px}}
+.form-title{font-size:22px;font-weight:900;color:var(--navy);margin-bottom:4px;letter-spacing:-.5px}
+.form-title-zh{font-size:13px;color:var(--muted);font-family:'Noto Sans TC',sans-serif;margin-bottom:28px}
+
+.field{margin-bottom:18px}
+.field label{display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;letter-spacing:-.1px}
+.field label .zh-hint{font-weight:400;color:var(--muted);font-size:11px;font-family:'Noto Sans TC',sans-serif;margin-left:6px}
+.field label .req{color:#e05252;margin-left:2px}
+input[type=text],input[type=email],input[type=tel],select,textarea{
+  width:100%;padding:12px 16px;border:1.5px solid var(--border);
+  border-radius:10px;font-family:'Inter',sans-serif;font-size:14px;
+  color:var(--text);background:var(--offwhite);transition:border-color .2s,background .2s;appearance:none
+}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--navy);background:white}
+input::placeholder,textarea::placeholder{color:var(--muted);font-size:13px}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7a99' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
+textarea{resize:vertical;min-height:80px}
+.field.error input,.field.error select,.field.error textarea{border-color:#e05252!important}
+.err-msg{font-size:12px;color:#e05252;margin-top:4px;display:none}
+.field.error .err-msg{display:block}
+
+.route-radio-group{display:flex;flex-direction:column;gap:10px}
+.route-radio{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all .18s;background:var(--offwhite);-webkit-tap-highlight-color:transparent}
+.route-radio:hover{border-color:var(--navy);background:white}
+.route-radio.sel-pinglin{border-color:var(--pinglin);background:var(--pinglin-bg)}
+.route-radio.sel-tamsui{border-color:var(--tamsui);background:var(--tamsui-bg)}
+.route-radio.sel-banqiao{border-color:var(--banqiao);background:var(--banqiao-bg)}
+.route-radio input{display:none}
+.radio-circle{width:20px;height:20px;border:2px solid #ccc;border-radius:50%;flex-shrink:0;margin-top:3px;display:flex;align-items:center;justify-content:center;background:white;transition:all .18s}
+.route-radio.sel-pinglin .radio-circle{border-color:var(--pinglin);background:var(--pinglin)}
+.route-radio.sel-tamsui .radio-circle{border-color:var(--tamsui);background:var(--tamsui)}
+.route-radio.sel-banqiao .radio-circle{border-color:var(--banqiao);background:var(--banqiao)}
+.radio-dot{width:8px;height:8px;border-radius:50%;background:white;display:none}
+.route-radio.sel-pinglin .radio-dot,.route-radio.sel-tamsui .radio-dot,.route-radio.sel-banqiao .radio-dot{display:block}
+.rr-name{font-size:14px;font-weight:700;color:var(--navy);letter-spacing:-.2px}
+.rr-name-zh{font-size:12px;color:var(--muted);font-family:'Noto Sans TC',sans-serif;margin-top:1px}
+.rr-quota{font-size:11px;font-weight:700;margin-top:4px}
+.route-radio.sel-pinglin .rr-quota{color:var(--pinglin)}
+.route-radio.sel-tamsui .rr-quota{color:var(--tamsui)}
+.route-radio.sel-banqiao .rr-quota{color:var(--banqiao)}
+.rr-quota-default{color:var(--muted)}
+
+.submit-btn{width:100%;background:var(--navy);color:white;border:none;border-radius:12px;padding:16px;font-family:'Inter',sans-serif;font-size:16px;font-weight:800;cursor:pointer;transition:background .18s;letter-spacing:-.3px;margin-top:22px;-webkit-tap-highlight-color:transparent}
+.submit-btn:hover:not(:disabled){background:var(--navy2)}
+.submit-btn:disabled{background:#ccc;cursor:not-allowed}
+.form-footnote{font-size:12px;color:var(--muted);text-align:center;margin-top:12px;line-height:1.7}
+.form-footnote .zh{font-family:'Noto Sans TC',sans-serif;display:block;margin-top:2px;color:rgba(107,122,153,.7)}
+.consent-item{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all .18s;background:var(--offwhite);-webkit-tap-highlight-color:transparent}
+.consent-item:hover{border-color:var(--navy);background:white}
+.consent-item.agreed{border-color:var(--green);background:#f0faf5}
+.consent-radio{width:22px;height:22px;border:2px solid #ccc;border-radius:6px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;background:white;transition:all .18s}
+.consent-item.agreed .consent-radio{background:var(--green);border-color:var(--green)}
+.consent-tick{font-size:13px;color:white;display:none}
+.consent-item.agreed .consent-tick{display:block}
+.consent-text{flex:1}
+.consent-en{font-size:13px;color:var(--text);line-height:1.65;margin-bottom:6px;font-weight:500}
+.consent-zh{font-size:12px;color:var(--muted);line-height:1.7;font-family:'Noto Sans TC',sans-serif;padding-top:6px;border-top:1px solid var(--border)}
+
+/* SUCCESS */
+#successScreen{display:none;text-align:center;padding:60px 20px;max-width:600px;margin:0 auto}
+.success-icon{font-size:52px;margin-bottom:16px}
+.success-title{font-size:28px;font-weight:900;color:var(--navy);letter-spacing:-1px;margin-bottom:4px}
+.success-title-zh{font-size:15px;color:var(--muted);font-family:'Noto Sans TC',sans-serif;margin-bottom:28px}
+.success-card{background:white;border-radius:16px;padding:22px;border:1px solid var(--border);text-align:left}
+.success-row{display:flex;justify-content:space-between;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--border);gap:16px}
+.success-row:last-child{border-bottom:none}
+.success-row-label{font-size:12px;color:var(--muted);flex-shrink:0;font-weight:600;letter-spacing:.3px;text-transform:uppercase}
+.success-row-value{font-size:13px;font-weight:700;color:var(--navy);text-align:right}
+
+/* FOOTER */
+.footer{background:var(--navy);padding:32px 24px;text-align:center;font-size:12px;color:rgba(255,255,255,.3);line-height:2}
+.footer a{color:rgba(255,255,255,.5);text-decoration:none}
+.footer a:hover{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">
+      New Taipei Cultural Ambassadors
+      <span>新北文化大使</span>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="/">首頁 Home</a>
+      <a class="nav-link" href="/registration.html">課程報名 Register</a>
+      <a class="nav-link active" href="/cultural-tour.html">文化小旅行 Cultural Tour</a>
+      <a class="nav-link" href="/sound-shizhuang/" target="_blank">新莊遊戲 Sound Game</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-deco1"></div>
+  <div class="hero-deco2"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-overline">
+        <div class="hero-overline-dot"></div>
+        <span class="hero-overline-text">Free · Bilingual · Aug 22, 2026</span>
+        <span class="hero-overline-zh">免費 · 雙語 · 8月22日</span>
+      </div>
+      <h1 class="hero-title">
+        New Taipei<br>
+        <em>Cultural Journey</em>
+      </h1>
+      <div class="hero-subtitle">新北文化社造小旅行</div>
+      <p class="hero-desc">Explore New Taipei's authentic neighborhoods with bilingual guides. Discover local artisans, dive into living culture, and bring home a handcrafted souvenir.</p>
+      <p class="hero-desc-zh">由新北文化大使帶你走進在地巷弄，以雙語導覽探索新北豐富的文化底蘊，並帶走親手製作的紀念品。</p>
+      <div class="hero-pills">
+        <div class="hero-pill pill-gold">
+          <small>Date 日期</small>
+          <strong>August 22 (Sat) · 8月22日（六）</strong>
+        </div>
+        <div class="hero-pill">
+          <small>Time 時間</small>
+          <strong>10:00 – 12:00 AM</strong>
+        </div>
+        <div class="hero-pill">
+          <small>Routes 路線</small>
+          <strong>Pinglin · Tamsui · Banqiao</strong>
+        </div>
+        <div class="hero-pill">
+          <small>Fee 費用</small>
+          <strong>Free · 免費</strong>
+        </div>
+      </div>
+      <div class="hero-btns">
+        <a class="btn-primary" href="#register">Sign Up Now →</a>
+        <a class="btn-ghost" href="#routes">View Routes</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-img-box">
+        <!-- Replace with: <img src="YOUR_IMAGE_URL" alt="New Taipei Cultural Journey"> -->
+        <div class="hero-img-placeholder-text">
+          🖼️<br>Main visual image<br><span style="font-size:10px">主視覺圖片<br>Replace src with your image URL</span>
+        </div>
+      </div>
+      <div class="hero-badge">
+        <div class="hero-badge-num">3</div>
+        <div class="hero-badge-label">Routes<br>路線</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WHY JOIN -->
+<div class="section">
+  <div class="container">
+    <div class="section-overline">Why Join Us <span class="section-overline-zh">活動亮點</span></div>
+    <div class="section-title">Discover New Taipei Like a Local</div>
+    <div class="section-title-zh">為什麼要來？</div>
+    <div class="gold-bar"></div>
+    <p style="font-size:15px;color:var(--muted);max-width:640px;margin-bottom:40px;line-height:1.75">Each route is crafted by young Cultural Ambassadors — locals who've trained all year to share New Taipei's living culture with the world, in both English and Chinese.</p>
+    <div class="why-grid">
+      <div class="why-card">
+        <span class="why-em">🗣️</span>
+        <div class="why-title">Bilingual Guided Tour</div>
+        <div class="why-title-zh">雙語深度導覽</div>
+        <div class="why-desc">Full commentary in both English and Chinese — every story, every detail, accessible to all.</div>
+        <div class="why-desc-zh">中英文同步解說，讓每位參與者都能深入了解在地故事。</div>
+      </div>
+      <div class="why-card">
+        <span class="why-em">🎨</span>
+        <div class="why-title">Hands-On Experience</div>
+        <div class="why-title-zh">親手文化體驗</div>
+        <div class="why-desc">Roll up your sleeves and create something with local artisans. Crafts that carry real stories.</div>
+        <div class="why-desc-zh">親自動手製作在地特色工藝，感受職人的技藝與溫度。</div>
+      </div>
+      <div class="why-card">
+        <span class="why-em">🎁</span>
+        <div class="why-title">Take a Souvenir Home</div>
+        <div class="why-title-zh">專屬紀念品帶回家</div>
+        <div class="why-desc">Every route includes a craft you'll make yourself — a memory you can hold in your hands.</div>
+        <div class="why-desc-zh">每條路線都有專屬手作體驗，帶走獨一無二的新北記憶。</div>
+      </div>
+      <div class="why-card">
+        <span class="why-em">🌟</span>
+        <div class="why-title">Led by Cultural Ambassadors</div>
+        <div class="why-title-zh">青年文化大使帶隊</div>
+        <div class="why-desc">Your guides are passionate young locals from the New Taipei Cultural Ambassador Program.</div>
+        <div class="why-desc-zh">由新北文化大使全程陪同，用青年視角詮釋在地文化。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ROUTES -->
+<div class="section-cream" id="routes">
+  <div class="container">
+    <div class="section-overline">Choose Your Route <span class="section-overline-zh">三條路線</span></div>
+    <div class="section-title">Three Routes, One Amazing Day</div>
+    <div class="section-title-zh">選一條，出發！</div>
+    <div class="gold-bar"></div>
+    <div class="routes-grid">
+
+      <!-- PINGLIN -->
+      <div class="route-card">
+        <div class="route-photo">
+          <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/culture-trip.jpg" alt="Pinglin Route">
+          <!-- To replace: change the src above to your Pinglin photo URL 坪林路線照片 -->
+          <div class="route-photo-overlay"></div>
+          <div class="route-photo-label">
+            <div class="route-num-badge">Route 1 · 路線一</div>
+            <div class="route-photo-title">Pinglin Tea Culture</div>
+            <div class="route-photo-title-zh">坪林老街 × 茶產業文化</div>
+          </div>
+        </div>
+        <div class="route-body">
+          <div class="route-theme">Taiwan's Tea Capital & Living Culture</div>
+          <div class="route-theme-zh">地方創生分享 × 茶文化體驗</div>
+          <div class="route-info">
+            <div class="route-info-row">
+              <span class="ri-icon">📅</span>
+              <div><div class="ri-main">August 22 (Sat) · 10:00–12:00</div><span class="ri-sub">8月22日（六）上午10點至12點</span></div>
+            </div>
+            <div class="route-info-row">
+              <span class="ri-icon">🗺️</span>
+              <div>
+                <div class="ri-main">Walking Route</div>
+                <div style="font-size:13px;margin-top:4px;display:flex;flex-direction:column;gap:3px">
+                  <span>→ Pinglin Old Street <span style="color:var(--muted);font-size:11px">坪林老街</span></span>
+                  <span>→ Pinglin Tea Museum <span style="color:var(--muted);font-size:11px">坪林茶業博物館</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="route-info-row">
+              <span class="ri-icon">🍵</span>
+              <div><div class="ri-main">Hands-On Experience</div><span class="ri-sub">茶香Bingo Tea Bingo game + 紙包茶手作 paper-wrapped tea craft souvenir</span></div>
+            </div>
+          </div>
+          <span class="route-quota-badge quota-pinglin">👥 30 Spots · 限額 30 人</span>
+          <a class="route-cta cta-pinglin" href="#register">Sign Up for This Route →</a>
+        </div>
+      </div>
+
+      <!-- TAMSUI -->
+      <div class="route-card">
+        <div class="route-photo">
+          <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/activity-2.jpg" alt="Tamsui Route">
+          <!-- To replace: change the src above to your Tamsui photo URL 淡水路線照片 -->
+          <div class="route-photo-overlay"></div>
+          <div class="route-photo-label">
+            <div class="route-num-badge">Route 2 · 路線二</div>
+            <div class="route-photo-title">Tamsui Music Arts</div>
+            <div class="route-photo-title-zh">淡水老街 × 南北管藝陣文化</div>
+          </div>
+        </div>
+        <div class="route-body">
+          <div class="route-theme">Riverside Promenade & Temple Traditions</div>
+          <div class="route-theme-zh">淡水街區 × 南北管藝陣文化體驗</div>
+          <div class="route-info">
+            <div class="route-info-row">
+              <span class="ri-icon">📅</span>
+              <div><div class="ri-main">August 22 (Sat) · 10:00–12:00</div><span class="ri-sub">8月22日（六）上午10點至12點</span></div>
+            </div>
+            <div class="route-info-row">
+              <span class="ri-icon">🗺️</span>
+              <div>
+                <div class="ri-main">Walking Route</div>
+                <div style="font-size:13px;margin-top:4px;display:flex;flex-direction:column;gap:3px">
+                  <span>→ Golden Coast of Tamsui <span style="color:var(--muted);font-size:11px">金色水岸</span></span>
+                  <span>→ Hezhong Temple <span style="color:var(--muted);font-size:11px">和衷宮</span></span>
+                  <span>→ Shengjiang Temple <span style="color:var(--muted);font-size:11px">聖江廟</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="route-info-row">
+              <span class="ri-icon">🎵</span>
+              <div><div class="ri-main">Hands-On Experience</div><span class="ri-sub">台灣傳統樂器體驗 Traditional instrument try-out + 手作紀念品 handcraft souvenir</span></div>
+            </div>
+          </div>
+          <span class="route-quota-badge quota-tamsui">👥 25 Spots · 限額 25 人</span>
+          <a class="route-cta cta-tamsui" href="#register">Sign Up for This Route →</a>
+        </div>
+      </div>
+
+      <!-- BANQIAO -->
+      <div class="route-card">
+        <div class="route-photo">
+          <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/culture-mystery.jpg" alt="Banqiao Route">
+          <!-- To replace: change the src above to your Banqiao photo URL 板橋路線照片 -->
+          <div class="route-photo-overlay"></div>
+          <div class="route-photo-label">
+            <div class="route-num-badge">Route 3 · 路線三</div>
+            <div class="route-photo-title">Banqiao Heritage Walk</div>
+            <div class="route-photo-title-zh">板橋林家花園 × 古城建築文化</div>
+          </div>
+        </div>
+        <div class="route-body">
+          <div class="route-theme">Ancient Gardens & Classic Architecture</div>
+          <div class="route-theme-zh">林家花園 × 古城建築文化探索</div>
+          <div class="route-info">
+            <div class="route-info-row">
+              <span class="ri-icon">📅</span>
+              <div><div class="ri-main">August 22 (Sat) · 10:00–12:00</div><span class="ri-sub">8月22日（六）上午10點至12點</span></div>
+            </div>
+            <div class="route-info-row">
+              <span class="ri-icon">🗺️</span>
+              <div>
+                <div class="ri-main">Two Walking Routes 兩條路線</div>
+                <div style="font-size:12px;margin-top:6px;display:flex;flex-direction:column;gap:6px">
+                  <div style="background:#f5ede3;border-radius:8px;padding:8px 10px">
+                    <div style="font-weight:700;color:var(--banqiao);font-size:12px;margin-bottom:3px">Route A</div>
+                    <span>→ Jieyun Temple <span style="color:var(--muted)">接雲寺</span></span><br>
+                    <span>→ Cihui Temple <span style="color:var(--muted)">慈惠宮</span></span>
+                  </div>
+                  <div style="background:#f5ede3;border-radius:8px;padding:8px 10px">
+                    <div style="font-weight:700;color:var(--banqiao);font-size:12px;margin-bottom:3px">Route B</div>
+                    <span>→ Lin Family Mansion and Garden <span style="color:var(--muted)">林家花園</span></span><br>
+                    <span>→ Daguan Academy <span style="color:var(--muted)">大觀書社</span></span><br>
+                    <span>→ Cihui Temple <span style="color:var(--muted)">慈惠宮</span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="route-info-row">
+              <span class="ri-icon">🎨</span>
+              <div><div class="ri-main">Hands-On Experience</div><span class="ri-sub">手作紀念品 Handcraft souvenir making</span></div>
+            </div>
+          </div>
+          <span class="route-quota-badge quota-banqiao">👥 20 Spots · 限額 20 人</span>
+          <a class="route-cta cta-banqiao" href="#register">Sign Up for This Route →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- REGISTRATION -->
+<div class="section" id="register">
+  <div class="container">
+    <div class="section-overline">Registration <span class="section-overline-zh">活動報名</span></div>
+    <div class="section-title">Reserve Your Spot</div>
+    <div class="section-title-zh">立即報名，額滿為止</div>
+    <div class="gold-bar"></div>
+    <div class="form-outer">
+      <div class="form-card">
+        <div class="form-title">Fill in Your Details</div>
+        <div class="form-title-zh">填寫報名資料 · 所有欄位均為必填，確認信將寄至你填寫的 Email</div>
+        <div style="background:var(--tamsui-bg);border:1.5px solid rgba(26,90,138,.25);border-radius:12px;padding:14px 16px;margin-bottom:24px;font-size:13px;line-height:1.75">
+          <div style="font-weight:700;color:var(--tamsui);margin-bottom:4px">🛡️ Insurance Notice · 保險說明</div>
+          <div style="color:#1a4a6a">Please fill in your details individually. The information below will be used for personal accident insurance registration.</div>
+          <div style="color:var(--tamsui);font-family:'Noto Sans TC',sans-serif;font-size:12px;margin-top:5px">每人請分開填寫，以下資料將作為活動保險使用。</div>
+        </div>
+
+        <div style="background:#fff8ec;border:1.5px solid #f0d060;border-radius:12px;padding:14px 16px;margin-bottom:24px;font-size:13px;line-height:1.75">
+          <div style="font-weight:700;color:#8a6510;margin-bottom:4px">📌 Please Note</div>
+          <div style="color:#6b5010">Bilingual printed materials will be provided for all routes. However, please note that our guides may not be able to conduct a fully fluent English commentary. If you have concerns about language, we warmly welcome you to join with a Taiwanese friend!</div>
+          <div style="color:#8a6510;font-family:'Noto Sans TC',sans-serif;font-size:12px;margin-top:6px">活動將設計中英文並列文件，但解說人員無法使用流利英語介紹，如擔心語言問題，歡迎邀請台灣朋友共同參與。</div>
+        </div>
+
+        <div class="field" id="field-name">
+          <label>Full Name <span class="zh-hint">姓名</span><span class="req">*</span></label>
+          <input type="text" id="name" placeholder="Your full name · 請填寫真實姓名">
+          <div class="err-msg">Please enter your name · 請填寫姓名</div>
+        </div>
+
+        <div class="field" id="field-email">
+          <label>Email Address <span class="zh-hint">電子郵件</span><span class="req">*</span></label>
+          <input type="email" id="email" placeholder="example@email.com">
+          <div class="err-msg">Please enter a valid email · 請填寫有效的 Email</div>
+        </div>
+
+        <div class="field" id="field-phone">
+          <label>Phone Number <span class="zh-hint">手機 / 聯絡電話</span><span class="req">*</span></label>
+          <input type="tel" id="phone" placeholder="e.g. +886-912-345-678 or 09xxxxxxxx">
+          <div class="err-msg">Please enter your phone number · 請填寫聯絡電話</div>
+        </div>
+
+        <div class="field" id="field-nationality">
+          <label>Nationality <span class="zh-hint">國籍</span><span class="req">*</span></label>
+          <input type="text" id="nationality" placeholder="e.g. Japan / USA / Taiwan / 台灣 ...">
+          <div class="err-msg">Please enter your nationality · 請填寫國籍</div>
+        </div>
+
+        <div class="field" id="field-birthday">
+          <label>Date of Birth <span class="zh-hint">生日</span><span class="req">*</span></label>
+          <input type="text" id="birthday" placeholder="YYYY/MM/DD · 例：1998/06/15">
+          <div class="err-msg">Please enter your date of birth · 請填寫生日</div>
+        </div>
+
+        <div class="field" id="field-idnumber">
+          <label>Passport No. or ID No. <span class="zh-hint">護照號碼或身分證字號</span><span class="req">*</span></label>
+          <input type="text" id="idnumber" placeholder="Passport No. or Taiwan ID · 護照號碼或身分證字號">
+          <div class="err-msg">Please enter your passport or ID number · 請填寫護照號碼或身分證字號</div>
+        </div>
+
+        <div class="field" id="field-route">
+          <label>Choose Your Route <span class="zh-hint">選擇路線</span><span class="req">*</span></label>
+          <div class="route-radio-group">
+            <div class="route-radio" onclick="selectRoute(this,'Pinglin Route — Tea Heritage & Local Artisans (30 spots)','pinglin')">
+              <input type="radio" name="route">
+              <div class="radio-circle"><div class="radio-dot"></div></div>
+              <div>
+                <div class="rr-name">🌿 Pinglin Route — Tea Culture</div>
+                <div class="rr-name-zh">坪林路線 · 坪林老街 × 茶產業文化</div>
+                <div class="rr-quota rr-quota-default">👥 30 Spots Available · 限額 30 人</div>
+              </div>
+            </div>
+            <div class="route-radio" onclick="selectRoute(this,'Tamsui Route — Old Streets & Traditional Music Arts (25 spots)','tamsui')">
+              <input type="radio" name="route">
+              <div class="radio-circle"><div class="radio-dot"></div></div>
+              <div>
+                <div class="rr-name">🌊 Tamsui Route — Traditional Music Arts</div>
+                <div class="rr-name-zh">淡水路線 · 淡水老街 × 南北管藝陣文化</div>
+                <div class="rr-quota rr-quota-default">👥 25 Spots Available · 限額 25 人</div>
+              </div>
+            </div>
+            <div class="route-radio" onclick="selectRoute(this,'Banqiao Route — Historic Architecture & Gardens (20 spots)','banqiao')">
+              <input type="radio" name="route">
+              <div class="radio-circle"><div class="radio-dot"></div></div>
+              <div>
+                <div class="rr-name">🏯 Banqiao Route — Heritage Architecture</div>
+                <div class="rr-name-zh">板橋路線 · 林家花園 × 古城建築文化</div>
+                <div class="rr-quota rr-quota-default">👥 20 Spots Available · 限額 20 人</div>
+              </div>
+            </div>
+          </div>
+          <div class="err-msg" id="route-err">Please select a route · 請選擇路線</div>
+        </div>
+
+        <div class="field">
+          <label>Additional Notes <span class="zh-hint">備註（非必填 Optional）</span></label>
+          <textarea id="note" placeholder="Any special requirements or questions? · 如有特殊需求或問題，請在此說明。"></textarea>
+        </div>
+
+        <div class="field" id="field-consent1">
+          <div class="consent-item" id="consentBox1" onclick="toggleConsent(1)">
+            <div class="consent-radio" id="consentRadio1"><span class="consent-tick" id="consentTick1"></span></div>
+            <div class="consent-text">
+              <div class="consent-en">I agree to follow all activity rules and instructions from staff. I understand that if an accident occurs due to my failure to comply, I will bear full legal responsibility.</div>
+              <div class="consent-zh">本人為參加「新北市青年推廣文化計畫」，願恪遵活動相關規定及工作人員之指導；活動期間如因未遵守相關規定及工作人員之指導，致發生意外事故，使本身法益遭受損害，同意自行負擔一切法律責任。</div>
+            </div>
+          </div>
+          <div class="err-msg" id="consent1-err">Please agree to continue · 請勾選同意</div>
+        </div>
+
+        <div class="field" id="field-consent2">
+          <div class="consent-item" id="consentBox2" onclick="toggleConsent(2)">
+            <div class="consent-radio" id="consentRadio2"><span class="consent-tick" id="consentTick2"></span></div>
+            <div class="consent-text">
+              <div class="consent-en">I consent to the organizer collecting, processing, and using my personal data, image, and audiovisual materials for the purpose of this program, including marketing and promotion during and after the event.</div>
+              <div class="consent-zh">本人參加「新北市青年推廣文化計畫」，茲同意主辦單位因本計畫而蒐集、處理及運用本人提供之個人資料、肖像、影音、文件等資料，並同意承辦單位攝錄、重製、編輯、公開展示、公開演出、公開上映、公開播送、公開傳輸，以利本計畫各項活動之進行與活動期間及結束後之行銷宣傳。</div>
+            </div>
+          </div>
+          <div class="err-msg" id="consent2-err">Please agree to continue · 請勾選同意</div>
+        </div>
+
+        <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit Registration · 送出報名</button>
+        <p class="form-footnote">
+          A confirmation email will be sent after submission. Please also check your spam folder.
+          <span class="zh">送出後將寄送確認信，請留意收件匣（含垃圾信件）。如有疑問請聯絡 ntpcca@wceo.org</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div id="successScreen">
+  <div class="success-icon">🎉</div>
+  <div class="success-title">You're registered!</div>
+  <div class="success-title-zh">報名成功！確認信已寄至你的 Email。</div>
+  <p style="font-size:14px;color:var(--muted);margin-bottom:28px;line-height:1.7">A confirmation email has been sent to your inbox.<br>Please also check your spam folder. See you on August 22!</p>
+  <div class="success-card" id="successDetail"></div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div>New Taipei City Youth Cultural Outreach Program · <span class="zh">新北市青年推廣文化計畫</span></div>
+  <div><strong style="color:rgba(255,255,255,.6)">Organized by · 主辦</strong>　New Taipei City Cultural Affairs Bureau · 新北市政府文化局</div>
+  <div><strong style="color:rgba(255,255,255,.6)">Executed by · 執行</strong>　傳藝寰宇文教有限公司</div>
+  <div><a href="https://www.instagram.com/ntpcyouthculture" target="_blank">@ntpcyouthculture</a> · <a href="mailto:ntpcca@wceo.org">ntpcca@wceo.org</a></div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+emailjs.init('H-L0gj00x0VV5Cs50');
+const SERVICE_ID = 'service_gwjk4e9';
+const NOTIFY_TEMPLATE = 'template_2hbedks';
+const CONFIRM_TEMPLATE = 'template_0phk1no';
+
+let selectedRoute = '';
+let selectedCls = '';
+let consent1 = false;
+let consent2 = false;
+
+function toggleConsent(num) {
+  if (num === 1) {
+    consent1 = !consent1;
+    const box = document.getElementById('consentBox1');
+    const tick = document.getElementById('consentTick1');
+    box.classList.toggle('agreed', consent1);
+    tick.textContent = consent1 ? '✓' : '';
+    document.getElementById('field-consent1').classList.remove('error');
+    document.getElementById('consent1-err').style.display = 'none';
+  } else {
+    consent2 = !consent2;
+    const box = document.getElementById('consentBox2');
+    const tick = document.getElementById('consentTick2');
+    box.classList.toggle('agreed', consent2);
+    tick.textContent = consent2 ? '✓' : '';
+    document.getElementById('field-consent2').classList.remove('error');
+    document.getElementById('consent2-err').style.display = 'none';
+  }
+}
+
+function selectRoute(el, name, cls) {
+  document.querySelectorAll('.route-radio').forEach(r => {
+    r.className = 'route-radio';
+  });
+  el.classList.add('sel-' + cls);
+  selectedRoute = name;
+  selectedCls = cls;
+  document.getElementById('route-err').style.display = 'none';
+  document.getElementById('field-route').classList.remove('error');
+}
+
+function validateField(id, fn) {
+  const el = document.getElementById('field-' + id);
+  const val = document.getElementById(id).value.trim();
+  if (!fn(val)) { el.classList.add('error'); return false; }
+  el.classList.remove('error');
+  return true;
+}
+
+function submitForm() {
+  let ok = true;
+  ok = validateField('name', v => v.length > 0) && ok;
+  ok = validateField('email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) && ok;
+  ok = validateField('phone', v => v.length >= 8) && ok;
+  ok = validateField('nationality', v => v.length > 0) && ok;
+  ok = validateField('birthday', v => v.length > 0) && ok;
+  ok = validateField('idnumber', v => v.length > 0) && ok;
+  if (!selectedRoute) {
+    document.getElementById('route-err').style.display = 'block';
+    document.getElementById('field-route').classList.add('error');
+    ok = false;
+  }
+  if (!consent1) {
+    document.getElementById('field-consent1').classList.add('error');
+    document.getElementById('consent1-err').style.display = 'block';
+    ok = false;
+  }
+  if (!consent2) {
+    document.getElementById('field-consent2').classList.add('error');
+    document.getElementById('consent2-err').style.display = 'block';
+    ok = false;
+  }
+  if (!ok) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting… ⏳';
+
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const nationality = document.getElementById('nationality').value.trim();
+  const note = document.getElementById('note').value.trim();
+  const now = new Date().toLocaleString('en-US', { timeZone: 'Asia/Taipei', hour12: false });
+
+  const birthday = document.getElementById('birthday').value.trim();
+  const idnumber = document.getElementById('idnumber').value.trim();
+
+  const params = {
+    name, email, phone,
+    school: 'Nationality: ' + nationality + ' | Birthday: ' + birthday,
+    grade: 'ID/Passport: ' + idnumber,
+    courses: '[Cultural Tour] ' + selectedRoute,
+    time: now
+  };
+
+  Promise.all([
+    emailjs.send(SERVICE_ID, NOTIFY_TEMPLATE, params),
+    emailjs.send(SERVICE_ID, CONFIRM_TEMPLATE, params)
+  ]).then(() => {
+    document.getElementById('register').style.display = 'none';
+    document.getElementById('successScreen').style.display = 'block';
+    document.getElementById('successDetail').innerHTML = `
+      <div class="success-row"><span class="success-row-label">Name</span><span class="success-row-value">${name}</span></div>
+      <div class="success-row"><span class="success-row-label">Email</span><span class="success-row-value">${email}</span></div>
+      <div class="success-row"><span class="success-row-label">Phone</span><span class="success-row-value">${phone}</span></div>
+      <div class="success-row"><span class="success-row-label">Nationality</span><span class="success-row-value">${nationality}</span></div>
+      <div class="success-row"><span class="success-row-label">Date of Birth</span><span class="success-row-value">${birthday}</span></div>
+      <div class="success-row"><span class="success-row-label">Passport / ID</span><span class="success-row-value">${idnumber}</span></div>
+      <div class="success-row"><span class="success-row-label">Route</span><span class="success-row-value">${selectedRoute}</span></div>
+      ${note ? `<div class="success-row"><span class="success-row-label">Notes</span><span class="success-row-value">${note}</span></div>` : ''}`;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }).catch(err => {
+    btn.disabled = false;
+    btn.textContent = 'Submit Registration · 送出報名';
+    alert('Submission failed. Please try again or email ntpcca@wceo.org\n送出失敗，請再試一次。\n' + JSON.stringify(err));
+  });
+}
+</script>
+</body>
+</html>
