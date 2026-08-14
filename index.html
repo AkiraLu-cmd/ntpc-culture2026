@@ -23,7 +23,6 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Noto Sans TC',sans-serif;background:var(--offwhite);color:var(--text);overflow-x:hidden}
 
-/* NAV */
 .site-nav{background:var(--navy);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,0.06)}
 .nav-inner{max-width:1040px;margin:0 auto;padding:0 24px;display:flex;align-items:center}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:auto;padding:13px 0}
@@ -33,9 +32,8 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--offwhite);color:var(
 .nav-link{color:rgba(255,255,255,0.6);font-size:13px;font-weight:600;padding:13px 14px;text-decoration:none;border-bottom:2px solid transparent;transition:color .15s;white-space:nowrap}
 .nav-link:hover{color:#fff}
 .nav-link.active{color:#fff;border-bottom-color:var(--gold)}
-@media(max-width:500px){.nav-link{padding:13px 9px;font-size:12px}.nav-logo-sub{display:none}}
+@media(max-width:500px){.nav-link{padding:13px 7px;font-size:11px}.nav-logo-sub{display:none}}
 
-/* HERO */
 .hero{background:var(--navy);min-height:92vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:80px 0 60px}
 .hero-bg{position:absolute;inset:0;background:url('https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/activity-3.jpg') center/cover no-repeat;opacity:0.12}
 .hero-grad{position:absolute;inset:0;background:linear-gradient(135deg,var(--navy) 40%,rgba(15,35,71,0.7) 100%)}
@@ -61,21 +59,16 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--offwhite);color:var(
 .hero-stat small{display:block;font-size:11px;color:rgba(255,255,255,.45);letter-spacing:.5px}
 .hero-stat strong{display:block;font-size:22px;font-weight:900;color:#fff;line-height:1.1}
 
-/* SECTIONS */
 .section{padding:72px 0}
 .section-alt{background:var(--cream)}
-.section-dark{background:var(--navy);padding:72px 0}
 .container{max-width:1040px;margin:0 auto;padding:0 28px}
 .section-label{font-size:11px;font-weight:700;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
 .section-title{font-size:clamp(24px,4vw,36px);font-weight:900;color:var(--navy);line-height:1.15;margin-bottom:6px}
-.section-title-white{color:#fff}
 .section-sub{font-size:14px;color:var(--muted);margin-bottom:36px;line-height:1.7}
 .gold-bar{width:40px;height:4px;background:var(--gold);border-radius:2px;margin-bottom:28px}
 
-/* ANNOUNCE */
 .announce-strip{background:var(--gold);padding:10px 24px;text-align:center;font-size:14px;font-weight:700;color:var(--navy)}
 
-/* LATEST NEWS */
 .news-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .news-card{background:white;border-radius:16px;padding:22px;border:0.5px solid var(--border);display:flex;flex-direction:column;gap:10px;transition:transform .2s,box-shadow .2s}
 .news-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(15,35,71,.08)}
@@ -89,7 +82,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--offwhite);color:var(
 .news-link:hover{color:var(--gold)}
 .news-link::after{content:'→'}
 
-/* ABOUT */
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
 @media(max-width:680px){.about-grid{grid-template-columns:1fr}}
 .about-photo{border-radius:24px;overflow:hidden;aspect-ratio:4/3;position:relative;transform:rotate(-1deg);box-shadow:0 16px 40px rgba(15,35,71,.12)}
@@ -102,34 +94,12 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--offwhite);color:var(
 .about-card h3{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:3px}
 .about-card p{font-size:12px;color:var(--muted);line-height:1.5}
 
-/* ACTIVITIES */
-.act-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-@media(max-width:600px){.act-grid{grid-template-columns:1fr 1fr}}
-.act-card{border-radius:16px;overflow:hidden;position:relative;aspect-ratio:3/4;cursor:default}
-.act-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
-.act-card:hover img{transform:scale(1.04)}
-.act-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(15,35,71,.85) 0%,transparent 50%);display:flex;flex-direction:column;justify-content:flex-end;padding:16px}
-.act-card-tag{background:var(--gold);color:var(--navy);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:6px;width:fit-content}
-.act-card-title{font-size:13px;font-weight:700;color:#fff;line-height:1.4}
-.act-card-main{grid-column:span 1;grid-row:span 2;aspect-ratio:auto}
-@media(max-width:600px){.act-card-main{grid-column:span 2}}
-
-/* SOCIAL */
 .social-wrap{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:28px}
 .social-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border-radius:50px;font-weight:700;font-size:15px;text-decoration:none;transition:transform .2s,box-shadow .2s}
 .social-btn:hover{transform:translateY(-2px)}
 .social-ig{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;box-shadow:0 4px 16px rgba(220,39,67,.25)}
 .social-ig:hover{box-shadow:0 8px 24px rgba(220,39,67,.35)}
 
-/* PROGRAM */
-.program-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.program-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:20px;transition:background .2s,transform .2s}
-.program-card:hover{background:rgba(255,255,255,.1);transform:translateY(-3px)}
-.program-em{font-size:26px;margin-bottom:10px;display:block}
-.program-card h3{font-size:13px;font-weight:700;color:#fff;margin-bottom:5px}
-.program-card p{font-size:12px;color:rgba(255,255,255,.55);line-height:1.5}
-
-/* CONTACT */
 .contact-strip{background:white;border-radius:20px;border:1.5px solid var(--border);padding:28px 32px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between;margin-top:48px}
 .contact-info{display:flex;flex-wrap:wrap;gap:20px}
 .contact-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
@@ -137,14 +107,12 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--offwhite);color:var(
 .contact-item a{color:var(--navy2);font-weight:600;text-decoration:none}
 .contact-item a:hover{color:var(--gold)}
 
-/* FOOTER */
 .footer{background:var(--navy);padding:28px 24px;text-align:center;font-size:12px;color:rgba(255,255,255,.35);line-height:1.8}
 .footer a{color:rgba(255,255,255,.5);text-decoration:none}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav class="site-nav">
   <div class="nav-inner">
     <a class="nav-logo" href="/">
@@ -154,19 +122,18 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--offwhite);color:var(
       </div>
     </a>
     <div class="nav-links">
-      <a class="nav-link active" href="/">首頁</a>
-      <a class="nav-link" href="/registration.html">課程報名</a>
-      <a class="nav-link" href="/sound-shizhuang/" target="_blank">新莊遊戲</a>
+      <a class="nav-link active" href="/">首頁 Home</a>
+      <a class="nav-link" href="/registration.html">課程報名 Register</a>
+      <a class="nav-link" href="/cultural-tour.html">文化小旅行 Cultural Tour</a>
+      <a class="nav-link" href="/sound-shizhuang/" target="_blank">新莊遊戲 Sound Game</a>
     </div>
   </div>
 </nav>
 
-<!-- ANNOUNCE -->
 <div class="announce-strip">
   🎉 社造小旅行開放民眾報名！8/14 淡水北管體驗 & 8/21 坪林茶體驗&nbsp;<a href="/registration.html" style="color:var(--navy);text-decoration:underline;font-weight:900">立即報名 →</a>
 </div>
 
-<!-- HERO -->
 <div class="hero">
   <div class="hero-bg"></div>
   <div class="hero-grad"></div>
@@ -197,7 +164,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--offwhite);color:var(
   </div>
 </div>
 
-<!-- LATEST NEWS -->
 <div class="section">
   <div class="container">
     <div class="section-label">最新消息</div>
@@ -225,6 +191,16 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--offwhite);color:var(
         <a class="news-link" href="/registration.html">立即報名</a>
       </div>
       <div class="news-card">
+        <span class="news-badge open dot">報名開放中</span>
+        <div class="news-title">🗺️ 新北文化社造小旅行</div>
+        <div class="news-meta">
+          📅 8月22日（六）10:00–12:00<br>
+          📍 坪林、淡水、板橋（三條路線）<br>
+          👥 免費，雙語導覽
+        </div>
+        <a class="news-link" href="/cultural-tour.html">了解更多</a>
+      </div>
+      <div class="news-card">
         <span class="news-badge announce dot">計畫公告</span>
         <div class="news-title">115年第二階段報名已截止</div>
         <div class="news-meta">
@@ -246,7 +222,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--offwhite);color:var(
   </div>
 </div>
 
-<!-- ABOUT -->
 <div class="section section-alt">
   <div class="container">
     <div class="about-grid">
@@ -268,7 +243,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--offwhite);color:var(
   </div>
 </div>
 
-<!-- SOCIAL -->
 <div class="section section-alt">
   <div class="container" style="text-align:center">
     <div class="section-label">社群媒體</div>
@@ -284,7 +258,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--offwhite);color:var(
   </div>
 </div>
 
-<!-- CONTACT -->
 <div class="section" style="padding-bottom:48px">
   <div class="container">
     <div class="section-label">聯絡我們</div>
@@ -302,7 +275,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--offwhite);color:var(
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer class="footer">
   <div>新北市青年推廣文化計畫 · New Taipei City Youth Cultural Outreach Program</div>
   <div>主辦：新北市政府文化局 · 執行：傳藝寰宇文教有限公司</div>
