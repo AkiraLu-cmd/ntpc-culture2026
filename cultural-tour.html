@@ -736,12 +736,17 @@ function submitForm() {
     name,
     email,
     phone,
+    // 新版欄位，給「文化小旅行確認信」樣板 (CONFIRM_TEMPLATE) 使用
     nationality,
     birthday,
     idnumber,
     route: selectedRoute,
     note: note || '（無 / None）',
-    time: now
+    time: now,
+    // 舊版欄位，給共用的「通知信」樣板 (NOTIFY_TEMPLATE) 使用，維持原本顯示格式
+    school: 'Nationality: ' + nationality + ' | Birthday: ' + birthday,
+    grade: 'ID/Passport: ' + idnumber,
+    courses: '[Cultural Tour] ' + selectedRoute
   };
 
   Promise.all([
