@@ -630,8 +630,16 @@ textarea{resize:vertical;min-height:80px}
 <script>
 emailjs.init('H-L0gj00x0VV5Cs50');
 const SERVICE_ID = 'service_gwjk4e9';
-const NOTIFY_TEMPLATE = 'template_2hbedks';
-const CONFIRM_TEMPLATE = 'template_0phk1no';
+
+/* ============================================================
+   ⚠️ 請先到 EmailJS 後台建立「文化小旅行」專屬樣板（通知信 + 確認信），
+   避免直接改到課程報名共用的 template_2hbedks / template_0phk1no。
+   建立好之後，把下面兩個 ID 換成你新樣板的 Template ID 即可。
+   （如果暫時還沒建好新樣板，先維持舊 ID 也能正常寄信，
+     只是信件內容欄位標籤可能還是舊的文字，需要手動在 EmailJS 後台調整樣板內容）
+   ============================================================ */
+const NOTIFY_TEMPLATE = 'template_2hbedks';   // 通知信給 ntpcca，維持原樣不變
+const CONFIRM_TEMPLATE = 'template_cyk1rwf';  // 文化小旅行專屬確認信（寄給報名者本人）
 
 let selectedRoute = '';
 let selectedCls = '';
@@ -716,11 +724,23 @@ function submitForm() {
   const birthday = document.getElementById('birthday').value.trim();
   const idnumber = document.getElementById('idnumber').value.trim();
 
+  /* ------------------------------------------------------------
+     修正重點：不再把國籍/生日/證號/路線硬塞進 school / grade / courses
+     欄位（那是課程報名表單專用的欄位名稱）。
+     改成直接對應「文化小旅行」實際收集的欄位，
+     記得在 EmailJS 樣板裡使用一樣的 {{變數名稱}}：
+     {{name}} {{email}} {{phone}} {{nationality}} {{birthday}}
+     {{idnumber}} {{route}} {{note}} {{time}}
+     ------------------------------------------------------------ */
   const params = {
-    name, email, phone,
-    school: 'Nationality: ' + nationality + ' | Birthday: ' + birthday,
-    grade: 'ID/Passport: ' + idnumber,
-    courses: '[Cultural Tour] ' + selectedRoute,
+    name,
+    email,
+    phone,
+    nationality,
+    birthday,
+    idnumber,
+    route: selectedRoute,
+    note: note || '（無 / None）',
     time: now
   };
 
