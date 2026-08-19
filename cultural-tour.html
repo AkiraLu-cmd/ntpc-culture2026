@@ -381,6 +381,7 @@ textarea{resize:vertical;min-height:80px}
             </div>
           </div>
           <span class="route-quota-badge quota-pinglin">👥 30 Spots · 限額 30 人</span>
+          <span class="route-quota-badge" style="background:#fdeaea;color:#c0392b;margin-left:6px">⚠️ Almost Full · 即將額滿</span>
           <a class="route-cta cta-pinglin" href="#register">Sign Up for This Route →</a>
         </div>
       </div>
@@ -471,6 +472,7 @@ textarea{resize:vertical;min-height:80px}
             </div>
           </div>
           <span class="route-quota-badge quota-banqiao">👥 20 Spots · 限額 20 人</span>
+          <span class="route-quota-badge" style="background:#fdeaea;color:#c0392b;margin-left:6px">⚠️ Almost Full · 即將額滿</span>
           <a class="route-cta cta-banqiao" href="#register">Sign Up for This Route →</a>
         </div>
       </div>
@@ -547,7 +549,7 @@ textarea{resize:vertical;min-height:80px}
               <div>
                 <div class="rr-name">🌿 Pinglin Route — Tea Culture</div>
                 <div class="rr-name-zh">坪林路線 · 坪林老街 × 茶產業文化</div>
-                <div class="rr-quota rr-quota-default">👥 30 Spots Available · 限額 30 人</div>
+                <div class="rr-quota-default" style="color:#c0392b;font-weight:700">⚠️ Almost Full · 即將額滿</div>
               </div>
             </div>
             <div class="route-radio" onclick="selectRoute(this,'Tamsui Route — Old Streets & Traditional Music Arts (25 spots)','tamsui')">
@@ -565,11 +567,15 @@ textarea{resize:vertical;min-height:80px}
               <div>
                 <div class="rr-name">🏯 Banqiao Route — Heritage Architecture</div>
                 <div class="rr-name-zh">板橋路線 · 林家花園 × 古城建築文化</div>
-                <div class="rr-quota rr-quota-default">👥 20 Spots Available · 限額 20 人</div>
+                <div class="rr-quota-default" style="color:#c0392b;font-weight:700">⚠️ Almost Full · 即將額滿</div>
               </div>
             </div>
           </div>
           <div class="err-msg" id="route-err">Please select a route · 請選擇路線</div>
+          <div id="limited-notice" style="display:none;margin-top:10px;background:#fdeaea;border:1.5px solid rgba(192,57,43,.3);border-radius:10px;padding:12px 14px;font-size:12.5px;line-height:1.7">
+            <div style="color:#c0392b">Due to limited spots for this route, applicants will be admitted in order of registration time. We will email you as soon as possible to confirm whether you've been admitted.</div>
+            <div style="color:#c0392b;font-family:'Noto Sans TC',sans-serif;margin-top:4px">由於此路線名額有限，主辦單位將依報名時間先後錄取，並盡快寄信告知您是否錄取。</div>
+          </div>
         </div>
 
         <div class="field">
@@ -677,6 +683,8 @@ function selectRoute(el, name, cls) {
   selectedCls = cls;
   document.getElementById('route-err').style.display = 'none';
   document.getElementById('field-route').classList.remove('error');
+  const notice = document.getElementById('limited-notice');
+  notice.style.display = (cls === 'pinglin' || cls === 'banqiao') ? 'block' : 'none';
 }
 
 function validateField(id, fn) {
