@@ -380,9 +380,8 @@ textarea{resize:vertical;min-height:80px}
               <div><div class="ri-main">Hands-On Experience</div><span class="ri-sub">茶香Bingo Tea Bingo game + 手作紀念品 handcraft souvenir</span></div>
             </div>
           </div>
-          <span class="route-quota-badge quota-pinglin">👥 30 Spots · 限額 30 人</span>
-          <span class="route-quota-badge" style="background:#fdeaea;color:#c0392b;margin-left:6px">⚠️ Almost Full · 即將額滿</span>
-          <a class="route-cta cta-pinglin" href="#register">Sign Up for This Route →</a>
+          <span class="route-quota-badge" style="background:#f0f0f0;color:#888">❌ Full · 已額滿</span>
+          <a class="route-cta" style="background:#f0f0f0;color:#999;cursor:not-allowed;pointer-events:none" href="javascript:void(0)">Registration Closed · 已額滿停止報名</a>
         </div>
       </div>
 
@@ -543,13 +542,13 @@ textarea{resize:vertical;min-height:80px}
         <div class="field" id="field-route">
           <label>Choose Your Route <span class="zh-hint">選擇路線</span><span class="req">*</span></label>
           <div class="route-radio-group">
-            <div class="route-radio" onclick="selectRoute(this,'Pinglin Route — Tea Heritage & Local Artisans (30 spots)','pinglin')">
-              <input type="radio" name="route">
-              <div class="radio-circle"><div class="radio-dot"></div></div>
+            <div class="route-radio" style="opacity:.55;cursor:not-allowed;pointer-events:none;background:#f5f5f5">
+              <input type="radio" name="route" disabled>
+              <div class="radio-circle"></div>
               <div>
                 <div class="rr-name">🌿 Pinglin Route — Tea Culture</div>
                 <div class="rr-name-zh">坪林路線 · 坪林老街 × 茶產業文化</div>
-                <div class="rr-quota-default" style="color:#c0392b;font-weight:700">⚠️ Almost Full · 即將額滿</div>
+                <div class="rr-quota-default" style="color:#888;font-weight:700">❌ Full · 已額滿，暫停報名</div>
               </div>
             </div>
             <div class="route-radio" onclick="selectRoute(this,'Tamsui Route — Old Streets & Traditional Music Arts (25 spots)','tamsui')">
@@ -684,7 +683,7 @@ function selectRoute(el, name, cls) {
   document.getElementById('route-err').style.display = 'none';
   document.getElementById('field-route').classList.remove('error');
   const notice = document.getElementById('limited-notice');
-  notice.style.display = (cls === 'pinglin' || cls === 'banqiao') ? 'block' : 'none';
+  notice.style.display = (cls === 'banqiao') ? 'block' : 'none';
 }
 
 function validateField(id, fn) {
