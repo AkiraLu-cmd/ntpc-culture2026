@@ -421,8 +421,8 @@ textarea{resize:vertical;min-height:80px}
               <div><div class="ri-main">Hands-On Experience</div><span class="ri-sub">台灣傳統樂器體驗 Traditional instrument try-out + 手作紀念品 handcraft souvenir</span></div>
             </div>
           </div>
-          <span class="route-quota-badge quota-tamsui">👥 25 Spots · 限額 25 人</span>
-          <a class="route-cta cta-tamsui" href="#register">Sign Up for This Route →</a>
+          <span class="route-quota-badge" style="background:#f0f0f0;color:#888">❌ Full · 已額滿</span>
+          <a class="route-cta" style="background:#f0f0f0;color:#999;cursor:not-allowed;pointer-events:none" href="javascript:void(0)">Registration Closed · 已額滿停止報名</a>
         </div>
       </div>
 
@@ -470,9 +470,8 @@ textarea{resize:vertical;min-height:80px}
               <div><div class="ri-main">Hands-On Experience</div><span class="ri-sub">手作紀念品 Handcraft souvenir making</span></div>
             </div>
           </div>
-          <span class="route-quota-badge quota-banqiao">👥 20 Spots · 限額 20 人</span>
-          <span class="route-quota-badge" style="background:#fdeaea;color:#c0392b;margin-left:6px">⚠️ Almost Full · 即將額滿</span>
-          <a class="route-cta cta-banqiao" href="#register">Sign Up for This Route →</a>
+          <span class="route-quota-badge" style="background:#f0f0f0;color:#888">❌ Full · 已額滿</span>
+          <a class="route-cta" style="background:#f0f0f0;color:#999;cursor:not-allowed;pointer-events:none" href="javascript:void(0)">Registration Closed · 已額滿停止報名</a>
         </div>
       </div>
 
@@ -491,6 +490,11 @@ textarea{resize:vertical;min-height:80px}
       <div class="form-card">
         <div class="form-title">Fill in Your Details</div>
         <div class="form-title-zh">填寫報名資料 · 所有欄位均為必填，確認信將寄至你填寫的 Email</div>
+
+        <div style="background:#f0f0f0;border:1.5px solid #ccc;border-radius:12px;padding:16px;margin-bottom:24px;text-align:center">
+          <div style="font-weight:800;color:#555;font-size:15px;margin-bottom:3px">❌ Registration Closed for All Routes</div>
+          <div style="color:#777;font-family:'Noto Sans TC',sans-serif;font-size:13px">三條路線皆已額滿，目前暫停報名</div>
+        </div>
         <div style="background:var(--tamsui-bg);border:1.5px solid rgba(26,90,138,.25);border-radius:12px;padding:14px 16px;margin-bottom:24px;font-size:13px;line-height:1.75">
           <div style="font-weight:700;color:var(--tamsui);margin-bottom:4px">🛡️ Insurance Notice · 保險說明</div>
           <div style="color:#1a4a6a">Please fill in your details individually. The information below will be used for personal accident insurance registration.</div>
@@ -551,22 +555,22 @@ textarea{resize:vertical;min-height:80px}
                 <div class="rr-quota-default" style="color:#888;font-weight:700">❌ Full · 已額滿，暫停報名</div>
               </div>
             </div>
-            <div class="route-radio" onclick="selectRoute(this,'Tamsui Route — Old Streets & Traditional Music Arts (25 spots)','tamsui')">
-              <input type="radio" name="route">
-              <div class="radio-circle"><div class="radio-dot"></div></div>
+            <div class="route-radio" style="opacity:.55;cursor:not-allowed;pointer-events:none;background:#f5f5f5">
+              <input type="radio" name="route" disabled>
+              <div class="radio-circle"></div>
               <div>
                 <div class="rr-name">🌊 Tamsui Route — Traditional Music Arts</div>
                 <div class="rr-name-zh">淡水路線 · 淡水老街 × 南北管藝陣文化</div>
-                <div class="rr-quota rr-quota-default">👥 25 Spots Available · 限額 25 人</div>
+                <div class="rr-quota-default" style="color:#888;font-weight:700">❌ Full · 已額滿，暫停報名</div>
               </div>
             </div>
-            <div class="route-radio" onclick="selectRoute(this,'Banqiao Route — Historic Architecture & Gardens (20 spots)','banqiao')">
-              <input type="radio" name="route">
-              <div class="radio-circle"><div class="radio-dot"></div></div>
+            <div class="route-radio" style="opacity:.55;cursor:not-allowed;pointer-events:none;background:#f5f5f5">
+              <input type="radio" name="route" disabled>
+              <div class="radio-circle"></div>
               <div>
                 <div class="rr-name">🏯 Banqiao Route — Heritage Architecture</div>
                 <div class="rr-name-zh">板橋路線 · 林家花園 × 古城建築文化</div>
-                <div class="rr-quota-default" style="color:#c0392b;font-weight:700">⚠️ Almost Full · 即將額滿</div>
+                <div class="rr-quota-default" style="color:#888;font-weight:700">❌ Full · 已額滿，暫停報名</div>
               </div>
             </div>
           </div>
@@ -606,7 +610,7 @@ textarea{resize:vertical;min-height:80px}
           <div class="err-msg" id="consent2-err">Please agree to continue · 請勾選同意</div>
         </div>
 
-        <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit Registration · 送出報名</button>
+        <button class="submit-btn" id="submitBtn" disabled style="background:#ccc;cursor:not-allowed">Registration Closed · 已停止報名</button>
         <p class="form-footnote">
           A confirmation email will be sent after submission. Please also check your spam folder.
           <span class="zh">送出後將寄送確認信，請留意收件匣（含垃圾信件）。如有疑問請聯絡 ntpcca@wceo.org</span>
