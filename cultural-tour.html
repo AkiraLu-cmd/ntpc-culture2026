@@ -19,6 +19,7 @@
   --pinglin:#2d6e4e;--pinglin-bg:#edf7f2;
   --tamsui:#1a5a8a;--tamsui-bg:#e3f0f8;
   --banqiao:#7a3d1a;--banqiao-bg:#f5ede3;
+  --linkou:#6b4c9e;--linkou-bg:#f0ebf7;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:var(--offwhite);color:var(--text);overflow-x:hidden;line-height:1.6}
@@ -104,7 +105,7 @@ body{font-family:'Inter',sans-serif;background:var(--offwhite);color:var(--text)
 .why-desc-zh{font-size:12px;color:rgba(107,122,153,.7);line-height:1.6;font-family:'Noto Sans TC',sans-serif;margin-top:6px;border-top:1px solid var(--border);padding-top:8px}
 
 /* ROUTES */
-.routes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.routes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
 @media(max-width:760px){.routes-grid{grid-template-columns:1fr}}
 
 .route-card{border-radius:20px;overflow:hidden;border:1.5px solid var(--border);background:white;transition:transform .2s,box-shadow .2s}
@@ -138,11 +139,13 @@ body{font-family:'Inter',sans-serif;background:var(--offwhite);color:var(--text)
 .quota-pinglin{background:var(--pinglin-bg);color:var(--pinglin)}
 .quota-tamsui{background:var(--tamsui-bg);color:var(--tamsui)}
 .quota-banqiao{background:var(--banqiao-bg);color:var(--banqiao)}
+.quota-linkou{background:var(--linkou-bg);color:var(--linkou)}
 
 .route-cta{display:block;text-align:center;padding:11px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;margin-top:14px;transition:opacity .2s;font-family:'Inter',sans-serif}
 .cta-pinglin{background:var(--pinglin-bg);color:var(--pinglin)}
 .cta-tamsui{background:var(--tamsui-bg);color:var(--tamsui)}
 .cta-banqiao{background:var(--banqiao-bg);color:var(--banqiao)}
+.cta-linkou{background:var(--linkou-bg);color:var(--linkou)}
 .route-cta:hover{opacity:.75}
 
 /* FORM */
@@ -175,19 +178,22 @@ textarea{resize:vertical;min-height:80px}
 .route-radio.sel-pinglin{border-color:var(--pinglin);background:var(--pinglin-bg)}
 .route-radio.sel-tamsui{border-color:var(--tamsui);background:var(--tamsui-bg)}
 .route-radio.sel-banqiao{border-color:var(--banqiao);background:var(--banqiao-bg)}
+.route-radio.sel-linkou{border-color:var(--linkou);background:var(--linkou-bg)}
 .route-radio input{display:none}
 .radio-circle{width:20px;height:20px;border:2px solid #ccc;border-radius:50%;flex-shrink:0;margin-top:3px;display:flex;align-items:center;justify-content:center;background:white;transition:all .18s}
 .route-radio.sel-pinglin .radio-circle{border-color:var(--pinglin);background:var(--pinglin)}
 .route-radio.sel-tamsui .radio-circle{border-color:var(--tamsui);background:var(--tamsui)}
 .route-radio.sel-banqiao .radio-circle{border-color:var(--banqiao);background:var(--banqiao)}
+.route-radio.sel-linkou .radio-circle{border-color:var(--linkou);background:var(--linkou)}
 .radio-dot{width:8px;height:8px;border-radius:50%;background:white;display:none}
-.route-radio.sel-pinglin .radio-dot,.route-radio.sel-tamsui .radio-dot,.route-radio.sel-banqiao .radio-dot{display:block}
+.route-radio.sel-pinglin .radio-dot,.route-radio.sel-tamsui .radio-dot,.route-radio.sel-banqiao .radio-dot,.route-radio.sel-linkou .radio-dot{display:block}
 .rr-name{font-size:14px;font-weight:700;color:var(--navy);letter-spacing:-.2px}
 .rr-name-zh{font-size:12px;color:var(--muted);font-family:'Noto Sans TC',sans-serif;margin-top:1px}
 .rr-quota{font-size:11px;font-weight:700;margin-top:4px}
 .route-radio.sel-pinglin .rr-quota{color:var(--pinglin)}
 .route-radio.sel-tamsui .rr-quota{color:var(--tamsui)}
 .route-radio.sel-banqiao .rr-quota{color:var(--banqiao)}
+.route-radio.sel-linkou .rr-quota{color:var(--linkou)}
 .rr-quota-default{color:var(--muted)}
 
 .submit-btn{width:100%;background:var(--navy);color:white;border:none;border-radius:12px;padding:16px;font-family:'Inter',sans-serif;font-size:16px;font-weight:800;cursor:pointer;transition:background .18s;letter-spacing:-.3px;margin-top:22px;-webkit-tap-highlight-color:transparent}
@@ -271,7 +277,7 @@ textarea{resize:vertical;min-height:80px}
         </div>
         <div class="hero-pill">
           <small>Routes 路線</small>
-          <strong>Pinglin · Tamsui · Banqiao</strong>
+          <strong>Pinglin · Tamsui · Banqiao · Linkou</strong>
         </div>
         <div class="hero-pill">
           <small>Fee 費用</small>
@@ -288,7 +294,7 @@ textarea{resize:vertical;min-height:80px}
         <img src="https://raw.githubusercontent.com/AkiraLu-cmd/ntpc-culture2026/main/cultural-tour-hero.jpg" alt="New Taipei Cultural Journey">
       </div>
       <div class="hero-badge">
-        <div class="hero-badge-num">3</div>
+        <div class="hero-badge-num">4</div>
         <div class="hero-badge-label">Routes<br>路線</div>
       </div>
     </div>
@@ -340,10 +346,54 @@ textarea{resize:vertical;min-height:80px}
 <div class="section-cream" id="routes">
   <div class="container">
     <div class="section-overline">Choose Your Route <span class="section-overline-zh">三條路線</span></div>
-    <div class="section-title">Three Routes, One Amazing Day</div>
+    <div class="section-title">Four Routes, One Amazing Day</div>
     <div class="section-title-zh">選一條，出發！</div>
     <div class="gold-bar"></div>
     <div class="routes-grid">
+
+      <!-- LINKOU -->
+      <div class="route-card">
+        <div class="route-photo">
+          <div class="route-photo-placeholder">
+            <div class="route-photo-placeholder-icon">🏛️</div>
+            <div class="route-photo-placeholder-text">Photo coming soon<br>照片製作中</div>
+          </div>
+          <div class="route-photo-overlay"></div>
+          <div class="route-photo-label">
+            <div class="route-num-badge">Route 1 · 路線一</div>
+            <div class="route-photo-title">Linkou Old Street</div>
+            <div class="route-photo-title-zh">林口舊街 × 產業文化體驗</div>
+          </div>
+        </div>
+        <div class="route-body">
+          <div class="route-theme">Old Linkou Street & Industrial Heritage</div>
+          <div class="route-theme-zh">林口舊街文化探索</div>
+          <div class="route-info">
+            <div class="route-info-row">
+              <span class="ri-icon">📅</span>
+              <div><div class="ri-main">August 22 (Sat) · 10:00–12:00</div><span class="ri-sub">8月22日（六）上午10點至12點</span></div>
+            </div>
+            <div class="route-info-row">
+              <span class="ri-icon">🗺️</span>
+              <div>
+                <div class="ri-main">Walking Route</div>
+                <div style="font-size:13px;margin-top:4px;display:flex;flex-direction:column;gap:3px">
+                  <span>→ Linkou Public Market <span style="color:var(--muted);font-size:11px">林口公有市場</span></span>
+                  <span>→ Xifu Temple <span style="color:var(--muted);font-size:11px">西福宮</span></span>
+                  <span>→ Linkou Brick Kiln Heritage Site <span style="color:var(--muted);font-size:11px">林口磚窯產業遺址</span></span>
+                  <span>→ Zhulinshan Guanyin Temple <span style="color:var(--muted);font-size:11px">竹林山觀音寺</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="route-info-row">
+              <span class="ri-icon">🔖</span>
+              <div><div class="ri-main">Hands-On Experience</div><span class="ri-sub">手作紀念書籤 Handcraft bookmark souvenir</span></div>
+            </div>
+          </div>
+          <span class="route-quota-badge quota-linkou">👥 20 Spots · 限額 20 人</span>
+          <a class="route-cta cta-linkou" href="#register">Sign Up for This Route →</a>
+        </div>
+      </div>
 
       <!-- PINGLIN -->
       <div class="route-card">
@@ -352,7 +402,7 @@ textarea{resize:vertical;min-height:80px}
           <!-- To replace: change the src above to your Pinglin photo URL 坪林路線照片 -->
           <div class="route-photo-overlay"></div>
           <div class="route-photo-label">
-            <div class="route-num-badge">Route 1 · 路線一</div>
+            <div class="route-num-badge">Route 2 · 路線二</div>
             <div class="route-photo-title">Pinglin Tea Culture</div>
             <div class="route-photo-title-zh">坪林老街 × 茶產業文化</div>
           </div>
@@ -392,7 +442,7 @@ textarea{resize:vertical;min-height:80px}
           <!-- To replace: change the src above to your Tamsui photo URL 淡水路線照片 -->
           <div class="route-photo-overlay"></div>
           <div class="route-photo-label">
-            <div class="route-num-badge">Route 2 · 路線二</div>
+            <div class="route-num-badge">Route 3 · 路線三</div>
             <div class="route-photo-title">Tamsui Music Arts</div>
             <div class="route-photo-title-zh">淡水老街 × 南北管藝陣文化</div>
           </div>
@@ -433,7 +483,7 @@ textarea{resize:vertical;min-height:80px}
           <!-- To replace: change the src above to your Banqiao photo URL 板橋路線照片 -->
           <div class="route-photo-overlay"></div>
           <div class="route-photo-label">
-            <div class="route-num-badge">Route 3 · 路線三</div>
+            <div class="route-num-badge">Route 4 · 路線四</div>
             <div class="route-photo-title">Banqiao Heritage Walk</div>
             <div class="route-photo-title-zh">板橋林家花園 × 古城建築文化</div>
           </div>
@@ -475,6 +525,8 @@ textarea{resize:vertical;min-height:80px}
         </div>
       </div>
 
+      
+
     </div>
   </div>
 </div>
@@ -490,11 +542,6 @@ textarea{resize:vertical;min-height:80px}
       <div class="form-card">
         <div class="form-title">Fill in Your Details</div>
         <div class="form-title-zh">填寫報名資料 · 所有欄位均為必填，確認信將寄至你填寫的 Email</div>
-
-        <div style="background:#f0f0f0;border:1.5px solid #ccc;border-radius:12px;padding:16px;margin-bottom:24px;text-align:center">
-          <div style="font-weight:800;color:#555;font-size:15px;margin-bottom:3px">❌ Registration Closed for All Routes</div>
-          <div style="color:#777;font-family:'Noto Sans TC',sans-serif;font-size:13px">三條路線皆已額滿，目前暫停報名</div>
-        </div>
         <div style="background:var(--tamsui-bg);border:1.5px solid rgba(26,90,138,.25);border-radius:12px;padding:14px 16px;margin-bottom:24px;font-size:13px;line-height:1.75">
           <div style="font-weight:700;color:var(--tamsui);margin-bottom:4px">🛡️ Insurance Notice · 保險說明</div>
           <div style="color:#1a4a6a">Please fill in your details individually. The information below will be used for personal accident insurance registration.</div>
@@ -546,6 +593,15 @@ textarea{resize:vertical;min-height:80px}
         <div class="field" id="field-route">
           <label>Choose Your Route <span class="zh-hint">選擇路線</span><span class="req">*</span></label>
           <div class="route-radio-group">
+            <div class="route-radio" onclick="selectRoute(this,'Linkou Route — Old Street & Industrial Heritage (20 spots)','linkou')">
+              <input type="radio" name="route">
+              <div class="radio-circle"><div class="radio-dot"></div></div>
+              <div>
+                <div class="rr-name">🏛️ Linkou Route — Old Street Heritage</div>
+                <div class="rr-name-zh">林口路線 · 林口舊街 × 產業文化體驗</div>
+                <div class="rr-quota rr-quota-default">👥 20 Spots Available · 限額 20 人</div>
+              </div>
+            </div>
             <div class="route-radio" style="opacity:.55;cursor:not-allowed;pointer-events:none;background:#f5f5f5">
               <input type="radio" name="route" disabled>
               <div class="radio-circle"></div>
@@ -610,7 +666,7 @@ textarea{resize:vertical;min-height:80px}
           <div class="err-msg" id="consent2-err">Please agree to continue · 請勾選同意</div>
         </div>
 
-        <button class="submit-btn" id="submitBtn" disabled style="background:#ccc;cursor:not-allowed">Registration Closed · 已停止報名</button>
+        <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit Registration · 送出報名</button>
         <p class="form-footnote">
           A confirmation email will be sent after submission. Please also check your spam folder.
           <span class="zh">送出後將寄送確認信，請留意收件匣（含垃圾信件）。如有疑問請聯絡 ntpcca@wceo.org</span>
