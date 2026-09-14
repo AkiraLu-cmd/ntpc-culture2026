@@ -6,73 +6,68 @@
   <title>課程簽到退 — 新北文化大使</title>
   <style>
     :root {
-      --primary: #0f2347;
-      --gold:    #c9a84c;
-      --bg:      #f8f6f1;
-      --card:    #ffffff;
-      --success: #2E7D32;
-      --danger:  #C62828;
-      --checkout:#5B4A8A;
+      --primary:#0f2347; --gold:#c9a84c; --bg:#f8f6f1; --card:#ffffff;
+      --success:#2E7D32; --danger:#C62828; --checkout:#5B4A8A;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;
-      background: var(--bg); min-height: 100vh;
-      display: flex; flex-direction: column; align-items: center;
-      padding: 24px 16px;
-    }
-    header { text-align: center; margin-bottom: 24px; width: 100%; max-width: 540px; }
-    .logo-bar { background: var(--primary); color: white; border-radius: 14px; padding: 20px 24px; margin-bottom: 12px; }
-    .logo-bar h1 { font-size: 1.5rem; font-weight: 900; letter-spacing: 1px; }
-    .course-info { font-size: 14px; opacity: 0.85; margin-top: 6px; line-height: 1.6; }
-    .badge-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
-    .badge { background: rgba(201,168,76,0.15); border: 1px solid var(--gold); color: var(--gold); font-size: 13px; font-weight: bold; padding: 4px 12px; border-radius: 20px; }
-    .mode-tabs { display: flex; width: 100%; max-width: 540px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(15,35,71,0.12); margin-bottom: 20px; }
-    .mode-tab { flex: 1; padding: 16px; border: none; font-size: 17px; font-weight: 800; cursor: pointer; transition: 0.2s; background: #DDD; color: #888; }
-    .mode-tab.active-checkin { background: var(--success); color: white; }
-    .mode-tab.active-checkout { background: var(--checkout); color: white; }
-    .card { background: var(--card); border-radius: 16px; box-shadow: 0 4px 20px rgba(15,35,71,0.08); padding: 28px 24px; width: 100%; max-width: 540px; margin-bottom: 20px; }
-    .card h2 { font-size: 1.1rem; font-weight: 800; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--bg); }
-    .card h2.checkin-title { color: var(--success); }
-    .card h2.checkout-title { color: var(--checkout); }
-    .input-group { margin-bottom: 20px; }
-    .input-group label { display: block; font-size: 14px; font-weight: 700; color: #444; margin-bottom: 8px; }
-    .input-row { display: flex; gap: 10px; }
-    .prefix { background: var(--primary); color: white; font-weight: bold; font-size: 15px; padding: 14px; border-radius: 10px; white-space: nowrap; display: flex; align-items: center; }
-    .prefix.checkout-prefix { background: var(--checkout); }
-    input[type="number"] { flex: 1; padding: 14px; border: 2px solid #DDD; border-radius: 10px; font-size: 20px; font-weight: 700; outline: none; color: var(--primary); transition: border-color 0.2s; }
-    input[type="number"]:focus { border-color: var(--gold); }
-    .lookup-btn { color: white; border: none; padding: 14px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 4px; transition: 0.2s; }
-    .lookup-btn.checkin-btn { background: var(--primary); }
-    .lookup-btn.checkin-btn:hover { background: #1a3560; }
-    .lookup-btn.checkout-btn { background: var(--checkout); }
-    .lookup-btn.checkout-btn:hover { background: #4a3a7a; }
-    .result-card { display: none; border-radius: 12px; padding: 18px; margin-top: 16px; border: 2px solid; }
-    .result-card.found-checkin  { background: #EBF5EB; border-color: var(--success); }
-    .result-card.found-checkout { background: #F0EDF8; border-color: var(--checkout); }
-    .result-card.not-found      { background: #FFF3E0; border-color: var(--danger); }
-    .result-label { font-size: 13px; color: #666; font-weight: 600; margin-bottom: 4px; }
-    .result-name { font-size: 2rem; font-weight: 900; color: var(--primary); letter-spacing: 2px; }
-    .result-id   { font-size: 14px; color: #666; margin-top: 4px; }
-    .already-badge { display: inline-block; background: #FFF9C4; border: 1.5px solid #F9A825; color: #E65100; font-size: 13px; font-weight: bold; padding: 3px 10px; border-radius: 20px; margin-top: 6px; }
-    .not-checkin-badge { display: inline-block; background: #FFEBEE; border: 1.5px solid var(--danger); color: var(--danger); font-size: 13px; font-weight: bold; padding: 3px 10px; border-radius: 20px; margin-top: 6px; }
-    .confirm-btn { color: white; border: none; padding: 16px; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 14px; transition: 0.2s; }
-    .confirm-btn:disabled { background: #AAA; cursor: not-allowed; }
-    .confirm-btn.checkin-confirm  { background: var(--success); }
-    .confirm-btn.checkout-confirm { background: var(--checkout); }
-    .note-input { width: 100%; padding: 10px; border: 1.5px solid #DDD; border-radius: 8px; font-size: 14px; margin-top: 10px; outline: none; }
-    .note-input:focus { border-color: var(--gold); }
-    .toast { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); color: white; padding: 14px 28px; border-radius: 50px; font-weight: bold; font-size: 16px; z-index: 999; box-shadow: 0 4px 20px rgba(0,0,0,0.2); white-space: nowrap; }
-    .toast.checkin-toast  { background: var(--success); }
-    .toast.checkout-toast { background: var(--checkout); }
-    .log-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    .log-table th { background: var(--primary); color: white; padding: 10px; text-align: left; }
-    .log-table td { padding: 10px; border-bottom: 1px solid #EEE; }
-    .log-table tr:nth-child(even) td { background: #F8F8F8; }
-    .type-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; }
-    .type-checkin  { background: #E8F5E9; color: var(--success); }
-    .type-checkout { background: #EDE7F6; color: var(--checkout); }
-    .count-badge { display: inline-block; background: var(--gold); color: white; font-weight: bold; font-size: 13px; padding: 3px 10px; border-radius: 20px; margin-left: 8px; }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    body{ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft JhengHei",sans-serif; background:var(--bg); min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:24px 16px; }
+    header{ text-align:center; margin-bottom:20px; width:100%; max-width:540px; }
+    .logo-bar{ background:var(--primary); color:white; border-radius:14px; padding:18px 24px; }
+    .logo-bar h1{ font-size:1.4rem; font-weight:900; letter-spacing:1px; }
+    .card{ background:var(--card); border-radius:16px; box-shadow:0 4px 20px rgba(15,35,71,0.08); padding:22px 24px; width:100%; max-width:540px; margin-bottom:16px; }
+    .card h2{ font-size:1rem; font-weight:800; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid var(--bg); }
+    .card h2.checkin-title{ color:var(--success); }
+    .card h2.checkout-title{ color:var(--checkout); }
+    /* 課程選擇 */
+    .course-row{ display:flex; gap:10px; align-items:center; }
+    .course-row select{ flex:1; padding:12px; border:2px solid #DDD; border-radius:10px; font-size:15px; font-weight:700; color:#333; outline:none; background:white; }
+    .course-row select:focus{ border-color:var(--gold); }
+    .course-label{ font-size:13px; color:#999; margin-top:6px; }
+    .course-active-badge{ display:inline-block; background:#E8F4FD; border:1.5px solid #1565C0; color:#1565C0; font-size:13px; font-weight:bold; padding:3px 10px; border-radius:20px; margin-top:6px; }
+    /* 模式切換 */
+    .mode-tabs{ display:flex; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(15,35,71,0.1); margin-bottom:16px; width:100%; max-width:540px; }
+    .mode-tab{ flex:1; padding:14px; border:none; font-size:16px; font-weight:800; cursor:pointer; background:#DDD; color:#888; transition:0.2s; }
+    .mode-tab.active-checkin{ background:var(--success); color:white; }
+    .mode-tab.active-checkout{ background:var(--checkout); color:white; }
+    .input-group{ margin-bottom:16px; }
+    .input-group label{ display:block; font-size:14px; font-weight:700; color:#444; margin-bottom:8px; }
+    .input-row{ display:flex; gap:10px; }
+    .prefix{ background:var(--primary); color:white; font-weight:bold; font-size:14px; padding:13px; border-radius:10px; white-space:nowrap; display:flex; align-items:center; }
+    .prefix.co{ background:var(--checkout); }
+    input[type="number"]{ flex:1; padding:13px; border:2px solid #DDD; border-radius:10px; font-size:20px; font-weight:700; outline:none; color:var(--primary); transition:border-color 0.2s; }
+    input[type="number"]:focus{ border-color:var(--gold); }
+    .lookup-btn{ color:white; border:none; padding:13px; border-radius:10px; font-size:15px; font-weight:bold; cursor:pointer; width:100%; margin-top:4px; transition:0.2s; }
+    .lookup-btn.ci{ background:var(--primary); }
+    .lookup-btn.ci:hover{ background:#1a3560; }
+    .lookup-btn.co{ background:var(--checkout); }
+    .lookup-btn.co:hover{ background:#4a3a7a; }
+    .result-card{ display:none; border-radius:12px; padding:16px; margin-top:14px; border:2px solid; }
+    .result-card.found-ci{ background:#EBF5EB; border-color:var(--success); }
+    .result-card.found-co{ background:#F0EDF8; border-color:var(--checkout); }
+    .result-card.not-found{ background:#FFF3E0; border-color:var(--danger); }
+    .result-label{ font-size:13px; color:#666; font-weight:600; margin-bottom:4px; }
+    .result-name{ font-size:1.9rem; font-weight:900; color:var(--primary); letter-spacing:2px; }
+    .result-id{ font-size:13px; color:#666; margin-top:4px; }
+    .already-badge{ display:inline-block; background:#FFF9C4; border:1.5px solid #F9A825; color:#E65100; font-size:13px; font-weight:bold; padding:3px 10px; border-radius:20px; margin-top:6px; }
+    .not-ci-badge{ display:inline-block; background:#FFEBEE; border:1.5px solid var(--danger); color:var(--danger); font-size:13px; font-weight:bold; padding:3px 10px; border-radius:20px; margin-top:6px; }
+    .confirm-btn{ color:white; border:none; padding:15px; border-radius:10px; font-size:17px; font-weight:bold; cursor:pointer; width:100%; margin-top:12px; transition:0.2s; }
+    .confirm-btn:disabled{ background:#AAA; cursor:not-allowed; }
+    .confirm-btn.ci{ background:var(--success); }
+    .confirm-btn.co{ background:var(--checkout); }
+    .note-input{ width:100%; padding:10px; border:1.5px solid #DDD; border-radius:8px; font-size:14px; margin-top:10px; outline:none; }
+    .note-input:focus{ border-color:var(--gold); }
+    .toast{ display:none; position:fixed; top:20px; left:50%; transform:translateX(-50%); color:white; padding:14px 28px; border-radius:50px; font-weight:bold; font-size:16px; z-index:999; box-shadow:0 4px 20px rgba(0,0,0,0.2); white-space:nowrap; }
+    .toast.ci{ background:var(--success); }
+    .toast.co{ background:var(--checkout); }
+    .log-table{ width:100%; border-collapse:collapse; font-size:14px; }
+    .log-table th{ background:var(--primary); color:white; padding:10px; text-align:left; }
+    .log-table td{ padding:10px; border-bottom:1px solid #EEE; }
+    .log-table tr:nth-child(even) td{ background:#F8F8F8; }
+    .type-badge{ display:inline-block; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:bold; }
+    .tci{ background:#E8F5E9; color:var(--success); }
+    .tco{ background:#EDE7F6; color:var(--checkout); }
+    .count-badge{ display:inline-block; background:var(--gold); color:white; font-weight:bold; font-size:13px; padding:3px 10px; border-radius:20px; margin-left:8px; }
+    .no-course-mask{ background:rgba(248,246,241,0.85); border-radius:12px; padding:14px; text-align:center; color:#999; font-size:14px; font-weight:600; border:2px dashed #DDD; }
   </style>
 </head>
 <body>
@@ -82,59 +77,81 @@
 <header>
   <div class="logo-bar">
     <h1>🏮 新北文化大使 課程簽到退</h1>
-    <div class="course-info" id="header-course-name"></div>
-    <div class="badge-row">
-      <span class="badge" id="header-date"></span>
-      <span class="badge" id="header-time"></span>
-    </div>
   </div>
 </header>
 
-<div class="mode-tabs">
-  <button class="mode-tab active-checkin" id="tab-checkin" onclick="switchMode('checkin')">✅ 簽到</button>
-  <button class="mode-tab" id="tab-checkout" onclick="switchMode('checkout')">🚪 簽退</button>
+<!-- 課程選擇（常駐顯示） -->
+<div class="card">
+  <h2 style="color:var(--primary);">📋 選擇課程</h2>
+  <div class="course-row">
+    <select id="course-select" onchange="onCourseChange()">
+      <option value="">— 請選擇課程 —</option>
+      <option value="0">9/19 ｜ 眷村試玩</option>
+      <option value="1">9/19 ｜ 解謎試玩</option>
+      <option value="2">9/19 ｜ 社造造船活動</option>
+      <option value="3">9/20 ｜ 社造造船活動</option>
+      <option value="4">9/20 ｜ 林口社造小旅行</option>
+    </select>
+  </div>
+  <div id="course-status" class="course-label">尚未選擇課程，請先選擇後再進行簽到</div>
 </div>
 
+<!-- 模式切換 -->
+<div class="mode-tabs">
+  <button class="mode-tab active-checkin" id="tab-ci" onclick="switchMode('checkin')">✅ 簽到</button>
+  <button class="mode-tab" id="tab-co" onclick="switchMode('checkout')">🚪 簽退</button>
+</div>
+
+<!-- 簽到退操作 -->
 <div class="card">
   <h2 id="card-title" class="checkin-title">🔍 查詢學員編號 — 簽到</h2>
-  <div class="input-group">
-    <label>請輸入學員編號後三碼</label>
-    <div class="input-row">
-      <div class="prefix" id="prefix">NTPCCA－</div>
-      <input type="number" id="id-input" placeholder="001" min="1" max="999"
-             oninput="onInput()" onkeydown="if(event.key==='Enter') lookupStudent()">
+  <div id="main-content">
+    <div class="no-course-mask" id="no-course-msg">⬆️ 請先在上方選擇課程</div>
+    <div id="lookup-area" style="display:none;">
+      <div class="input-group">
+        <label>請輸入學員編號後三碼</label>
+        <div class="input-row">
+          <div class="prefix" id="prefix">NTPCCA－</div>
+          <input type="number" id="id-input" placeholder="001" min="1" max="999"
+                 oninput="onInput()" onkeydown="if(event.key==='Enter') lookupStudent()">
+        </div>
+      </div>
+      <button class="lookup-btn ci" id="lookup-btn" onclick="lookupStudent()">🔎 查詢姓名</button>
+      <div class="result-card" id="result-card">
+        <div class="result-label" id="result-label">查詢結果</div>
+        <div class="result-name" id="result-name">—</div>
+        <div class="result-id"   id="result-id">—</div>
+        <div id="status-warn"></div>
+        <input class="note-input" id="note-input" type="text" placeholder="備註（選填）">
+        <button class="confirm-btn ci" id="confirm-btn" onclick="confirmAction()">✅ 確認簽到</button>
+      </div>
     </div>
-  </div>
-  <button class="lookup-btn checkin-btn" id="lookup-btn" onclick="lookupStudent()">🔎 查詢姓名</button>
-  <div class="result-card" id="result-card">
-    <div class="result-label" id="result-label">查詢結果</div>
-    <div class="result-name" id="result-name">—</div>
-    <div class="result-id"   id="result-id">—</div>
-    <div id="status-warn"></div>
-    <input class="note-input" id="note-input" type="text" placeholder="備註（選填）">
-    <button class="confirm-btn checkin-confirm" id="confirm-btn" onclick="confirmAction()">✅ 確認簽到</button>
   </div>
 </div>
 
+<!-- 紀錄 -->
 <div class="card">
   <h2>📋 本場操作紀錄 <span class="count-badge" id="count-badge">0 筆</span></h2>
   <table class="log-table">
-    <thead><tr><th>#</th><th>編號</th><th>姓名</th><th>類型</th><th>時間</th></tr></thead>
+    <thead><tr><th>#</th><th>編號</th><th>姓名</th><th>課程</th><th>類型</th><th>時間</th></tr></thead>
     <tbody id="log-body"></tbody>
   </table>
 </div>
 
 <script>
-// ╔══════════════════════════════════════════╗
-// ║  每次課程前只需修改以下三行              ║
-// ╚══════════════════════════════════════════╝
-const COURSE_NAME = '社造小旅行';
-const COURSE_DATE = '2026年8月22日（六）';
-const COURSE_TIME = '10:00–12:00';
-// ════════════════════════════════════════════
-
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbyAMe8pvTjjoHG9FBzV7ySL3L05vM-WONuwp7tWWtAUEKbhWVOo6XI6rVtRLquUHwdq/exec';
-const COURSE  = COURSE_NAME + '（' + COURSE_DATE + '）';
+
+// ╔══════════════════════════════════════════════════╗
+// ║  新增課程：在此清單新增一行，並在上方 <select>   ║
+// ║  對應新增一個 <option>                           ║
+// ╚══════════════════════════════════════════════════╝
+const COURSE_LIST = [
+  { name: '眷村試玩',       date: '2026年9月19日（六）', time: '' },
+  { name: '解謎試玩',       date: '2026年9月19日（六）', time: '' },
+  { name: '社造造船活動',   date: '2026年9月19日（六）', time: '' },
+  { name: '社造造船活動',   date: '2026年9月20日（日）', time: '' },
+  { name: '林口社造小旅行', date: '2026年9月20日（日）', time: '' },
+];
 
 const STUDENTS = {
   "NTPCCA-001": "呂家維",
@@ -264,163 +281,129 @@ const STUDENTS = {
   "NTPCCA-125": "陳沅妍"
 };
 
-const records = {};
+let COURSE_NAME = '';
+let COURSE_DATE = '';
+let COURSE      = '';
+const records   = {};
 let currentMode = 'checkin';
 let currentId   = null;
 let currentName = null;
 
-function switchMode(mode) {
-  currentMode = mode;
-  const isCheckin = mode === 'checkin';
-  document.getElementById('tab-checkin').className  = 'mode-tab' + (isCheckin ? ' active-checkin' : '');
-  document.getElementById('tab-checkout').className = 'mode-tab' + (!isCheckin ? ' active-checkout' : '');
-  const title = document.getElementById('card-title');
-  title.className = isCheckin ? 'checkin-title' : 'checkout-title';
-  title.innerText = isCheckin ? '🔍 查詢學員編號 — 簽到' : '🔍 查詢學員編號 — 簽退';
-  document.getElementById('prefix').className = 'prefix' + (!isCheckin ? ' checkout-prefix' : '');
-  document.getElementById('lookup-btn').className = 'lookup-btn ' + (isCheckin ? 'checkin-btn' : 'checkout-btn');
+function onCourseChange() {
+  const val = document.getElementById('course-select').value;
+  const statusEl   = document.getElementById('course-status');
+  const lookupArea = document.getElementById('lookup-area');
+  const noMsg      = document.getElementById('no-course-msg');
+
+  if (val === '') {
+    COURSE_NAME = ''; COURSE_DATE = ''; COURSE = '';
+    statusEl.className = 'course-label';
+    statusEl.innerText = '尚未選擇課程，請先選擇後再進行簽到';
+    lookupArea.style.display = 'none';
+    noMsg.style.display = 'block';
+    return;
+  }
+
+  const c = COURSE_LIST[parseInt(val)];
+  COURSE_NAME = c.name; COURSE_DATE = c.date;
+  COURSE = COURSE_NAME + '（' + COURSE_DATE + '）';
+
+  statusEl.className = 'course-active-badge';
+  statusEl.innerText = '✅ ' + COURSE_NAME + '　' + COURSE_DATE;
+  lookupArea.style.display = 'block';
+  noMsg.style.display = 'none';
+
+  // 清空上一次查詢結果
   document.getElementById('id-input').value = '';
   document.getElementById('result-card').style.display = 'none';
   currentId = null; currentName = null;
   document.getElementById('id-input').focus();
 }
 
-function pad(n) { return String(n).padStart(3, '0'); }
-
-function onInput() {
+function switchMode(mode) {
+  currentMode = mode;
+  const ic = mode === 'checkin';
+  document.getElementById('tab-ci').className = 'mode-tab' + (ic ? ' active-checkin' : '');
+  document.getElementById('tab-co').className = 'mode-tab' + (!ic ? ' active-checkout' : '');
+  const title = document.getElementById('card-title');
+  title.className = ic ? 'checkin-title' : 'checkout-title';
+  title.innerText = ic ? '🔍 查詢學員編號 — 簽到' : '🔍 查詢學員編號 — 簽退';
+  document.getElementById('prefix').className = 'prefix' + (!ic ? ' co' : '');
+  document.getElementById('lookup-btn').className = 'lookup-btn ' + (ic ? 'ci' : 'co');
+  document.getElementById('id-input').value = '';
   document.getElementById('result-card').style.display = 'none';
   currentId = null; currentName = null;
+  if (COURSE) document.getElementById('id-input').focus();
 }
 
+function pad(n) { return String(n).padStart(3,'0'); }
+function onInput() { document.getElementById('result-card').style.display='none'; currentId=null; currentName=null; }
+
 function lookupStudent() {
+  if (!COURSE) { alert('請先選擇課程'); return; }
   const raw = document.getElementById('id-input').value.trim();
   if (!raw) { alert('請輸入編號'); return; }
   const ntpcca_id = 'NTPCCA-' + pad(parseInt(raw));
   const name = STUDENTS[ntpcca_id];
-  const card    = document.getElementById('result-card');
-  const nameEl  = document.getElementById('result-name');
-  const idEl    = document.getElementById('result-id');
-  const warnEl  = document.getElementById('status-warn');
-  const btn     = document.getElementById('confirm-btn');
-  const labelEl = document.getElementById('result-label');
-  card.className = 'result-card';
-  card.style.display = 'block';
-  warnEl.innerHTML = '';
+  const card=document.getElementById('result-card'), nameEl=document.getElementById('result-name'),
+        idEl=document.getElementById('result-id'), warnEl=document.getElementById('status-warn'),
+        btn=document.getElementById('confirm-btn'), labelEl=document.getElementById('result-label');
+  card.className='result-card'; card.style.display='block'; warnEl.innerHTML='';
   if (!name) {
-    card.classList.add('not-found');
-    nameEl.style.color = 'var(--danger)';
-    nameEl.innerText = '找不到此編號';
-    idEl.innerText   = ntpcca_id + ' — 請確認號碼是否正確';
-    btn.disabled = true;
-    currentId = null; currentName = null;
-    return;
+    card.classList.add('not-found'); nameEl.style.color='var(--danger)';
+    nameEl.innerText='找不到此編號'; idEl.innerText=ntpcca_id+' — 請確認號碼是否正確';
+    btn.disabled=true; currentId=null; currentName=null; return;
   }
-  nameEl.style.color = 'var(--primary)';
-  nameEl.innerText = name;
-  idEl.innerText   = ntpcca_id;
-  currentId   = ntpcca_id;
-  currentName = name;
-  btn.disabled = false;
-  const rec = records[ntpcca_id] || {};
-  if (currentMode === 'checkin') {
-    card.classList.add('found-checkin');
-    labelEl.innerText = '✅ 簽到查詢結果';
-    btn.className = 'confirm-btn checkin-confirm';
-    btn.innerText = '✅ 確認簽到';
-    btn.style.background = '';
-    if (rec.checkin) {
-      warnEl.innerHTML = `<div class="already-badge">⚠️ 此學員今日已簽到（${rec.checkin}）</div>`;
-      btn.innerText = '⚠️ 已簽到（再次確認送出）';
-      btn.style.background = '#E65100';
-    }
+  nameEl.style.color='var(--primary)'; nameEl.innerText=name; idEl.innerText=ntpcca_id;
+  currentId=ntpcca_id; currentName=name; btn.disabled=false;
+  const rec=records[ntpcca_id]||{};
+  if (currentMode==='checkin') {
+    card.classList.add('found-ci'); labelEl.innerText='✅ 簽到查詢結果';
+    btn.className='confirm-btn ci'; btn.innerText='✅ 確認簽到'; btn.style.background='';
+    if (rec.checkin) { warnEl.innerHTML=`<div class="already-badge">⚠️ 此學員今日已簽到（${rec.checkin}）</div>`; btn.innerText='⚠️ 已簽到（再次確認送出）'; btn.style.background='#E65100'; }
   } else {
-    card.classList.add('found-checkout');
-    labelEl.innerText = '🚪 簽退查詢結果';
-    btn.className = 'confirm-btn checkout-confirm';
-    btn.style.background = '';
-    if (!rec.checkin) {
-      warnEl.innerHTML = `<div class="not-checkin-badge">⚠️ 此學員尚未簽到，仍可送出簽退紀錄</div>`;
-    }
-    if (rec.checkout) {
-      warnEl.innerHTML += `<div class="already-badge" style="margin-top:4px">⚠️ 此學員今日已簽退（${rec.checkout}）</div>`;
-      btn.innerText = '⚠️ 已簽退（再次確認送出）';
-      btn.style.background = '#5B4A8A';
-    } else {
-      btn.innerText = '🚪 確認簽退';
-    }
+    card.classList.add('found-co'); labelEl.innerText='🚪 簽退查詢結果';
+    btn.className='confirm-btn co'; btn.style.background='';
+    if (!rec.checkin) { warnEl.innerHTML=`<div class="not-ci-badge">⚠️ 此學員尚未簽到，仍可送出簽退紀錄</div>`; }
+    if (rec.checkout) { warnEl.innerHTML+=`<div class="already-badge" style="margin-top:4px">⚠️ 此學員今日已簽退（${rec.checkout}）</div>`; btn.innerText='⚠️ 已簽退（再次確認送出）'; btn.style.background='#5B4A8A'; }
+    else { btn.innerText='🚪 確認簽退'; }
   }
 }
 
 async function confirmAction() {
-  if (!currentId || !currentName) return;
-  const btn  = document.getElementById('confirm-btn');
-  const note = document.getElementById('note-input').value.trim();
-  btn.disabled = true;
-  btn.innerText = '送出中...';
-  const now = new Date().toLocaleString('zh-TW', {
-    timeZone: 'Asia/Taipei',
-    year: 'numeric', month: '2-digit', day: '2-digit',
-    hour: '2-digit', minute: '2-digit', second: '2-digit',
-    hour12: false
-  });
-  const record = {
-    type      : currentMode === 'checkin' ? '簽到' : '簽退',
-    timestamp : now,
-    ntpcca_id : currentId,
-    name      : currentName,
-    course    : COURSE,
-    note      : note
-  };
+  if (!currentId||!currentName) return;
+  const btn=document.getElementById('confirm-btn'), note=document.getElementById('note-input').value.trim();
+  btn.disabled=true; btn.innerText='送出中...';
+  const now=new Date().toLocaleString('zh-TW',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+  const record={type:currentMode==='checkin'?'簽到':'簽退',timestamp:now,ntpcca_id:currentId,name:currentName,course:COURSE,note:note};
   try {
-    await fetch(GAS_URL, {
-      method : 'POST',
-      mode   : 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body   : JSON.stringify(record)
-    });
-  } catch(e) {
-    console.warn('送出失敗:', e);
-  }
-  if (!records[currentId]) records[currentId] = {};
-  const timeShort = now.slice(-8, -3);
-  if (currentMode === 'checkin') {
-    records[currentId].checkin  = timeShort;
-  } else {
-    records[currentId].checkout = timeShort;
-  }
-  addToLog(currentId, currentName, record.type, timeShort);
-  showToast(currentName + (currentMode === 'checkin' ? ' 簽到成功！' : ' 簽退成功！'), currentMode);
-  document.getElementById('id-input').value = '';
-  document.getElementById('note-input').value = '';
-  document.getElementById('result-card').style.display = 'none';
+    await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(record)});
+  } catch(e) { console.warn('送出失敗:',e); }
+  if (!records[currentId]) records[currentId]={};
+  const ts=now.slice(-8,-3);
+  if (currentMode==='checkin') { records[currentId].checkin=ts; } else { records[currentId].checkout=ts; }
+  addToLog(currentId, currentName, record.type, COURSE_NAME, ts);
+  showToast(currentName+(currentMode==='checkin'?' 簽到成功！':' 簽退成功！'), currentMode);
+  document.getElementById('id-input').value=''; document.getElementById('note-input').value='';
+  document.getElementById('result-card').style.display='none';
   document.getElementById('id-input').focus();
-  currentId = null; currentName = null;
+  currentId=null; currentName=null;
 }
 
-function addToLog(id, name, type, time) {
-  const tbody = document.getElementById('log-body');
-  const count = tbody.rows.length + 1;
-  const tr = document.createElement('tr');
-  const badgeClass = type === '簽到' ? 'type-checkin' : 'type-checkout';
-  tr.innerHTML = `<td>${count}</td><td>${id}</td><td style="font-weight:bold">${name}</td><td><span class="type-badge ${badgeClass}">${type}</span></td><td>${time}</td>`;
-  tbody.insertBefore(tr, tbody.firstChild);
-  document.getElementById('count-badge').innerText = count + ' 筆';
+function addToLog(id, name, type, course, time) {
+  const tbody=document.getElementById('log-body'), count=tbody.rows.length+1, tr=document.createElement('tr');
+  const bc=type==='簽到'?'tci':'tco';
+  tr.innerHTML=`<td>${count}</td><td>${id}</td><td style="font-weight:bold">${name}</td><td style="font-size:12px;color:#666">${course}</td><td><span class="type-badge ${bc}">${type}</span></td><td>${time}</td>`;
+  tbody.insertBefore(tr,tbody.firstChild);
+  document.getElementById('count-badge').innerText=count+' 筆';
 }
 
-function showToast(msg, mode) {
-  const t = document.getElementById('toast');
-  t.className = 'toast ' + (mode === 'checkin' ? 'checkin-toast' : 'checkout-toast');
-  t.innerText = (mode === 'checkin' ? '✅ ' : '🚪 ') + msg;
-  t.style.display = 'block';
-  setTimeout(() => { t.style.display = 'none'; }, 2500);
+function showToast(msg,mode) {
+  const t=document.getElementById('toast');
+  t.className='toast '+(mode==='checkin'?'ci':'co');
+  t.innerText=(mode==='checkin'?'✅ ':'🚪 ')+msg;
+  t.style.display='block'; setTimeout(()=>{t.style.display='none';},2500);
 }
-
-window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('header-course-name').innerText = COURSE_NAME;
-  document.getElementById('header-date').innerText = '📅 ' + COURSE_DATE;
-  document.getElementById('header-time').innerText = '🕐 ' + COURSE_TIME;
-  document.getElementById('id-input').focus();
-});
 </script>
 </body>
 </html>
