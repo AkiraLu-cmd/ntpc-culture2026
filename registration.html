@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>課程報名｜新北文化大使</title>
+<title>活動報名｜新北文化大使</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>emailjs.init('H-L0gj00x0VV5Cs50');</script>
@@ -25,17 +25,20 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--offwhite);color:var(
 .hero-title{color:white;font-size:clamp(22px,5vw,32px);font-weight:900;line-height:1.25;margin-bottom:8px}
 .hero-sub{color:rgba(255,255,255,.6);font-size:14px}
 
-/* COURSE CARD */
+/* EVENT CARD */
 .container{max-width:620px;margin:0 auto;padding:28px 20px 60px}
 .course-card{background:white;border-radius:16px;padding:24px;border:0.5px solid var(--border);margin-bottom:20px}
 .course-tag{display:inline-block;background:var(--gold);color:var(--navy);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.06em;margin-bottom:12px}
+.course-tag.open-all{background:var(--green);color:white;margin-left:6px}
 .course-title{font-size:18px;font-weight:900;color:var(--navy);margin-bottom:16px;line-height:1.3}
+.course-desc{font-size:13.5px;color:var(--text);line-height:1.8;background:var(--cream);border-radius:10px;padding:14px 16px;margin-bottom:16px}
 .course-info{display:flex;flex-direction:column;gap:8px}
 .course-row{display:flex;align-items:flex-start;gap:10px;font-size:14px}
 .course-icon{width:20px;flex-shrink:0;text-align:center;margin-top:1px}
-.course-label{color:var(--muted);font-size:12px;min-width:40px;flex-shrink:0;margin-top:2px}
+.course-label{color:var(--muted);font-size:12px;min-width:56px;flex-shrink:0;margin-top:2px}
 .course-value{color:var(--text);font-weight:500;flex:1}
 .course-highlight{background:var(--cream);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:13px;color:var(--navy);font-weight:600}
+.tbd{color:var(--red);font-weight:700}
 
 /* FORM */
 .form-card{background:white;border-radius:16px;padding:26px 22px;border:0.5px solid var(--border)}
@@ -46,26 +49,13 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--offwhite);color:var(
 .field label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px}
 .field label .req{color:var(--red);margin-left:3px}
 .field label .hint{font-weight:400;color:var(--muted);font-size:11px;margin-left:6px}
+.field .subhint{display:block;font-weight:400;color:var(--muted);font-size:11.5px;margin-top:5px;line-height:1.5}
 input[type=text],input[type=email],input[type=tel],select{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:'Noto Sans TC',sans-serif;font-size:14px;color:var(--text);background:var(--offwhite);transition:border-color .2s;appearance:none}
 input:focus,select:focus{outline:none;border-color:var(--navy);background:white}
 select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7a99' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
 .field.error input,.field.error select{border-color:var(--red)!important}
 .err-msg{font-size:12px;color:var(--red);margin-top:4px;display:none}
 .field.error .err-msg{display:block}
-
-/* CHECKBOX GROUP */
-.checkbox-group{display:flex;flex-direction:column;gap:8px}
-.check-item{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .18s;background:var(--offwhite)}
-.check-item:hover{border-color:var(--navy);background:white}
-.check-item.selected{border-color:var(--navy2);background:#eef2fa}
-.check-item input{display:none}
-.check-box{width:20px;height:20px;border:2px solid var(--border);border-radius:5px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .18s;background:white}
-.check-item.selected .check-box{background:var(--navy2);border-color:var(--navy2)}
-.check-tick{color:white;font-size:12px;display:none}
-.check-item.selected .check-tick{display:block}
-.check-text{flex:1}
-.check-name{font-size:14px;font-weight:600;color:var(--text)}
-.check-meta{font-size:12px;color:var(--muted);margin-top:2px}
 
 /* SUBMIT */
 .submit-btn{width:100%;background:var(--navy);color:white;border:none;border-radius:10px;padding:16px;font-family:'Noto Sans TC',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:background .18s;letter-spacing:.04em;margin-top:20px;-webkit-tap-highlight-color:transparent}
@@ -91,73 +81,51 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 <nav class="site-nav">
   <a class="nav-logo" href="/">新北文化大使</a>
   <a class="nav-link" href="/">首頁</a>
-  <a class="nav-link active" href="/registration.html">課程報名</a>
+  <a class="nav-link active" href="/registration.html">活動報名</a>
   <a class="nav-link" href="/sound-shizhuang/" target="_blank">新莊遊戲</a>
 </nav>
 
 <div class="hero">
   <div class="hero-badge">115年 新北市青年推廣文化計畫</div>
-  <div class="hero-title">課程報名</div>
+  <div class="hero-title">活動報名</div>
   <div class="hero-sub">填寫以下資料完成報名，報名確認信將寄至你填寫的 Email</div>
 </div>
 
 <div class="container" id="formContainer">
 
-  <!-- 課程資訊 -->
+  <!-- 活動資訊 -->
   <div class="course-card">
     <div class="course-tag">開放報名中</div>
-    <div class="course-title">🌿 坪林：地方創生分享＋紙包茶體驗</div>
-    <div class="course-info">
-      <div class="course-row">
-        <span class="course-icon">📅</span>
-        <span class="course-label">日期</span>
-        <span class="course-value">2026 年 8 月 21 日（五）</span>
-      </div>
-      <div class="course-row">
-        <span class="course-icon">🕐</span>
-        <span class="course-label">時間</span>
-        <span class="course-value">13:00 – 15:00</span>
-      </div>
-      <div class="course-row">
-        <span class="course-icon">📍</span>
-        <span class="course-label">地點</span>
-        <span class="course-value">坪感覺<br><span style="font-size:12px;color:var(--muted)">新北市坪林區坪林里坪林街 12 號</span></span>
-      </div>
-      <div class="course-row">
-        <span class="course-icon">👥</span>
-        <span class="course-label">名額</span>
-        <span class="course-value">限額 10 人</span>
-      </div>
-    </div>
-    <div class="course-highlight">🎁 本活動開放一般民眾參與，免費報名！額滿為止。</div>
-  </div>
+    <div class="course-tag open-all">歡迎非專案學員登記</div>
+    <div class="course-title">🏠 眷村文化節｜三重空軍一村文化解謎</div>
 
-  <div class="course-card">
-    <div class="course-tag">開放報名中</div>
-    <div class="course-title">🎵 淡水：北管一日弟子體驗</div>
+    <div class="course-desc">
+      這是一場跨越時空的承諾與釋懷，玩家以「隊」為單位報名，2–3 人一隊，進入空軍三重一村，以沈浸式的方式體驗眷村特有的「等待」與「想念」。<br><br>
+      玩家將透過智慧小盒子（大家的手機），在 2 個小時內穿梭在現代與過去交錯的時空中，尋找眷村裡埋藏的線索，完成以建築、美食、歌唱、童玩為主題的支線任務，最終拼湊出一場遲到了半個世紀的告別。
+    </div>
+
     <div class="course-info">
       <div class="course-row">
         <span class="course-icon">📅</span>
-        <span class="course-label">日期</span>
-        <span class="course-value">2026 年 8 月 14 日（五）</span>
-      </div>
-      <div class="course-row">
-        <span class="course-icon">🕐</span>
-        <span class="course-label">時間</span>
-        <span class="course-value">10:00 – 12:00</span>
+        <span class="course-label">日期場次</span>
+        <span class="course-value">
+          2026 年 10 月 3 日（六）14:00–15:00｜16:00–17:00<br>
+          2026 年 10 月 4 日（日）14:00–15:00｜16:00–17:00<br>
+          <span style="font-size:12px;color:var(--muted)">共 4 個場次，報名時請選擇一個場次參加</span>
+        </span>
       </div>
       <div class="course-row">
         <span class="course-icon">📍</span>
         <span class="course-label">地點</span>
-        <span class="course-value">淡水捷運站 3 號出口 集合</span>
+        <span class="course-value">空軍三重一村<br><span style="font-size:12px;color:var(--muted)">（確切報到地點將於行前通知）</span></span>
       </div>
       <div class="course-row">
         <span class="course-icon">👥</span>
-        <span class="course-label">名額</span>
-        <span class="course-value">限額 10 人</span>
+        <span class="course-label">組成</span>
+        <span class="course-value">2–3 人一隊（可先自組隊伍或由工作人員協助配對）</span>
       </div>
     </div>
-    <div class="course-highlight">🎁 本活動開放一般民眾參與，免費報名！額滿為止。</div>
+    <div class="course-highlight">🎁 歡迎非專案學員一同參與，名額有限，額滿為止。</div>
   </div>
 
   <!-- 報名表單 -->
@@ -188,6 +156,18 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
       <div class="err-msg">請填寫學校或單位</div>
     </div>
 
+    <div class="field" id="field-session">
+      <label>報名場次 <span class="req">*</span></label>
+      <select id="session">
+        <option value="">請選擇場次</option>
+        <option value="10月3日（六）14:00–15:00">10月3日（六）14:00–15:00</option>
+        <option value="10月3日（六）16:00–17:00">10月3日（六）16:00–17:00</option>
+        <option value="10月4日（日）14:00–15:00">10月4日（日）14:00–15:00</option>
+        <option value="10月4日（日）16:00–17:00">10月4日（日）16:00–17:00</option>
+      </select>
+      <div class="err-msg">請選擇報名場次</div>
+    </div>
+
     <div class="field" id="field-grade">
       <label>年級 / 身分 <span class="req">*</span></label>
       <select id="grade">
@@ -212,31 +192,14 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
       <div class="err-msg">請選擇年級或身分</div>
     </div>
 
-    <div class="field" id="field-courses">
-      <label>報名課程 <span class="req">*</span></label>
-      <div class="checkbox-group">
-        <div class="check-item" onclick="toggleCourse(this, '坪林：地方創生分享＋紙包茶體驗（8/21 13:00–15:00）')">
-          <input type="checkbox">
-          <div class="check-box"><span class="check-tick">✓</span></div>
-          <div class="check-text">
-            <div class="check-name">🌿 坪林：地方創生分享＋紙包茶體驗</div>
-            <div class="check-meta">8月21日（五）13:00–15:00 ｜ 坪感覺（坪林街 12 號）｜ 限額 10 人</div>
-          </div>
-        </div>
-        <div class="check-item" onclick="toggleCourse(this, '淡水：北管一日弟子體驗（8/14 10:00–12:00）')">
-          <input type="checkbox">
-          <div class="check-box"><span class="check-tick">✓</span></div>
-          <div class="check-text">
-            <div class="check-name">🎵 淡水：北管一日弟子體驗</div>
-            <div class="check-meta">8月14日（五）10:00–12:00 ｜ 淡水捷運站 3 號出口集合 ｜ 限額 10 人</div>
-          </div>
-        </div>
-      </div>
-      <div class="err-msg" id="courses-err" style="display:none">請至少選擇一門課程</div>
+    <div class="field" id="field-referral">
+      <label>推薦學員<span class="hint">（計劃內學員無需填寫）</span></label>
+      <input type="text" id="referral" placeholder="請填寫姓名（若無可留空）">
+      <span class="subhint">方便工作人員安排您與推薦學員同組</span>
     </div>
 
     <button class="submit-btn" id="submitBtn" onclick="submitForm()">送出報名 🎉</button>
-    <p class="form-note">所有欄位均為必填<span>（*）</span><br>送出後將自動寄送確認信至你填寫的 Email，請留意收件匣（含垃圾信件）</p>
+    <p class="form-note">除「推薦學員」外，其餘欄位均為必填<span>（*）</span><br>送出後將自動寄送確認信至你填寫的 Email，請留意收件匣（含垃圾信件）</p>
   </div>
 
 </div>
@@ -252,18 +215,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 const SERVICE_ID = 'service_gwjk4e9';
 const NOTIFY_TEMPLATE = 'template_2hbedks';
 const CONFIRM_TEMPLATE = 'template_0phk1no';
-
-let selectedCourses = [];
-
-function toggleCourse(el, courseName) {
-  el.classList.toggle('selected');
-  if (el.classList.contains('selected')) {
-    if (!selectedCourses.includes(courseName)) selectedCourses.push(courseName);
-  } else {
-    selectedCourses = selectedCourses.filter(c => c !== courseName);
-  }
-  document.getElementById('courses-err').style.display = 'none';
-}
+const ACTIVITY_NAME = '眷村文化節｜三重空軍一村文化解謎';
 
 function validateField(id, checkFn) {
   const el = document.getElementById('field-' + id);
@@ -283,13 +235,8 @@ function submitForm() {
   valid = validateField('email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) && valid;
   valid = validateField('phone', v => v.length >= 8) && valid;
   valid = validateField('school', v => v.length > 0) && valid;
+  valid = validateField('session', v => v.length > 0) && valid;
   valid = validateField('grade', v => v.length > 0) && valid;
-
-  if (selectedCourses.length === 0) {
-    document.getElementById('courses-err').style.display = 'block';
-    document.getElementById('field-courses').classList.add('error');
-    valid = false;
-  }
 
   if (!valid) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
 
@@ -301,13 +248,17 @@ function submitForm() {
   const email = document.getElementById('email').value.trim();
   const phone = document.getElementById('phone').value.trim();
   const school = document.getElementById('school').value.trim();
+  const session = document.getElementById('session').value;
   const grade = document.getElementById('grade').value;
-  const coursesText = selectedCourses.join('\n');
+  const referral = document.getElementById('referral').value.trim();
   const now = new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei', hour12: false });
 
   const params = {
     name, email, phone, school, grade,
-    courses: coursesText,
+    referral: referral || '（無）',
+    session,
+    courses: ACTIVITY_NAME + '｜' + session,
+    activity: ACTIVITY_NAME,
     time: now
   };
 
@@ -324,7 +275,9 @@ function submitForm() {
       <div class="success-row"><span class="success-row-label">電話</span><span class="success-row-value">${phone}</span></div>
       <div class="success-row"><span class="success-row-label">學校／單位</span><span class="success-row-value">${school}</span></div>
       <div class="success-row"><span class="success-row-label">年級／身分</span><span class="success-row-value">${grade}</span></div>
-      <div class="success-row"><span class="success-row-label">報名課程</span><span class="success-row-value">${selectedCourses.join('<br>')}</span></div>`;
+      <div class="success-row"><span class="success-row-label">報名活動</span><span class="success-row-value">${ACTIVITY_NAME}</span></div>
+      <div class="success-row"><span class="success-row-label">報名場次</span><span class="success-row-value">${session}</span></div>
+      <div class="success-row"><span class="success-row-label">推薦學員</span><span class="success-row-value">${referral || '（無）'}</span></div>`;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }).catch(err => {
     btn.disabled = false;
